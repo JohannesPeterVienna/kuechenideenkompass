@@ -6,9 +6,13 @@
  * 3. Google Analytics 4 (G-T00HRG2YVF) misst nur, wenn BEIDE Signale zustimmen:
  *    a) TCF: Zweck 1 und Anbieter 755 (Google) erlaubt,
  *    b) Consent Mode der Google-CMP: analytics_storage = GRANTED.
- *    UNKNOWN, fehlende Werte oder ein noch offener Dialog zählen als Nein.
- *    Gilt die DSGVO laut CMP nicht (gdprApplies === false) und meldet die CMP
- *    keine Ablehnung, darf gemessen werden.
+ *    Gilt die DSGVO laut CMP nicht (gdprApplies === false), wird nur gemessen,
+ *    wenn der Analyticswert GRANTED (1) oder NOT_APPLICABLE (3) ist und die CMP
+ *    ausdrücklich keinen US-Opt-out meldet (usstatesoptout Status 1 oder 2).
+ *    Fehlend, UNKNOWN (0), DENIED (2), NOT_CONFIGURED (4), ein offener Dialog
+ *    oder ein Fehler einer CMP-Schnittstelle zählen als Nein. Ein eindeutiges
+ *    TCF-Nein schaltet sofort ab, bevor weitere CMP-Schnittstellen gefragt werden.
+ *    Werte: developers.google.com/funding-choices/fc-api-docs
  * 4. Ablehnung oder Widerruf: consent update „denied“, ga-disable-Schalter an,
  *    keine weiteren Treffer. Erneute Zustimmung schaltet die Messung wieder ein.
  * 5. „Datenschutz-Einstellungen“ öffnet die Widerrufsmitteilung (callbackQueue).
@@ -18,7 +22,8 @@
   var PUB = 'pub-7811071715414905';
   var GA_ID = 'G-T00HRG2YVF';
   var AUS_SCHALTER = 'ga-disable-' + GA_ID;
-  var CM = { UNBEKANNT: 0, ERTEILT: 1, ABGELEHNT: 2 };
+  var CM = { UNBEKANNT: 0, ERTEILT: 1, ABGELEHNT: 2, NICHT_ANWENDBAR: 3, NICHT_KONFIGURIERT: 4 };
+  var US_OHNE_WIDERSPRUCH = [1, 2]; // usstatesoptout: DOES_NOT_APPLY, NOT_OPTED_OUT (0 UNKNOWN, 3 OPTED_OUT sperren)
 
   // --- 1. dataLayer, gtag-Stub und Grundwerte vor jedem Google-Skript ---
   window.dataLayer = window.dataLayer || [];
@@ -61,31 +66,38 @@
     document.body.appendChild(f);
   }
 
-  // Analytics-Status aus dem Consent Mode der Google-CMP (0 = unbekannt)
+  // Analytics-Status aus dem Consent Mode der Google-CMP (Zahl laut ConsentModePurposeStatusEnum)
   function statistikWert() {
     try {
       var fc = window.googlefc;
       if (!fc || typeof fc.getGoogleConsentModeValues !== 'function') return CM.UNBEKANNT;
       var werte = fc.getGoogleConsentModeValues();
       var w = werte && werte.analyticsStoragePurposeConsentStatus;
-      var e = fc.ConsentModePurposeStatusEnum;
-      if (e && w === e.GRANTED) return CM.ERTEILT;
-      if (e && w === e.DENIED) return CM.ABGELEHNT;
       return typeof w === 'number' ? w : CM.UNBEKANNT;
     } catch (err) { return CM.UNBEKANNT; }
+  }
+
+  // US-Bundesstaaten: true, solange die CMP nicht ausdrücklich „kein Opt-out“ meldet; Fehler = Opt-out.
+  function usWiderspruch() {
+    try {
+      var u = window.googlefc && window.googlefc.usstatesoptout;
+      return !(u && typeof u.getInitialUsStatesOptOutStatus === 'function' && US_OHNE_WIDERSPRUCH.indexOf(u.getInitialUsStatesOptOutStatus()) !== -1);
+    } catch (err) { return true; }
   }
 
   // true = messen, false = nicht messen, null = noch keine Entscheidung
   function entscheidung() {
     var tc = letzteTcDaten;
-    var cm = statistikWert();
-    if (cm === CM.ABGELEHNT) return false;
     if (!tc) return null;
-    if (tc.gdprApplies === false) return true;
+    if (tc.gdprApplies === false) {
+      var w = statistikWert();
+      return (w === CM.ERTEILT || w === CM.NICHT_ANWENDBAR) && !usWiderspruch();
+    }
     if (tc.eventStatus !== 'tcloaded' && tc.eventStatus !== 'useractioncomplete') return null;
     var zweck1 = !!(tc.purpose && tc.purpose.consents && tc.purpose.consents[1]);
     var anbieter = !!(tc.vendor && tc.vendor.consents && tc.vendor.consents[755]);
-    return zweck1 && anbieter && cm === CM.ERTEILT;
+    if (!zweck1 || !anbieter) return false; // eindeutiges Nein, ohne weitere CMP-Abfrage
+    return statistikWert() === CM.ERTEILT;
   }
 
   function messungEin() {
@@ -138,6 +150,7 @@
 
   window.googlefc.callbackQueue.push({ CONSENT_MODE_DATA_READY: abgleichen });
   window.googlefc.callbackQueue.push({ CONSENT_DATA_READY: abgleichen });
+  window.googlefc.callbackQueue.push({ INITIAL_US_STATES_OPT_OUT_DATA_READY: abgleichen });
 
   skript('https://fundingchoicesmessages.google.com/i/' + PUB + '?ers=1');
   signalSetzen();
