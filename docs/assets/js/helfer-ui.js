@@ -86,7 +86,9 @@
     if (!box || !$('ek-rezepte')) return;
     var SCHLUESSEL = 'kik-einkauf-v1';
     var daten = { rezepte: [], vorrat: '', abgehakt: {} };
-    try { var g = JSON.parse(localStorage.getItem(SCHLUESSEL) || 'null'); if (g) daten = Object.assign(daten, g); } catch (e) { /* ohne Speicher weiter */ }
+    var geladen = false;
+    try { var g = JSON.parse(localStorage.getItem(SCHLUESSEL) || 'null'); if (g) { daten = Object.assign(daten, g); geladen = true; } } catch (e) { /* ohne Speicher weiter */ }
+    if (geladen) $('ek-gespeichert').textContent = 'Gespeicherte Liste aus diesem Browser geladen.';
     if (!daten.rezepte.length) daten.rezepte = [{ titel: '', text: '', faktor: 1 }];
     daten.abgehakt = daten.abgehakt || {};
 
