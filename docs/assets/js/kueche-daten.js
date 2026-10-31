@@ -56,7 +56,7 @@
     { id: 'hartweizengriess', name: 'Hartweizengrieß (Semola)', en: 'Semolina Flour', volText: '1 cup', cups: 1, g: 163, muster: ['hartweizengrieß', 'hartweizengriess', 'semola', 'semolina'] },
     { id: 'maismehl', name: 'Maismehl, grob (Cornmeal)', en: 'Cornmeal (whole)', volText: '1 cup', cups: 1, g: 138, muster: ['maismehl', 'cornmeal'] },
     { id: 'zucker', name: 'Kristallzucker / Zucker', en: 'Sugar (granulated white)', volText: '1 cup', cups: 1, g: 198, muster: ['kristallzucker', 'feinkristallzucker', 'zucker', 'sugar'] },
-    { id: 'braunerzucker', name: 'Brauner Zucker, fest gedrückt', en: 'Brown sugar (dark or light, packed)', volText: '1 cup', cups: 1, g: 213, muster: ['brauner zucker', 'rohrzucker', 'brown sugar'] },
+    { id: 'braunerzucker', name: 'Brauner Zucker, fest gedrückt', en: 'Brown sugar (dark or light, packed)', volText: '1 cup', cups: 1, g: 213, muster: ['brauner zucker', 'braunen zucker', 'brown sugar'] },
     { id: 'staubzucker', name: 'Staubzucker / Puderzucker', en: "Confectioners' sugar (unsifted)", volText: '1 cup', cups: 1, g: 113, muster: ['staubzucker', 'puderzucker', "confectioners' sugar", 'powdered sugar'] },
     { id: 'butter', name: 'Butter', en: 'Butter', volText: '8 tablespoons (1/2 cup)', cups: 0.5, g: 113, muster: ['butter'] },
     { id: 'milch', name: 'Milch', en: 'Milk (fresh)', volText: '1 cup', cups: 1, g: 227, fluessig: true, muster: ['milch', 'vollmilch', 'milk'] },
@@ -80,8 +80,38 @@
     { id: 'salz', name: 'Speisesalz, fein', en: 'Salt (table)', volText: '1 tablespoon', cups: 1 / 16, g: 18, muster: ['speisesalz', 'tafelsalz', 'salz', 'salt'] },
     { id: 'backpulver', name: 'Backpulver', en: 'Baking powder', volText: '1 teaspoon', cups: 1 / 48, g: 4, muster: ['backpulver', 'baking powder'] },
     { id: 'natron', name: 'Natron', en: 'Baking soda', volText: '1/2 teaspoon', cups: 1 / 96, g: 3, muster: ['natron', 'speisenatron', 'baking soda'] },
+    // Ergänzt 31.10.2026 aus derselben King-Arthur-Tabelle (zusammengesetzte Zutaten)
+    { id: 'erdnussbutter', name: 'Erdnussbutter', en: 'Peanut butter', volText: '1/2 cup', cups: 0.5, g: 135, muster: ['erdnussbutter', 'erdnussmus', 'peanut butter'] },
+    { id: 'mandelmus', name: 'Mandelmus', en: 'Almond butter', volText: '1/4 cup', cups: 0.25, g: 68, muster: ['mandelmus', 'almond butter'] },
+    { id: 'kokosmehl', name: 'Kokosmehl', en: 'Coconut Flour', volText: '1 cup', cups: 1, g: 128, muster: ['kokosmehl', 'coconut flour'] },
+    { id: 'brotmehl', name: 'Brotmehl (US Bread Flour)', en: 'Bread Flour', volText: '1 cup', cups: 1, g: 120, muster: ['bread flour'] },
+    { id: 'cakeflour', name: 'Kuchenmehl (US Cake Flour)', en: 'Unbleached Cake Flour', volText: '1 cup', cups: 1, g: 120, muster: ['cake flour'] },
+    { id: 'pastryflour', name: 'Feines Gebäckmehl (US Pastry Flour)', en: 'Pastry Flour', volText: '1 cup', cups: 1, g: 106, muster: ['pastry flour'] },
+    { id: 'selfrising', name: 'Mehl mit Backtriebmittel (Self-Rising)', en: 'Self-Rising Flour', volText: '1 cup', cups: 1, g: 113, muster: ['self-rising flour', 'self-raising flour'] },
+    { id: 'reismehl', name: 'Reismehl, weiß', en: 'Rice flour (white)', volText: '1 cup', cups: 1, g: 142, muster: ['reismehl', 'rice flour'] },
+    { id: 'hafermehl', name: 'Hafermehl', en: 'Oat Flour', volText: '1 cup', cups: 1, g: 92, muster: ['hafermehl', 'oat flour'] },
+    { id: 'buchweizenmehl', name: 'Buchweizenmehl', en: 'Buckwheat Flour', volText: '1 cup', cups: 1, g: 120, muster: ['buchweizenmehl', 'buckwheat flour'] },
+    { id: 'kichererbsenmehl', name: 'Kichererbsenmehl', en: 'Chickpea flour', volText: '1 cup', cups: 1, g: 85, muster: ['kichererbsenmehl', 'chickpea flour'] },
+    { id: 'kokosbluetenzucker', name: 'Kokosblütenzucker', en: 'Coconut sugar', volText: '1/2 cup', cups: 0.5, g: 77, muster: ['kokosblütenzucker', 'coconut sugar'] },
+    { id: 'demerara', name: 'Demerara-Zucker', en: 'Demerara sugar', volText: '1 cup', cups: 1, g: 220, muster: ['demerarazucker', 'demerara-zucker', 'demerara sugar'] },
+    { id: 'turbinado', name: 'Turbinado-Zucker', en: 'Turbinado sugar (raw)', volText: '1 cup', cups: 1, g: 180, muster: ['turbinado sugar', 'turbinado'] },
+    { id: 'buttermilch', name: 'Buttermilch', en: 'Buttermilk', volText: '1 cup', cups: 1, g: 227, fluessig: true, muster: ['buttermilch', 'buttermilk'] },
+    { id: 'kokosoel', name: 'Kokosöl', en: 'Coconut oil', volText: '1/2 cup', cups: 0.5, g: 113, muster: ['kokosöl', 'coconut oil'] },
+    { id: 'kokosmilch', name: 'Kokosmilch (Dose, gut geschüttelt)', en: 'Coconut milk; canned, well shaken', volText: '1 cup', cups: 1, g: 241, fluessig: true, muster: ['kokosmilch', 'coconut milk'] },
+    { id: 'melasse', name: 'Melasse', en: 'Molasses', volText: '1/4 cup', cups: 0.25, g: 85, muster: ['melasse', 'zuckerrohrmelasse', 'molasses'] },
+    { id: 'maissirup', name: 'Maissirup', en: 'Corn syrup', volText: '1 cup', cups: 1, g: 312, muster: ['maissirup', 'corn syrup'] },
+    { id: 'vanilleextrakt', name: 'Vanilleextrakt', en: 'Vanilla Extract', volText: '1 tablespoon', cups: 1 / 16, g: 14, fluessig: true, muster: ['vanilleextrakt', 'vanilla extract'] },
     { id: 'trockenhefe', name: 'Trockenhefe / Trockengerm (Instant)', en: 'Yeast (instant)', volText: '2 1/4 teaspoons', cups: 2.25 / 48, g: 7, muster: ['trockenhefe', 'trockengerm', 'trockenbackhefe', 'instant yeast'] }
   ];
+  /*
+   * Bewusst ohne Gewichtswert: mehrdeutig oder nicht in der Quelle. Diese Zutaten
+   * werden in Milliliter umgerechnet und gekennzeichnet, statt den Grundbegriff zu nehmen.
+   */
+  var OHNE_WERT = ['rohrzucker', 'vanillezucker', 'hagelzucker', 'gelierzucker', 'dinkelmehl', 'paniermehl', 'semmelbrösel',
+    'nussbutter', 'kakaobutter', 'cocoa butter', 'apple butter', 'cashew butter', 'erdnussöl', 'almond milk', 'mandelmilch',
+    'hafermilch', 'oat milk', 'soy milk', 'sojamilch', 'kondensmilch', 'condensed milk', 'evaporated milk', 'coconut cream',
+    'kokoscreme', 'ice cream', 'whipped cream', 'cream of tartar', 'weinstein', 'sugar substitute', 'zuckerersatz'];
+
   WAAGE.forEach(function (z) {
     z.gProMl = z.g / (z.cups * US_ML.cup);
     z.gProCup = z.g / z.cups;
@@ -150,5 +180,5 @@
     { id: 'sonst', name: 'Sonstiges', muster: [] }
   ];
 
-  return { QUELLEN: QUELLEN, US_ML: US_ML, WAAGE: WAAGE, STUECK: STUECK, REGIONAL: REGIONAL, BEREICHE: BEREICHE, STAND: 'Oktober 2026' };
+  return { QUELLEN: QUELLEN, US_ML: US_ML, WAAGE: WAAGE, STUECK: STUECK, REGIONAL: REGIONAL, BEREICHE: BEREICHE, OHNE_WERT: OHNE_WERT, STAND: 'Oktober 2026' };
 });

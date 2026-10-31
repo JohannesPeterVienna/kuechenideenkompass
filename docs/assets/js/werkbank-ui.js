@@ -79,6 +79,7 @@
     erg.zeilen.forEach(function (z, i) {
       if (z.ueberschrift) { html += '<tr class="ue"><td colspan="3">' + h(z.name) + '</td></tr>'; return; }
       var notiz = [];
+      if (z.unsicher) notiz.push(z.unsicher);
       if (z.eiHinweis) notiz.push(z.eiHinweis);
       if (z.pkgHinweis) notiz.push(z.pkgHinweis);
       if (z.einheitHinweis) notiz.push(z.einheitHinweis);
@@ -89,6 +90,7 @@
       if (z.flags.indexOf('ei') >= 0) marken += '<span class="marke-klein m-ei">ganze Eier</span>';
       if (z.flags.indexOf('trieb') >= 0) marken += '<span class="marke-klein m-tr">Triebmittel</span>';
       if (z.ersetzt && z.ersetzt.length) marken += '<span class="marke-klein m-reg">übersetzt</span>';
+      if (z.unsicher) marken += '<span class="marke-klein m-ei">prüfen</span>';
       var ein = z.einheit ? K.einheitText(z.einheit, z.menge) : '';
       if (einheiten === 'at' && z.einheit === 'l' && /[⅛¼⅜½⅝¾⅞]/.test(z.text)) ein = 'l';
       html += '<tr><td class="m">' + (z.menge === null ? '' : (z.gerundet ? '<span title="gerundet">≈ </span>' : '') + h(z.text)) + '</td><td class="e">' + h(ein) + '</td><td>' + h(z.name || zeilen[i].roh) + marken + (notiz.length ? '<span class="notiz">' + h(notiz.join(' · ')) + '</span>' : '') + '</td></tr>';

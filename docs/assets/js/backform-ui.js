@@ -87,7 +87,12 @@
     // Backzeit-Hinweis über die Teighöhe
     var hoehe = r.a1 / r.a2; // gleiche Teigmenge in neuer Form
     html += '<div class="nichtlinear"><h4>Backzeit & Teighöhe</h4><dl>';
-    html += '<dt>Mit umgerechneter Menge</dt><dd>Die Teighöhe bleibt gleich wie im Original – die Backzeit liegt deshalb meist nahe am Rezept. Bei deutlich größerer Fläche gart die Mitte etwas später: ab der angegebenen Zeit mit der Stäbchenprobe prüfen.</dd>';
+    var hVerh = r.volumen ? b.h / a.h : 1; // Teighöhe neu/alt bei umgerechneter Menge
+    if (Math.abs(hVerh - 1) < 0.05) {
+      html += '<dt>Mit umgerechneter Menge</dt><dd>Die Teighöhe bleibt ' + (r.volumen ? 'praktisch ' : '') + 'gleich wie im Original – die Backzeit liegt deshalb meist nahe am Rezept. Bei deutlich größerer Fläche gart die Mitte etwas später: ab der angegebenen Zeit mit der Stäbchenprobe prüfen.</dd>';
+    } else {
+      html += '<dt>Mit umgerechneter Menge</dt><dd>Gerechnet über das Volumen: Der Teig steht mit ' + K.deZahl(b.h, 1) + ' statt ' + K.deZahl(a.h, 1) + ' cm Füllhöhe ' + (hVerh > 1 ? K.deZahl((hVerh - 1) * 100, 0) + ' % höher' : K.deZahl((1 - hVerh) * 100, 0) + ' % niedriger') + ' als im Original (Höhenverhältnis ' + K.deZahl(hVerh, 2) + '). ' + (hVerh > 1 ? 'Höherer Teig braucht deutlich länger und bei Bedarf etwas weniger Hitze; die Backzeit lässt sich nicht aus dem Faktor ableiten – mit der Stäbchenprobe prüfen.' : 'Flacherer Teig ist früher fertig – deutlich vor Ende der Rezeptzeit prüfen.') + '</dd>';
+    }
     html += '<dt>Gleiche Menge in der neuen Form</dt><dd>Der Teig steht ' + (hoehe > 1 ? K.deZahl((hoehe - 1) * 100, 0) + ' % höher' : K.deZahl((1 - hoehe) * 100, 0) + ' % niedriger') + ' als im Original. ' + (hoehe > 1.05 ? 'Höherer Teig braucht länger und bei Bedarf etwas weniger Hitze, damit die Oberfläche nicht zu dunkel wird.' : hoehe < 0.95 ? 'Flacherer Teig ist früher fertig – deutlich vor Ende der Rezeptzeit prüfen.' : 'Der Unterschied ist gering.') + '</dd>';
     if (b.typ === 'rund' || a.typ === 'rund') {
       var dGleich = K.durchmesserFuer(r.a2);

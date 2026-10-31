@@ -232,3 +232,53 @@ test('Daten: jede Waage-Zeile hat Quelle und plausible Dichte', () => {
     assert.ok(z.gProMl > 0.2 && z.gProMl < 1.5, z.id + ' ' + z.gProMl);
   }
 });
+
+/* ---------- Codex Runde 2 ---------- */
+const zeile = (txt, f, ein = 'original') => K.skalieren(K.rezeptLesen(txt), { faktor: f, einheiten: ein, region: 'original' }).zeilen[0];
+
+test('Nummerierte Listen: Listennummer ist keine Menge', () => {
+  let z = zeile('1. 250 g Mehl', 2);
+  assert.equal(z.text, '500'); assert.equal(z.einheit, 'g'); assert.equal(z.name, 'Mehl');
+  z = zeile('2. 3 Eier', 2);
+  assert.equal(z.text, '6'); assert.equal(z.name, 'Eier');
+  for (const t of ['1) 250 g Mehl', '(3) 250 g Mehl', 'a) 250 g Mehl', '• 250 g Mehl', '– 250 g Mehl', '10. 250 g Mehl']) {
+    const r = K.zeileLesen(t);
+    assert.equal(r.menge, 250, t); assert.equal(r.einheit, 'g', t); assert.equal(r.name, 'Mehl', t);
+  }
+  assert.equal(K.zeileLesen('1.5 kg Mehl').menge, 1.5);
+  assert.equal(K.zeileLesen('3 Eier').unsicher, undefined);
+});
+
+test('Unsicher gelesene Zeilen werden gekennzeichnet', () => {
+  assert.ok(K.zeileLesen('2. Eier').unsicher);
+  assert.ok(K.zeileLesen('1 250 g Mehl').unsicher);
+  assert.ok(zeile('1 250 g Mehl', 2).unsicher);
+});
+
+test('Zusammengesetzte Zutaten: längster, exakter Treffer oder kein Wert', () => {
+  const g = (txt) => { const z = zeile(txt, 1, 'metrisch'); return z.einheit === 'g' ? z.exakt : z.einheit; };
+  const FAELLE = [
+    ['1 cup peanut butter', 270], ['1 cup coconut flour', 128], ['1 cup almond flour', 96], ['1 cup bread flour', 120],
+    ['1 cup brown sugar', 213], ['1 cup light brown sugar, packed', 213], ['1 cup powdered sugar', 113], ['1/2 cup cocoa', 42],
+    ['1 cup heavy cream', 'ml'], ['1 cup sour cream', 227], ['1 cup buttermilk', 'ml'], ['1 Tasse Mandelmehl', 96],
+    ['1 Tasse Vollkornmehl', 113], ['1 Tasse Staubzucker', 113], ['1 Tasse Rohrzucker', 'ml'], ['1 Tasse Schlagobers', 'ml'],
+    ['1 cup all-purpose flour', 120], ['½ cup unsalted butter, softened', 113], ['1 cup Erdnussbutter', 270],
+    ['1 cup almond milk', 'ml'], ['1 cup rice flour', 142], ['1 cup Dinkelmehl', 'ml'], ['1 cup cake flour', 120],
+    ['1 cup chopped walnuts', 113], ['1 cup flour', 120], ['1 cup coconut sugar', 154]
+  ];
+  for (const [t, soll] of FAELLE) {
+    const ist = g(t);
+    if (typeof soll === 'number') nah(ist, soll, 0.5); else assert.equal(ist, soll, t);
+  }
+  assert.equal(K.waageFinden('apple butter'), null);
+  assert.equal(K.waageFinden('Erdnussbutter').id, 'erdnussbutter');
+  assert.equal(K.waageFinden('Vanillezucker'), null);
+  assert.equal(K.waageFinden('King Arthur flour'), null);
+  assert.equal(K.waageFinden('Mehl (glatt)').id, 'weizenmehl');
+  assert.ok(zeile('1 cup coconut cream', 1, 'metrisch').einheitHinweis);
+});
+
+test('Backform: Volumenmodus verdoppelt die Füllhöhe', () => {
+  const r = K.formFaktor({ typ: 'rund', d: 26, h: 5 }, { typ: 'rund', d: 26, h: 10 });
+  nah(r.volumen, 2); nah(r.flaeche, 1);
+});

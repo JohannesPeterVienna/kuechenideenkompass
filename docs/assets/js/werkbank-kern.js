@@ -87,7 +87,7 @@
     if (/backpulver|baking powder|weinsteinbackpulver/.test(n)) return 'backpulver';
     if (/natron|baking soda|hirschhornsalz|pottasche/.test(n)) return 'natron';
     if (/\s(salz|meersalz|speisesalz|pfeffer|muskat|muskatnuss|zimt|chili|chiliflocken|cayennepfeffer|paprikapulver|kümmel|curry|currypulver|kreuzkümmel|nelken|piment|kardamom|ingwerpulver|knoblauchpulver|majoran|oregano|gewürz|gewürze|salt|pepper)\s/.test(n) || /gewürz/.test(n)) return 'gewuerz';
-    if (/mehl|flour/.test(n) && !/paniermehl|mandelmehl/.test(n)) return 'mehl';
+    if (/mehl|flour/.test(n) && !/paniermehl|mandelmehl|almond flour|kokosmehl|coconut flour|nussmehl/.test(n)) return 'mehl';
     return 'normal';
   }
 
@@ -95,7 +95,10 @@
   function zeileLesen(roh) {
     var z = { roh: roh, menge: null, bis: null, einheit: null, name: '', ueberschrift: false, leer: false };
     var t = String(roh).replace(/\t/g, ' ').replace(/ /g, ' ').trim();
-    t = t.replace(/^[-–•*·▪◦]\s*/, '').replace(/^\d+[.)]\s+(?=\D)/, '');
+    t = t.replace(/^[-–—•*·▪◦]\s*/, '');
+    // Listennummern: "1. ", "1) ", "(1) ", "a) ", "b. " – vor der Mengenerkennung entfernen
+    var lm = t.match(/^(?:\(\s*(?:\d{1,2}|[a-z])\s*\)|\d{1,2}\s*[.)]|[a-z]\))\s+(?=\S)/i);
+    if (lm) { t = t.slice(lm[0].length); z.listenNr = lm[0].trim(); }
     if (!t) { z.leer = true; return z; }
     if (/:$/.test(t) && !/^[\d½⅓⅔¼¾⅛⅜⅝⅞]/.test(t)) { z.ueberschrift = true; z.name = t.replace(/:$/, ''); return z; }
     var m = t.match(SPANNE);
@@ -131,6 +134,9 @@
     }
     rest = rest.replace(/^(von|of)\s+/i, '');
     z.name = rest.trim();
+    // unsicher gelesen: zweite Zahl direkt nach der Menge ("1 250 g Mehl") oder Listennummer ohne folgende Menge
+    if (z.menge !== null && !z.einheit && /^\d/.test(z.name)) z.unsicher = 'Zwei Zahlen am Zeilenanfang – Menge bitte prüfen.';
+    else if (z.listenNr && z.menge === null) z.unsicher = 'Listennummer „' + z.listenNr + '“ entfernt, keine Menge erkannt – bitte prüfen.';
     z.klasse = klasseVon(z.name || '');
     return z;
   }
@@ -197,17 +203,38 @@
   }
 
   /* ---------- Waage ---------- */
+  // Zutat zuordnen: nur ganze Wörter, längste Übereinstimmung zuerst. Steht vor dem
+  // Treffer ein Wort, das die Zutat verändert ("peanut butter", "coconut flour"),
+  // gibt es keinen Treffer – nie stillschweigend den Grundbegriff verwenden.
+  var NEUTRAL = ('unsalted salted softened melted cold chilled room-temperature warm granulated white plain all-purpose ' +
+    'sifted unsifted packed firmly lightly light dark heavy whipping fresh whole full-fat low-fat natural creamy smooth crunchy ' +
+    'unsweetened sweetened large extra fine superfine regular cups cup tbsp tsp ' +
+    'chopped rolled old-fashioned quick-cooking quick ' +
+    'weiche geschmolzene zerlassene flüssige kalte kalter kaltes warme handwarme zimmerwarme ' +
+    'glattes griffiges universal feines feiner grobes grober gesiebtes weißer weisser weißes heller helles frische frischer ' +
+    'gesalzene ungesalzene ungesüßtes ungesüßter fein grob braun weiß gekühlte gekühlter gehackte gemahlene ganze etwas ' +
+    'teelöffel esslöffel tl el g ml').split(' ');
+  function woerter(t) {
+    return t.toLowerCase().replace(/\([^)]*\)/g, ' ').replace(/['’]/g, '').split(/[^a-zäöüß-]+/).filter(Boolean);
+  }
+  var WAAGE_MUSTER = [];
+  D.WAAGE.forEach(function (z) { z.muster.forEach(function (m) { WAAGE_MUSTER.push({ z: z, w: woerter(m) }); }); });
+  (D.OHNE_WERT || []).forEach(function (m) { WAAGE_MUSTER.push({ z: null, w: woerter(m) }); });
+  WAAGE_MUSTER.sort(function (a, b) { return b.w.join(' ').length - a.w.join(' ').length; });
   function waageFinden(name) {
-    var n = name.toLowerCase();
-    var best = null;
-    D.WAAGE.forEach(function (z) {
-      z.muster.forEach(function (m) {
-        var re = new RegExp('(^|[^a-zäöüß])' + esc(m) + '($|[^a-zäöüß])');
-        var treffer = m.length > 4 ? n.indexOf(m) >= 0 : re.test(n);
-        if (treffer && (!best || m.length > best.len)) best = { z: z, len: m.length };
-      });
-    });
-    return best ? best.z : null;
+    var w = woerter(name || '');
+    for (var k = 0; k < WAAGE_MUSTER.length; k++) {
+      var mu = WAAGE_MUSTER[k].w;
+      for (var i = 0; i + mu.length <= w.length; i++) {
+        var ok = true;
+        for (var j = 0; j < mu.length; j++) if (w[i + j] !== mu[j]) { ok = false; break; }
+        if (!ok) continue;
+        if (!WAAGE_MUSTER[k].z) return null; // bewusst ohne belegten Wert
+        if (i > 0 && NEUTRAL.indexOf(w[i - 1]) < 0) return null; // unbekannter Zusatz vor dem Grundbegriff
+        return WAAGE_MUSTER[k].z;
+      }
+    }
+    return null;
   }
 
   /* ---------- Einheiten umrechnen ---------- */
@@ -336,7 +363,7 @@
     var hinweise = [];
     var mehlG = 0, mehlBekannt = false;
     var out = zeilen.map(function (z) {
-      var r = { roh: z.roh, ueberschrift: z.ueberschrift, klasse: z.klasse, flags: [] };
+      var r = { roh: z.roh, ueberschrift: z.ueberschrift, klasse: z.klasse, flags: [], unsicher: z.unsicher };
       var nameReg = regionalUebersetzen(z.name, opts.region);
       r.name = skaliereKlammern(nameReg.text, f);
       r.ersetzt = nameReg.ersetzt;
@@ -387,6 +414,9 @@
       var trieb = out.filter(function (r) { return r.flags.indexOf('trieb') >= 0; });
       if (trieb.length) hinweise.push(triebHinweis(zeilen, f, mehlBekannt ? mehlG : null));
       hinweise.push(geschirrHinweis(f));
+    }
+    if (out.some(function (r) { return r.unsicher; })) {
+      hinweise.push({ art: 'unsicher', titel: 'Bitte prüfen', text: 'Einige Zeilen ließen sich nicht eindeutig lesen (zum Beispiel zwei Zahlen hintereinander oder eine Listennummer ohne Menge). Sie sind markiert; vergleichen Sie diese Zeilen mit dem Originalrezept.' });
     }
     if (out.some(function (r) { return r.einheitHinweis; })) {
       hinweise.push({ art: 'einheit', titel: 'Einheiten', text: 'Bei einigen Zeilen gab es keinen belegten Gewichtswert; sie sind in Milliliter umgerechnet oder als Löffel belassen. Details stehen in der jeweiligen Zeile.' });
