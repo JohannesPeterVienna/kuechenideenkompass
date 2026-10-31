@@ -2,7 +2,6 @@
   "name": "kuechenideenkompass",
   "private": true,
   "description": "Rezept-Werkbank AT · DE · CH – statische Website für GitHub Pages (docs/)",
-  "type": "module",
   "scripts": {
     "build": "node src/build.mjs",
     "test": "node --test tests/kern.test.mjs && node tests/seitenpruefung.mjs",
