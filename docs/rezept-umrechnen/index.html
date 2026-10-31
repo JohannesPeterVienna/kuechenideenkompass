@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rezept umrechnen: Portionen, Backform &amp; Einheiten in einem Schritt</title>
+<meta name="description" content="Beliebiges Rezept einfügen, auf neue Portionen oder eine andere Backform umrechnen, Cups in Gramm wandeln und zwischen AT-, DE- und CH-Küchensprache übersetzen.">
+<link rel="canonical" href="https://kuechenideenkompass.de/rezept-umrechnen/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="google-adsense-account" content="ca-pub-7811071715414905">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_AT">
+<meta property="og:site_name" content="Küchenideenkompass">
+<meta property="og:title" content="Rezept umrechnen: Portionen, Backform &amp; Einheiten in einem Schritt">
+<meta property="og:description" content="Beliebiges Rezept einfügen, auf neue Portionen oder eine andere Backform umrechnen, Cups in Gramm wandeln und zwischen AT-, DE- und CH-Küchensprache übersetzen.">
+<meta property="og:url" content="https://kuechenideenkompass.de/rezept-umrechnen/">
+<meta name="theme-color" content="#2E4A3A">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/figtree-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/werkbank.css?v=20261031">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://kuechenideenkompass.de/"},{"@type":"ListItem","position":2,"name":"Rezept umrechnen","item":"https://kuechenideenkompass.de/rezept-umrechnen/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Wird mein Rezept irgendwo gespeichert?","acceptedAnswer":{"@type":"Answer","text":"Nein. Die Werkbank rechnet im Browser. Nur wenn Sie „Auf die Einkaufsliste“ wählen, legt der Browser das Rezept lokal auf Ihrem Gerät ab; der Teilen-Link enthält das Rezept selbst."}},{"@type":"Question","name":"Warum stehen bei Eiern ganze Zahlen, obwohl 4,5 herauskommt?","acceptedAnswer":{"@type":"Answer","text":"Weil man im Laden keine halben Eier kauft. Die genaue Grammzahl steht in der Zeile darunter – für Biskuit und andere empfindliche Teige das Ei verquirlen und abwiegen."}},{"@type":"Question","name":"Kann ich ein amerikanisches Rezept direkt einfügen?","acceptedAnswer":{"@type":"Answer","text":"Ja. Cups, Tablespoons, Teaspoons, Sticks, Unzen und Fahrenheit-Angaben im Zubereitungstext werden erkannt. Im Modus „metrisch“ erhalten Sie Gramm und Milliliter."}},{"@type":"Question","name":"Was bedeutet der Faktor genau?","acceptedAnswer":{"@type":"Answer","text":"Mit dem Faktor wird jede Menge multipliziert. Von 4 auf 6 Portionen ergibt 1,5; von einer 26er- auf eine 28er-Springform ergibt sich das Flächenverhältnis 28² ÷ 26² ≈ 1,16."}},{"@type":"Question","name":"Rechnet die Werkbank auch Backzeiten um?","acceptedAnswer":{"@type":"Answer","text":"Nein, bewusst nicht. Die Backzeit hängt von der Teighöhe ab. Beim Umrechnen über die Form bleibt die Höhe gleich; prüfen Sie dann zur angegebenen Zeit mit der Stäbchenprobe."}}]},{"@type":"HowTo","name":"Ein Rezept mit der Werkbank umrechnen","step":[{"@type":"HowToStep","position":1,"name":"Rezept einfügen","text":"Zutatenliste in das linke Feld kopieren, eine Zutat pro Zeile. Aufzählungszeichen und Nummern am Zeilenanfang stören nicht."},{"@type":"HowToStep","position":2,"name":"Grundlage wählen","text":"Portionen (z. B. 4 → 6), Backform (z. B. Springform 26 cm → Blech) oder einen freien Faktor eintragen."},{"@type":"HowToStep","position":3,"name":"Einheiten festlegen","text":"„wie im Rezept“ lässt alle Einheiten stehen, „metrisch“ macht aus Cups und Löffeln Gramm oder Milliliter, „österreichisch“ schreibt dag und Liter in Bruchform."},{"@type":"HowToStep","position":4,"name":"Küchensprache wählen","text":"Obers wird zu Sahne oder Rahm, Topfen zu Quark, Germ zu Hefe – oder umgekehrt."},{"@type":"HowToStep","position":5,"name":"Hinweise lesen und drucken","text":"Der rot umrandete Kasten zeigt, was nicht linear mitwächst. Danach drucken, als Link teilen oder auf die Einkaufsliste legen."}]},{"@type":"WebApplication","name":"Rezept umrechnen","url":"https://kuechenideenkompass.de/rezept-umrechnen/","applicationCategory":"UtilitiesApplication","operatingSystem":"Browser","inLanguage":"de","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}]}</script>
+<script src="/assets/js/einwilligung.js?v=20261031" defer></script>
+<script src="/assets/js/anzeigen.js?v=20261031" defer></script>
+<script src="/assets/js/kueche-daten.js?v=20261031" defer></script>
+<script src="/assets/js/werkbank-kern.js?v=20261031" defer></script>
+<script src="/assets/js/werkbank-ui.js?v=20261031" defer></script>
+</head>
+<body data-werbung="ja" data-seitentyp="werkzeug">
+<a class="uebersprung" href="#inhalt">Zum Inhalt springen</a>
+<header class="kopf"><div class="kopf-innen">
+<a class="marke" href="/" aria-label="Küchenideenkompass – Startseite"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="#1F3328" stroke="#E9B53C" stroke-width="3"/><g stroke="#F3F5EF" stroke-width="2" stroke-linecap="round"><path d="M24 7v4M24 37v4M7 24h4M37 24h4"/><path d="M12 12l2.5 2.5M33.5 33.5L36 36M36 12l-2.5 2.5M14.5 33.5L12 36" stroke-width="1.4"/></g><path d="M24 24L33 13" stroke="#B4441E" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="3.2" fill="#E9B53C"/></svg><span class="marke-text">Küchenideenkompass<small>Rezept-Werkbank AT · DE · CH</small></span></a>
+<nav class="nav nav-breit" aria-label="Hauptnavigation"><ul><li><a href="/rezept-umrechnen/" aria-current="page">Werkbank</a></li><li><a href="/backform-umrechnen/">Backform</a></li><li><a href="/cups-in-gramm/">Zutaten-Waage</a></li><li><a href="/kuechenwoerterbuch/">Wörterbuch</a></li><li><a href="/einkaufsliste/">Einkaufsliste</a></li><li><a href="/#ratgeber">Ratgeber</a></li></ul></nav>
+<details class="menue"><summary>☰ Menü</summary><nav class="nav" aria-label="Hauptnavigation mobil"><ul><li><a href="/rezept-umrechnen/" aria-current="page">Werkbank</a></li><li><a href="/backform-umrechnen/">Backform</a></li><li><a href="/cups-in-gramm/">Zutaten-Waage</a></li><li><a href="/kuechenwoerterbuch/">Wörterbuch</a></li><li><a href="/einkaufsliste/">Einkaufsliste</a></li><li><a href="/#ratgeber">Ratgeber</a></li></ul></nav></details>
+</div></header>
+<div class="rahmen"><div class="anzeige" data-anzeige="kopf" hidden></div></div>
+<main id="inhalt" class="rahmen">
+<nav class="brotkrumen" aria-label="Brotkrumen"><ol><li><a href="/">Startseite</a></li><li aria-current="page">Rezept umrechnen</li></ol></nav><h1>Rezept umrechnen – Portionen, Backform und Einheiten</h1><p class="einleitung">Fügen Sie ein Rezept ein, wie es im Kochbuch, auf dem Zettel oder auf einer Website steht. Die Werkbank liest Mengen, Brüche und Einheiten, rechnet alles auf einmal um und zeigt offen, welche Zutaten nicht einfach mitwachsen.</p><p class="stand">Stand: Oktober 2026 · Werkzeug läuft vollständig in Ihrem Browser</p>
+<section class="werkzeug" id="werkbank" aria-labelledby="wb-titel-h">
+  <div class="werkzeug-kopf"><h2 id="wb-titel-h">Rezept-Werkbank</h2><span class="kennung">Portionen · Form · Einheiten · Küchensprache</span></div>
+  <div class="spalten spalten-2">
+    <div class="nicht-drucken">
+      <div class="feld"><label for="wb-titel">Name des Rezepts</label><input type="text" id="wb-titel" placeholder="z. B. Marillenkuchen" autocomplete="off"></div>
+      <div class="feld"><label for="wb-zutaten">Zutaten – eine pro Zeile</label>
+        <textarea id="wb-zutaten" spellcheck="false" placeholder="25 dag Mehl&#10;½ l Milch&#10;2–3 Eier&#10;1 Pkg. Backpulver&#10;1 Prise Salz"></textarea>
+        <p class="hilfe">Erkennt Brüche (½, 1/4, 1 1/2), Spannen (2–3), dag, g, l, ml, EL, TL, Cups, Tassen, Sticks, Pkg., Würfel. Zeilen mit Doppelpunkt am Ende werden Zwischenüberschriften.</p></div>
+      <details class="feld" id="wb-schritte-box"><summary>Zubereitung mitübersetzen (optional)</summary>
+        <label for="wb-schritte" class="label" style="margin-top:.5rem">Zubereitungstext</label>
+        <textarea id="wb-schritte" spellcheck="false" style="min-height:120px" placeholder="Fahrenheit-Angaben und Regionalbegriffe werden übersetzt."></textarea></details>
+      <fieldset><legend>Grundlage der Umrechnung</legend>
+        <div class="wahl" role="radiogroup">
+          <label><input type="radio" name="grundlage" value="portionen" checked> Portionen</label>
+          <label><input type="radio" name="grundlage" value="form"> Backform</label>
+          <label><input type="radio" name="grundlage" value="faktor"> Freier Faktor</label>
+        </div>
+        <div id="wb-g-portionen" class="reihe" style="margin-top:.8rem">
+          <div class="feld"><label for="wb-von">Rezept ist für</label><input type="number" id="wb-von" inputmode="decimal" min="0.5" step="0.5" value="4"></div>
+          <div class="feld"><label for="wb-nach">Ich brauche</label><input type="number" id="wb-nach" inputmode="decimal" min="0.5" step="0.5" value="6"></div>
+        </div>
+        <div id="wb-g-form" hidden style="margin-top:.8rem">
+          <div class="reihe">
+            <div class="feld"><label for="wb-fv-typ">Form im Rezept</label><select id="wb-fv-typ"><option value="rund">rund (Springform)</option><option value="eckig">eckig</option><option value="kasten">Kastenform</option><option value="gugelhupf">Gugelhupf</option><option value="blech">Blech</option></select></div>
+            <div class="reihe reihe-3" id="wb-fv-masse"></div>
+          </div>
+          <div class="reihe">
+            <div class="feld"><label for="wb-fn-typ">Meine Form</label><select id="wb-fn-typ"><option value="rund">rund (Springform)</option><option value="eckig">eckig</option><option value="kasten">Kastenform</option><option value="gugelhupf">Gugelhupf</option><option value="blech">Blech</option></select></div>
+            <div class="reihe reihe-3" id="wb-fn-masse"></div>
+          </div>
+        </div>
+        <div id="wb-g-faktor" hidden class="reihe" style="margin-top:.8rem">
+          <div class="feld"><label for="wb-faktor">Faktor</label><input type="number" id="wb-faktor" inputmode="decimal" min="0.05" step="0.05" value="1.5"></div>
+        </div>
+      </fieldset>
+      <fieldset><legend>Einheiten</legend><div class="wahl">
+        <label><input type="radio" name="einheiten" value="original" checked> wie im Rezept</label>
+        <label><input type="radio" name="einheiten" value="metrisch"> metrisch (g/ml)</label>
+        <label><input type="radio" name="einheiten" value="at"> österreichisch (dag/l)</label>
+      </div></fieldset>
+      <fieldset><legend>Küchensprache</legend><div class="wahl">
+        <label><input type="radio" name="region" value="original" checked> unverändert</label>
+        <label><input type="radio" name="region" value="at"> Österreich</label>
+        <label><input type="radio" name="region" value="de"> Deutschland</label>
+        <label><input type="radio" name="region" value="ch"> Schweiz</label>
+      </div></fieldset>
+      <div class="knopf-reihe"><button type="button" class="knopf zweit" id="wb-beispiel">Beispiel laden</button><button type="button" class="knopf zweit" id="wb-leeren">Leeren</button></div>
+    </div>
+    <div>
+      <div class="blatt" id="wb-ergebnis" aria-live="polite"></div>
+      <div class="knopf-reihe nicht-drucken">
+        <button type="button" class="knopf" id="wb-drucken">Rezept drucken</button>
+        <button type="button" class="knopf zweit" id="wb-teilen">Teilen-Link kopieren</button>
+        <button type="button" class="knopf akzent" id="wb-liste">Auf die Einkaufsliste</button>
+      </div>
+      <p class="status nicht-drucken" id="wb-status" role="status"></p>
+    </div>
+  </div>
+</section>
+<div class="raster-layout">
+<article class="artikel erklaerung">
+<h2 id="so-funktioniert-die-werkbank">So funktioniert die Werkbank</h2>
+<p>Die meisten Portionsrechner verlangen, dass man jede Zutat einzeln in ein Formular tippt. Die Werkbank geht den umgekehrten Weg: Sie kopieren das Rezept so, wie es ist, und das Werkzeug zerlegt jede Zeile selbst in Menge, Einheit und Zutat. Dabei versteht es die Schreibweisen, die in Kochbüchern aus Österreich, Deutschland und der Schweiz tatsächlich vorkommen – „25 dag“, „⅛ l Obers“, „1 Pkg. Backpulver“ –, aber auch amerikanische Angaben wie „1 ½ cups“ oder „1 stick butter“.</p>
+<ol class="howto">
+  <li><b>Rezept einfügen.</b> Zutatenliste in das linke Feld kopieren, eine Zutat pro Zeile. Aufzählungszeichen und Nummern am Zeilenanfang stören nicht.</li>
+  <li><b>Grundlage wählen.</b> Portionen (z. B. 4 → 6), Backform (z. B. Springform 26 cm → Blech) oder einen freien Faktor eintragen.</li>
+  <li><b>Einheiten festlegen.</b> „wie im Rezept“ lässt alle Einheiten stehen, „metrisch“ macht aus Cups und Löffeln Gramm oder Milliliter, „österreichisch“ schreibt dag und Liter in Bruchform.</li>
+  <li><b>Küchensprache wählen.</b> Obers wird zu Sahne oder Rahm, Topfen zu Quark, Germ zu Hefe – oder umgekehrt.</li>
+  <li><b>Hinweise lesen und drucken.</b> Der rot umrandete Kasten zeigt, was nicht linear mitwächst. Danach drucken, als Link teilen oder auf die Einkaufsliste legen.</li>
+</ol>
+<p>Alles passiert in Ihrem Browser. Das Rezept wird an keinen Server geschickt. Der Teilen-Link enthält das Rezept selbst in kodierter Kurzform – wer ihn öffnet, sieht genau Ihre Einstellung, ohne dass irgendwo etwas gespeichert wurde.</p>
+
+<h2 id="was-die-werkbank-aus-einer-zeile-liest">Was die Werkbank aus einer Zeile liest</h2>
+<p>Jede Zeile wird von links nach rechts gelesen: zuerst eine Menge, dann eine Einheit, dann der Name der Zutat. Die Menge darf eine ganze Zahl sein („3“), eine Dezimalzahl mit Komma oder Punkt („1,5“, „1.5“), ein Bruch („1/4“), ein gemischter Bruch („1 1/2“) oder ein Bruchzeichen („½“, „1½“). Spannen wie „2–3“, „2-3“ oder „2 bis 3“ bleiben Spannen und werden an beiden Enden umgerechnet. Ein „ca.“ oder „etwa“ vor der Zahl wird erkannt und stört die Rechnung nicht.</p>
+<p>Bei den Einheiten kennt die Werkbank Gewichte (mg, g, dag beziehungsweise dkg, kg, oz, lb), Volumen (ml, cl, dl, l, Achterl, Cup, Tasse, fl oz), Löffel (EL, TL, Kaffeelöffel) und Stückeinheiten wie Pkg., Würfel, Zehe, Bund, Dose oder Becher. Zeilen ohne Menge – „Salz, Pfeffer“ oder „Butter für die Form“ – bleiben unverändert stehen. Endet eine Zeile mit einem Doppelpunkt, etwa „Für die Fülle:“, wird sie als Zwischenüberschrift gesetzt.</p>
+<div class="beispiel"><span class="beispiel-titel">Beispiel</span>
+<p>„1 Becher Schlagobers (250 ml)“ wird bei Faktor 1,5 zu „1 ½ Becher Schlagobers (375 ml)“. Auch Mengen in Klammern rechnet die Werkbank mit – und mit Küchensprache Deutschland steht danach „Schlagsahne“ in der Zeile.</p></div>
+
+<h2 id="was-nicht-linear-mitwaechst">Was nicht linear mitwächst</h2>
+<p>Ein Rezept ist keine Tabelle, bei der man jede Zahl mit demselben Faktor malnimmt. Die Werkbank rechnet zwar zuerst alles linear – das ist der ehrlichste Ausgangspunkt –, markiert aber vier Gruppen, bei denen Sie mitdenken sollten:</p>
+<ul>
+  <li><b>Eier</b> werden auf ganze Stück gerundet. Ergibt die Rechnung 4,5 Eier, steht dort 5, und darunter, wie viel Gramm Ei eigentlich gemeint sind. Grundlage ist der Wert von King Arthur Baking: Ein großes Ei ohne Schale wiegt rund 50 g, ein Eigelb rund 14 g.</li>
+  <li><b>Salz und Gewürze</b> sind als „abschmecken“ markiert. Die hochgerechnete Menge ist ein Startwert; Prisen und Messerspitzen sind ohnehin keine genauen Maße.</li>
+  <li><b>Triebmittel</b> bekommen eine eigene Regel. Steht im Rezept eine Mehlmenge in Gramm (oder in Cups, die sich in Gramm umrechnen lassen), vergleicht die Werkbank Backpulver und Germ mit den Bezugsgrößen von Dr. Oetker: 1 Päckchen Backpulver (≈ 16 g) für 500 g Mehl, 7 g Trockengerm für etwa 500 g Mehl, 1 Würfel Frischgerm (42 g) für etwa 1 kg Mehl.</li>
+  <li><b>Form, Pfanne und Topf</b> wachsen nicht im selben Verhältnis. Bei gleicher Füllhöhe braucht die doppelte Menge die doppelte Bodenfläche – der Durchmesser steigt aber nur um den Faktor √2, also rund 1,41. Die Werkbank rechnet Ihnen das für 20, 24 und 28 cm vor.</li>
+</ul>
+<p>Garzeiten rechnet die Werkbank bewusst nicht um. Ob ein Kuchen länger braucht, hängt an der Teighöhe, nicht an der Menge. Wenn Sie über die Backform umrechnen, bleibt die Teighöhe gleich, und die Backzeit liegt meist nahe am Original; Details stehen beim <a href="/backform-umrechnen/">Backform-Übersetzer</a>.</p>
+
+<h2 id="einheiten-wie-im-rezept-metrisch-oder-oesterreichisch">Einheiten: wie im Rezept, metrisch oder österreichisch</h2>
+<p>Im Modus <b>metrisch</b> werden Cups, Tassen, Sticks, Unzen und Pfund (lb) umgerechnet. Für Zutaten, deren Gewicht pro Volumen veröffentlicht ist – Mehl, Zucker, Butter, Kakao, Haferflocken und gut zwei Dutzend weitere –, rechnet die Werkbank in Gramm und nennt in der Zeile die Quelle. Flüssigkeiten wie Milch, Obers oder Öl werden in Milliliter umgerechnet. Löffelangaben bleiben Löffel, außer es gibt für die Zutat einen belegten Gewichtswert. Alle Gewichte stehen in der <a href="/cups-in-gramm/">Zutaten-Waage</a>, die Herleitung in der <a href="/so-rechnet-die-werkbank/">Methodik</a>.</p>
+<p>Im Modus <b>österreichisch</b> werden Gramm ab 10 g in Dekagramm geschrieben und Milliliter ab 100 ml in Liter – bei Achteln als Bruch, wie man es aus Omas Kochbuch kennt: ⅛ l, ¼ l, ⅜ l. So passt das Ergebnis zu einem Rezept, das ohnehin österreichisch geschrieben ist. Was hinter dag und Achterl steckt, erklärt der Ratgeber <a href="/dag-in-gramm/">dag in Gramm</a>.</p>
+<p>Gerundet wird küchentauglich: Gramm unter 10 auf halbe Gramm, bis 100 auf ganze, darüber auf 5er-Schritte; Löffel auf Viertel, Cups auf Achtel oder Drittel. Ein „≈“ vor der Zahl zeigt, dass gerundet wurde.</p>
+
+<h2 id="kuechensprache-obers-sahne-oder-rahm">Küchensprache: Obers, Sahne oder Rahm?</h2>
+<p>Die Übersetzung arbeitet mit einer kurzen, belegten Liste. Jedes Wortpaar ist im Duden oder im Wiktionary nachgeschlagen, und nur eindeutige Paare werden automatisch ersetzt – etwa Obers ↔ Sahne ↔ Rahm, Topfen ↔ Quark, Germ ↔ Hefe, Paradeiser ↔ Tomaten, Marillen ↔ Aprikosen oder Vogerlsalat ↔ Feldsalat ↔ Nüsslisalat. Zusammensetzungen wie „Marillenknödel“ oder „Germteig“ werden mitübersetzt. Mehrdeutige Wörter, etwa „Peperoni“ (in der Schweiz auch die Gemüsepaprika), lässt die Werkbank stehen und erklärt sie stattdessen im <a href="/kuechenwoerterbuch/">Küchenwörterbuch</a>.</p>
+<div class="tabelle-huelle"><table><caption>Was die Werkbank automatisch übersetzt</caption><thead><tr><th scope="col">Österreich</th><th scope="col" class="zahl">Deutschland</th><th scope="col" class="zahl">Schweiz</th><th scope="col" class="zahl">Beleg</th></tr></thead><tbody><tr><th scope="row">Schlagobers</th><td class="zahl">Schlagsahne</td><td class="zahl">Schlagrahm</td><td class="zahl"><small>Duden „Schlagobers“; Wiktionary „Schlagrahm“</small></td></tr><tr><th scope="row">Sauerrahm</th><td class="zahl">saure Sahne</td><td class="zahl">Sauerrahm</td><td class="zahl"><small>Duden „Sauerrahm“</small></td></tr><tr><th scope="row">Obers</th><td class="zahl">Sahne</td><td class="zahl">Rahm</td><td class="zahl"><small>Duden „Obers“, „Rahm“</small></td></tr><tr><th scope="row">Topfen</th><td class="zahl">Quark</td><td class="zahl">Quark</td><td class="zahl"><small>Wiktionary „Topfen“</small></td></tr><tr><th scope="row">Trockengerm</th><td class="zahl">Trockenhefe</td><td class="zahl">Trockenhefe</td><td class="zahl"><small>Duden „Germ“</small></td></tr><tr><th scope="row">Germ</th><td class="zahl">Hefe</td><td class="zahl">Hefe</td><td class="zahl"><small>Duden „Germ“</small></td></tr><tr><th scope="row">Paradeiser</th><td class="zahl">Tomaten</td><td class="zahl">Tomaten</td><td class="zahl"><small>Duden „Paradeiser“</small></td></tr><tr><th scope="row">Erdäpfel</th><td class="zahl">Kartoffeln</td><td class="zahl">Kartoffeln</td><td class="zahl"><small>Duden „Erdapfel“</small></td></tr><tr><th scope="row">Karfiol</th><td class="zahl">Blumenkohl</td><td class="zahl">Blumenkohl</td><td class="zahl"><small>Duden „Karfiol“</small></td></tr><tr><th scope="row">Fisolen</th><td class="zahl">grüne Bohnen</td><td class="zahl">grüne Bohnen</td><td class="zahl"><small>Duden „Fisole“</small></td></tr><tr><th scope="row">Faschiertes</th><td class="zahl">Hackfleisch</td><td class="zahl">Hackfleisch</td><td class="zahl"><small>Wiktionary „Faschiertes“</small></td></tr><tr><th scope="row">Marillen</th><td class="zahl">Aprikosen</td><td class="zahl">Aprikosen</td><td class="zahl"><small>Duden „Marille“; Wiktionary „Aprikose“</small></td></tr><tr><th scope="row">Ribiseln</th><td class="zahl">Johannisbeeren</td><td class="zahl">Johannisbeeren</td><td class="zahl"><small>Duden „Ribisel“</small></td></tr><tr><th scope="row">Zwetschken</th><td class="zahl">Zwetschgen</td><td class="zahl">Zwetschgen</td><td class="zahl"><small>Wiktionary „Zwetschke“</small></td></tr><tr><th scope="row">Kren</th><td class="zahl">Meerrettich</td><td class="zahl">Meerrettich</td><td class="zahl"><small>Duden „Kren“; Wiktionary „Meerrettich“</small></td></tr><tr><th scope="row">Melanzani</th><td class="zahl">Auberginen</td><td class="zahl">Auberginen</td><td class="zahl"><small>Wiktionary „Melanzani“, „Aubergine“</small></td></tr><tr><th scope="row">Kohlsprossen</th><td class="zahl">Rosenkohl</td><td class="zahl">Rosenkohl</td><td class="zahl"><small>Wiktionary „Kohlsprosse“</small></td></tr><tr><th scope="row">Vogerlsalat</th><td class="zahl">Feldsalat</td><td class="zahl">Nüsslisalat</td><td class="zahl"><small>Duden „Vogerlsalat“, „Nüsslisalat“</small></td></tr><tr><th scope="row">Eierschwammerl</th><td class="zahl">Pfifferlinge</td><td class="zahl">Eierschwämme</td><td class="zahl"><small>Duden „Eierschwammerl“; Wiktionary „Eierschwamm“</small></td></tr><tr><th scope="row">Staubzucker</th><td class="zahl">Puderzucker</td><td class="zahl">Puderzucker</td><td class="zahl"><small>Duden „Staubzucker“</small></td></tr><tr><th scope="row">Semmelbrösel</th><td class="zahl">Paniermehl</td><td class="zahl">Paniermehl</td><td class="zahl"><small>Wiktionary „Brösel“, „Paniermehl“</small></td></tr><tr><th scope="row">Häuptelsalat</th><td class="zahl">Kopfsalat</td><td class="zahl">Kopfsalat</td><td class="zahl"><small>Duden „Häuptelsalat“</small></td></tr><tr><th scope="row">Semmeln</th><td class="zahl">Brötchen</td><td class="zahl">Weggli</td><td class="zahl"><small>Wiktionary „Semmel“; Duden „Weggli“</small></td></tr><tr><th scope="row">Karotten</th><td class="zahl">Karotten</td><td class="zahl">Rüebli</td><td class="zahl"><small>Duden „Rüebli“</small></td></tr><tr><th scope="row">Backrohr</th><td class="zahl">Backofen</td><td class="zahl">Backofen</td><td class="zahl"><small>Duden „Backrohr“</small></td></tr></tbody></table></div>
+
+<h2 id="grenzen-wann-sie-selbst-pruefen-sollten">Grenzen – wann Sie selbst prüfen sollten</h2>
+<p>Sehr große Faktoren – etwa von 4 auf 40 Portionen – sind rechnerisch kein Problem, praktisch schon: Bratflächen, Herdplätze und Kühlschrankplatz wachsen nicht mit. Dafür gibt es den Ratgeber <a href="/fuer-viele-gaeste-kochen/">Für viele Gäste kochen</a>. Beim Halbieren sind halbe Eier und zu große Formen die häufigsten Stolpersteine; mehr dazu unter <a href="/rezept-halbieren/">Rezept halbieren</a>. Und wenn eine Zeile ungewöhnlich geschrieben ist („eine gute Handvoll“), bleibt sie unverändert – lieber eine sichtbare Lücke als eine erfundene Zahl.</p>
+
+<section class="faq" aria-labelledby="faq-h"><h2 id="faq-h">Häufige Fragen</h2>
+<details><summary>Wird mein Rezept irgendwo gespeichert?</summary><p>Nein. Die Werkbank rechnet im Browser. Nur wenn Sie „Auf die Einkaufsliste“ wählen, legt der Browser das Rezept lokal auf Ihrem Gerät ab; der Teilen-Link enthält das Rezept selbst.</p></details>
+<details><summary>Warum stehen bei Eiern ganze Zahlen, obwohl 4,5 herauskommt?</summary><p>Weil man im Laden keine halben Eier kauft. Die genaue Grammzahl steht in der Zeile darunter – für Biskuit und andere empfindliche Teige das Ei verquirlen und abwiegen.</p></details>
+<details><summary>Kann ich ein amerikanisches Rezept direkt einfügen?</summary><p>Ja. Cups, Tablespoons, Teaspoons, Sticks, Unzen und Fahrenheit-Angaben im Zubereitungstext werden erkannt. Im Modus „metrisch“ erhalten Sie Gramm und Milliliter.</p></details>
+<details><summary>Was bedeutet der Faktor genau?</summary><p>Mit dem Faktor wird jede Menge multipliziert. Von 4 auf 6 Portionen ergibt 1,5; von einer 26er- auf eine 28er-Springform ergibt sich das Flächenverhältnis 28² ÷ 26² ≈ 1,16.</p></details>
+<details><summary>Rechnet die Werkbank auch Backzeiten um?</summary><p>Nein, bewusst nicht. Die Backzeit hängt von der Teighöhe ab. Beim Umrechnen über die Form bleibt die Höhe gleich; prüfen Sie dann zur angegebenen Zeit mit der Stäbchenprobe.</p></details>
+</section>
+
+<section class="quellen"><h2 id="quellen">Quellen</h2><ul>
+<li><a href="https://www.kingarthurbaking.com/learn/ingredient-weight-chart" rel="noopener" target="_blank">King Arthur Baking: Ingredient Weight Chart</a> – Gewichte je Volumen, Ei 50 g, Eigelb 14 g</li>
+<li><a href="https://www.nist.gov/pml/owm/approximate-conversions-us-customary-measures-metric" rel="noopener" target="_blank">NIST: Approximate Conversions from U.S. Customary Measures to Metric</a> – Cup, EL, TL, Unze, Fahrenheit</li>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/wie-viel-backpulver-braucht-man" rel="noopener" target="_blank">Dr. Oetker Österreich: Wie viel Backpulver braucht man?</a></li>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/welche-arten-von-germ-gibt-es" rel="noopener" target="_blank">Dr. Oetker Österreich: Welche Arten von Germ gibt es?</a></li>
+<li><a href="https://cabotcreamery.com/blogs/food/how-many-tablespoons-in-a-stick-of-butter" rel="noopener" target="_blank">Cabot Creamery: Stick Butter = 8 EL = 113 g</a></li>
+<li>Duden und Wiktionary für alle Regionalbegriffe – Einzelnachweise im <a href="/kuechenwoerterbuch/">Küchenwörterbuch</a></li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>
+</article>
+<aside class="seitenleiste" aria-label="Seitenleiste"><nav class="inhalt-liste" aria-label="Auf dieser Seite"><h2>Auf dieser Seite</h2><ol><li><a href="#so-funktioniert-die-werkbank">So funktioniert die Werkbank</a></li><li><a href="#was-die-werkbank-aus-einer-zeile-liest">Was die Werkbank aus einer Zeile liest</a></li><li><a href="#was-nicht-linear-mitwaechst">Was nicht linear mitwächst</a></li><li><a href="#einheiten-wie-im-rezept-metrisch-oder-oesterreichisch">Einheiten: wie im Rezept, metrisch oder österreichisch</a></li><li><a href="#kuechensprache-obers-sahne-oder-rahm">Küchensprache: Obers, Sahne oder Rahm?</a></li><li><a href="#grenzen-wann-sie-selbst-pruefen-sollten">Grenzen – wann Sie selbst prüfen sollten</a></li><li><a href="#faq-h">Häufige Fragen</a></li><li><a href="#quellen">Quellen</a></li></ol></nav><div class="anzeige" data-anzeige="seite" hidden></div></aside>
+</div>
+</main>
+<footer class="fuss"><div class="rahmen"><div class="fuss-raster">
+<div><h2>Werkzeuge</h2><ul><li><a href="/rezept-umrechnen/">Rezept umrechnen</a></li><li><a href="/backform-umrechnen/">Backform umrechnen</a></li><li><a href="/cups-in-gramm/">Cups in Gramm (Zutaten-Waage)</a></li><li><a href="/einkaufsliste/">Einkaufsliste aus Rezepten</a></li><li><a href="/kuechenwoerterbuch/">Küchenwörterbuch AT–DE–CH</a></li></ul></div>
+<div><h2>Ratgeber</h2><ul><li><a href="/springform-umrechnen/">Springform 26 cm umrechnen</a></li><li><a href="/dag-in-gramm/">dag in Gramm</a></li><li><a href="/obers-sahne-rahm/">Obers, Sahne, Rahm</a></li><li><a href="/topfen-quark/">Topfen und Quark</a></li><li><a href="/germ-umrechnen/">Germ umrechnen</a></li><li><a href="/triebmittel-verdoppeln/">Triebmittel beim Verdoppeln</a></li><li><a href="/rezept-halbieren/">Rezept halbieren</a></li><li><a href="/fuer-viele-gaeste-kochen/">Für viele Gäste kochen</a></li><li><a href="/us-rezepte-umrechnen/">US-Rezepte nachbacken</a></li><li><a href="/ofentemperatur-umrechnen/">Ofentemperatur umrechnen</a></li><li><a href="/essloeffel-teeloeffel-gramm/">Esslöffel &amp; Teelöffel in Gramm</a></li></ul></div>
+<div><h2>Projekt</h2><ul><li><a href="/so-rechnet-die-werkbank/">So rechnet die Werkbank</a></li><li><a href="/ueber-uns/">Über uns</a></li><li><a href="/kontakt/">Kontakt</a></li><li><a href="/impressum/">Impressum</a></li><li><a href="/datenschutz/">Datenschutz</a></li><li><button type="button" class="link-knopf" data-datenschutz-einstellungen>Datenschutz-Einstellungen</button></li></ul></div>
+</div>
+<p class="klein">© 2026 AdStern, Wien · Alle Rechenwerte mit Quellenangabe, Stand: Oktober 2026 · Rezepte und Listen bleiben in Ihrem Browser.</p>
+</div></footer>
+</body>
+</html>

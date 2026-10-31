@@ -1,0 +1,80 @@
+<h2>Grundsätze</h2>
+<p>Die Werkbank soll Rezepte zuverlässig umrechnen und dabei ehrlich bleiben. Daraus folgen vier Grundsätze, die sich durch alle Werkzeuge dieser Website ziehen:</p>
+<ol>
+<li><b>Linear als Ausgangspunkt.</b> Jede Menge wird zuerst mit demselben Faktor multipliziert. Das ist die nachvollziehbarste Rechnung und für die allermeisten Zutaten richtig.</li>
+<li><b>Ausnahmen sichtbar machen statt verstecken.</b> Wo eine lineare Rechnung in der Praxis nicht genügt – Eier, Gewürze, Triebmittel, Geschirr –, rechnet die Werkbank trotzdem linear, markiert die Zeile und erklärt im Hinweiskasten, worauf zu achten ist.</li>
+<li><b>Nur belegte Werte.</b> Gewichte, Umrechnungsfaktoren und Begriffe stammen aus genannten Quellen. Wo es keinen belegten Wert gibt, rechnet die Werkbank nicht in Gramm, sondern lässt die Einheit stehen oder rechnet in Milliliter.</li>
+<li><b>Alles im Browser.</b> Rezepte werden nicht an einen Server geschickt. Gespeichert wird nur, was Sie selbst in die Einkaufsliste legen – und das nur lokal auf Ihrem Gerät.</li>
+</ol>
+
+<h2>Schritt 1: Eine Zeile lesen</h2>
+<p>Jede Zeile der Zutatenliste wird in drei Teile zerlegt: Menge, Einheit, Zutat. Vorher entfernt die Werkbank Aufzählungszeichen (–, •, *) und Nummerierungen am Zeilenanfang. Endet eine Zeile mit einem Doppelpunkt und beginnt nicht mit einer Zahl, wird sie zur Zwischenüberschrift.</p>
+<p><b>Mengen:</b> erkannt werden ganze Zahlen, Dezimalzahlen mit Komma oder Punkt, Brüche mit Schrägstrich (1/4), gemischte Brüche (1 1/2), Unicode-Bruchzeichen (½, ¼, ¾, ⅛ und weitere) sowie Kombinationen wie „1½“. Spannen mit Bindestrich, Gedankenstrich oder „bis“ werden als Spanne gespeichert und an beiden Enden umgerechnet. Vorangestellte Wörter wie „ca.“, „etwa“ oder „circa“ werden erkannt.</p>
+<p><b>Einheiten:</b> Die Werkbank kennt Gewichte (mg, g, dag/dkg/Deka, kg, oz, lb), Volumen (ml, cl, dl, l, Achterl, Cup, Tasse, fl oz), Löffel (EL, TL, KL sowie tbsp und tsp) und Stückeinheiten (Stück, Pkg./Päckchen/Packung, Würfel, Zehe, Scheibe, Blatt, Bund, Dose, Becher, Glas, Zweig, Stange, Kopf, Handvoll). Prise, Messerspitze und Schuss gelten als kleine, ungenaue Mengen. Eine Einheit wird nur erkannt, wenn sie als eigenes Wort dasteht – „3 große Eier“ wird also nicht als „3 g roße Eier“ gelesen.</p>
+<p><b>Zutatenklasse:</b> Anhand des Namens ordnet die Werkbank jede Zeile einer Klasse zu: Ei, Eigelb, Eiklar, Frischgerm, Trockengerm, Backpulver, Natron, Gewürz, Mehl oder „normal“. Die Klasse bestimmt, welche Regeln in Schritt 3 gelten.</p>
+
+<h2>Schritt 2: Den Faktor bestimmen</h2>
+<p>Der Faktor kommt aus einer von drei Quellen:</p>
+<ul>
+<li><b>Portionen:</b> Zielportionen ÷ Ausgangsportionen. Aus 4 → 6 wird 1,5.</li>
+<li><b>Backform:</b> Bodenfläche der neuen Form ÷ Bodenfläche der alten. Kreis π × r², Kreisring (Gugelhupf) π × (R² − r²), Rechteck Länge × Breite. Mit Höhenangaben rechnet der <a href="/backform-umrechnen/">Backform-Übersetzer</a> über das Volumen.</li>
+<li><b>Freier Faktor:</b> eine beliebige Zahl, auch aus dem Backform-Übersetzer übernommen.</li>
+</ul>
+
+<h2>Schritt 3: Skalieren und die Regeln je Klasse</h2>
+<p>Jede Menge wird mit dem Faktor multipliziert. Danach gelten diese Regeln:</p>
+<ul>
+<li><b>Eier, Eigelb, Eiklar</b> (ohne Einheit oder in Stück) werden auf ganze Stück gerundet, mindestens 1. Weicht der Wert ab, nennt die Werkbank den rechnerischen Wert und das Gewicht nach King Arthur Baking: Ei 50 g, Eiklar 30–35 g (gerechnet mit 32,5 g), Eigelb 14 g.</li>
+<li><b>Gewürze, Salz, Prisen, Messerspitzen</b> erhalten die Markierung „abschmecken“.</li>
+<li><b>Backpulver und Germ</b> erhalten die Markierung „Triebmittel“. Lässt sich die Mehlmenge in Gramm bestimmen (direkt in g/dag/kg oder über Cups mit dem King-Arthur-Wert für Mehl), vergleicht die Werkbank mit den Angaben von Dr. Oetker Österreich: 1 Päckchen Backpulver (≈ 16 g) für 500 g Mehl, 7 g Trockengerm für ca. 500 g Mehl, 42 g Frischgerm für ca. 1 kg Mehl.</li>
+<li><b>Natron</b> wird linear mitgerechnet; die Werkbank weist darauf hin, dass es mit den sauren Zutaten des Rezepts reagiert und keine Mehl-Faustregel des Herstellers existiert.</li>
+<li><b>Päckchen und Würfel</b> von Backpulver, Trockengerm und Frischgerm erhalten zusätzlich eine Grammangabe.</li>
+<li><b>Mengen in Klammern</b> im Zutatennamen („Becher (250 ml)“) werden mitskaliert, sofern sie eine Einheit g, kg, dag, ml oder l tragen.</li>
+</ul>
+<p>Weicht der Faktor von 1 ab, ergänzt die Werkbank einen Geschirr-Hinweis: Bei gleicher Füllhöhe ändert sich der Durchmesser von Form, Topf oder Pfanne um die Wurzel des Faktors.</p>
+
+<h2>Schritt 4: Einheiten umrechnen</h2>
+<p>Im Modus <b>„wie im Rezept“</b> bleibt jede Einheit erhalten. Im Modus <b>„metrisch“</b> gilt:</p>
+<ul>
+<li>Unzen und Pfund werden mit den NIST-Werten in Gramm umgerechnet (1 oz ≈ 28,35 g, 1 lb ≈ 453,59 g).</li>
+<li>Cups, Tassen, fl oz und Achterl werden in Milliliter umgerechnet (1 Cup ≈ 236,59 ml, 1 fl oz ≈ 29,57 ml nach NIST; Achterl = 125 ml). Ist die Zutat fest und in der <a href="/cups-in-gramm/">Zutaten-Waage</a> enthalten, rechnet die Werkbank weiter in Gramm: Milliliter × (Gewicht laut King Arthur ÷ Volumen laut King Arthur).</li>
+<li>Löffel (EL ≈ 14,79 ml, TL ≈ 4,93 ml) werden nur in Gramm umgerechnet, wenn für die Zutat ein belegter Wert existiert. Sonst bleiben sie Löffel.</li>
+<li>„Tasse“ wird wie ein US-Cup behandelt; die Zeile trägt dann einen Hinweis, weil eine Tasse kein festes Maß ist.</li>
+<li>Ein Stick Butter wird mit 113 g gerechnet (Cabot Creamery, King Arthur).</li>
+<li>Dekagramm werden in Gramm umgeschrieben.</li>
+</ul>
+<p>Im Modus <b>„österreichisch“</b> laufen dieselben Umrechnungen, danach werden Gramm ab 10 g in Dekagramm und Milliliter ab 100 ml in Liter geschrieben; wo die Literzahl ein Vielfaches von ⅛ ist, als Bruch.</p>
+
+<h2>Schritt 5: Runden</h2>
+<p>Die Werkbank rundet küchentauglich und kennzeichnet gerundete Werte mit „≈“:</p>
+<ul>
+<li>Gramm und Milliliter: unter 10 auf 0,5; unter 100 auf 1; unter 1.000 auf 5; darüber auf 10.</li>
+<li>Kilogramm und Liter: auf zwei Nachkommastellen. Dekagramm: ab 10 auf ganze dag, darunter auf 0,5.</li>
+<li>Löffel: auf Viertel. Cups und Tassen: auf Achtel oder Drittel. Stückeinheiten: auf Viertel, ab 10 auf ganze Zahlen.</li>
+</ul>
+
+<h2>Schritt 6: Küchensprache</h2>
+<p>Die Übersetzung arbeitet mit einer festen Liste von Wortpaaren für Österreich, Deutschland und die Schweiz. Jedes Paar ist im Duden oder im Wiktionary belegt; die Belege stehen im <a href="/kuechenwoerterbuch/">Küchenwörterbuch</a>. Längere Wörter werden zuerst geprüft. Ersetzt werden ganze Wörter; bei ausgewählten Begriffen (etwa Marillen, Topfen, Germ, Paradeiser) auch Zusammensetzungen am Wortanfang. Im Zubereitungstext übersetzt die Werkbank zusätzlich Fahrenheit-Angaben nach der NIST-Formel (°F − 32) ÷ 1,8, gerundet auf 5 °C.</p>
+
+<h2>Was die Werkbank bewusst nicht tut</h2>
+<ul>
+<li>Sie rechnet keine Back- oder Garzeiten um, weil diese von Teighöhe, Form und Ofen abhängen.</li>
+<li>Sie erfindet keine Gewichte für Zutaten ohne belegten Wert.</li>
+<li>Sie übersetzt keine mehrdeutigen Wörter wie Peperoni oder Pfanne.</li>
+<li>Sie wendet keine nicht-lineare „Geheimformel“ auf Gewürze an. Es gibt dafür keine allgemein belegte Regel; deshalb die Markierung zum Abschmecken.</li>
+</ul>
+
+<h2>Tests</h2>
+<p>Der Rechenkern wird mit automatischen Tests geprüft, darunter fast 40 typische Rezeptzeilen mit Brüchen, Spannen, dag und Cups, die Skalierungsregeln, Backform-Faktoren, Einheitenumrechnungen, Rundungen und die Küchensprache. Der Quelltext läuft vollständig in Ihrem Browser und ist damit für jeden einsehbar.</p>
+
+<section class="quellen"><h2>Alle Quellen</h2><ul>
+<li><a href="https://www.kingarthurbaking.com/learn/ingredient-weight-chart" rel="noopener" target="_blank">King Arthur Baking: Ingredient Weight Chart</a></li>
+<li><a href="https://www.nist.gov/pml/owm/approximate-conversions-us-customary-measures-metric" rel="noopener" target="_blank">NIST: Approximate Conversions from U.S. Customary Measures to Metric</a></li>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/wie-viel-backpulver-braucht-man" rel="noopener" target="_blank">Dr. Oetker Österreich: Wie viel Backpulver braucht man?</a></li>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/welche-arten-von-germ-gibt-es" rel="noopener" target="_blank">Dr. Oetker Österreich: Welche Arten von Germ gibt es?</a></li>
+<li><a href="https://www.oetker.ch/inspiration/tipps-tricks/t/trockenhefe-richtig-angewendet" rel="noopener" target="_blank">Dr. Oetker Schweiz: Trockenhefe richtig angewendet</a></li>
+<li><a href="https://cabotcreamery.com/blogs/food/how-many-tablespoons-in-a-stick-of-butter" rel="noopener" target="_blank">Cabot Creamery: Stick Butter</a></li>
+<li><a href="https://www.neff-home.com/de/neff-entdecken/produkt-design-highlights/funktionen-von-a-z/umluft-ober-unterhitze" rel="noopener" target="_blank">NEFF: Umluft und Ober-/Unterhitze</a></li>
+<li><a href="https://de.wikipedia.org/wiki/Backhefe" rel="noopener" target="_blank">Wikipedia: Backhefe</a> · <a href="https://de.wikipedia.org/wiki/Backpulver" rel="noopener" target="_blank">Wikipedia: Backpulver</a> · <a href="https://de.wikipedia.org/wiki/Gramm#Dekagramm" rel="noopener" target="_blank">Wikipedia: Gramm (Dekagramm)</a></li>
+<li><a href="https://www.duden.de/" rel="noopener" target="_blank">Duden online</a> und <a href="https://de.wiktionary.org/" rel="noopener" target="_blank">Wiktionary</a> für Begriffe</li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>

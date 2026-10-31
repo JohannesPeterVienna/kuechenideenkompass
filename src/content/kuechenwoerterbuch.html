@@ -1,0 +1,56 @@
+<!--@werkzeug-->
+<section class="werkzeug" id="woerterbuch" aria-labelledby="wo-h">
+  <div class="werkzeug-kopf"><h2 id="wo-h">Küchenwörterbuch durchsuchen</h2><span class="kennung">{{woerter-anzahl}} belegte Einträge</span></div>
+  <div class="reihe" style="grid-template-columns:minmax(0,2fr) minmax(0,3fr)">
+    <div class="feld"><label for="wo-suche">Begriff suchen</label><input type="search" id="wo-suche" placeholder="z. B. Obers, Rüebli, Hackfleisch" autocomplete="off"></div>
+    <fieldset style="margin:0"><legend>Region</legend><div class="wahl">
+      <label><input type="radio" name="wo-region" value="alle" checked> alle</label>
+      <label><input type="radio" name="wo-region" value="at"> Österreich</label>
+      <label><input type="radio" name="wo-region" value="de"> Deutschland</label>
+      <label><input type="radio" name="wo-region" value="ch"> Schweiz</label>
+    </div></fieldset>
+  </div>
+  <p class="treffer-info" id="wo-info" role="status"></p>
+  {{woerterbuch}}
+</section>
+<!--@artikel-->
+<h2>Drei Länder, eine Sprache, viele Küchenwörter</h2>
+<p>Deutsch ist in Österreich, Deutschland und der Schweiz Standardsprache – aber nicht überall dieselbe. Gerade in der Küche hat jedes Land eigene Wörter, die im Alltag so selbstverständlich sind, dass man sie für allgemein bekannt hält. Wer in Wien „Paradeiser“ sagt, wird in Zürich womöglich fragend angeschaut; wer in Hamburg „Topfen“ kauft, sucht im Kühlregal vergeblich. Das Küchenwörterbuch oben sammelt die Begriffe, die beim Nachkochen am häufigsten zu Missverständnissen führen, mit Bedeutung, Region und Quelle.</p>
+<p>Ausgewählt haben wir Wörter, die in Zutatenlisten und Rezepten tatsächlich vorkommen, und nur solche, die sich in einem anerkannten Wörterbuch belegen lassen. Jeder Eintrag nennt die Entsprechungen in den drei Ländern, erklärt kurz, was gemeint ist, und verlinkt auf den Duden oder das Wiktionary. Ein Strich bedeutet: Für dieses Land haben wir keinen belegten eigenen Begriff gefunden.</p>
+
+<h2>Wie die Einträge entstehen</h2>
+<p>Grundlage sind zwei frei zugängliche Nachschlagewerke. Der <b>Duden</b> kennzeichnet bei jedem Stichwort den „Gebrauch“ – etwa „österreichisch“, „schweizerisch“, „süddeutsch“ oder „landschaftlich“. Das <b>Wiktionary</b> nennt zusätzlich Synonyme mit regionaler Zuordnung und häufig Beispiele aus Rezepten oder Zeitungen. Wo beide Quellen leicht unterschiedlich gewichten, schreiben wir das dazu. Beim Wort „Schlagrahm“ zum Beispiel nennt das Wiktionary Österreich und Süddeutschland, der Duden „landschaftlich, besonders bayrisch“.</p>
+<p>Was in keinem der beiden Werke belegt ist, steht nicht im Wörterbuch – auch wenn es im Alltag verbreitet sein mag. Das ist eine bewusste Entscheidung: Ein Wörterbuch, das sich auf das Bauchgefühl verlässt, verbreitet Missverständnisse statt sie aufzulösen.</p>
+
+<h2>Automatische Übersetzung in der Werkbank</h2>
+<p>Ein Teil der Einträge wird in der <a href="/rezept-umrechnen/">Rezept-Werkbank</a> automatisch übersetzt, sobald Sie eine Küchensprache wählen. Dafür gelten strengere Regeln als für das Wörterbuch selbst:</p>
+<ul>
+<li><b>Nur eindeutige Paare.</b> Obers ↔ Sahne ↔ Rahm, Topfen ↔ Quark, Germ ↔ Hefe, Marillen ↔ Aprikosen und ähnliche werden ersetzt. Wörter mit mehreren Bedeutungen – Peperoni, Pfanne, Mehlspeise, Hendl – bleiben stehen.</li>
+<li><b>Längere Begriffe zuerst.</b> „Schlagobers“ wird vor „Obers“ geprüft, „saure Sahne“ vor „Sahne“, „Trockenhefe“ vor „Hefe“. So entstehen keine Wortmischungen.</li>
+<li><b>Zusammensetzungen nur am Wortanfang.</b> Bei ausgewählten Wörtern übersetzt die Werkbank auch Zusammensetzungen: Marillenknödel → Aprikosenknödel, Germteig → Hefeteig, Topfenstrudel → Quarkstrudel. Bei „Obers“ ist das bewusst ausgeschaltet, damit „Oberschenkel“ ein Oberschenkel bleibt.</li>
+<li><b>Großschreibung bleibt erhalten.</b> Steht ein Wort am Satzanfang groß oder mitten im Satz klein, übernimmt die Übersetzung das.</li>
+</ul>
+<p>Jede übersetzte Zeile ist im Ergebnis markiert, und darunter steht der Originalwortlaut. So bleibt nachvollziehbar, was verändert wurde.</p>
+{{regional-tabelle}}
+
+<h2>Wörter, die gleich klingen und Verschiedenes meinen</h2>
+<p>Die gefährlichsten Wörter sind nicht die fremden, sondern die vertrauten mit anderer Bedeutung. Drei Beispiele aus dem Wörterbuch:</p>
+<ul>
+<li><b>Peperoni</b> ist im Allgemeinen eine kleine scharfe Paprikaschote. In der Schweiz und in Südtirol kann damit laut Wiktionary auch die milde Gemüsepaprika gemeint sein. Wer ein Schweizer Rezept mit „2 Peperoni“ nachkocht und scharfe Schoten nimmt, erlebt eine Überraschung.</li>
+<li><b>Pfanne</b> kann in der Schweiz auch ein Kochgeschirr mit hohem Rand sein – also ein Topf.</li>
+<li><b>Mehlspeise</b> meint in Österreich vor allem süßes Gebäck wie Strudel und Kuchen, in Deutschland jedes Gericht auf Mehlbasis, auch Nudeln und Knödel.</li>
+</ul>
+<p>Solche Wörter übersetzt die Werkbank nicht, weil sie nicht wissen kann, was gemeint ist. Im Wörterbuch sind sie mit einem deutlichen Hinweis versehen.</p>
+
+<h2>Einheiten sind auch Sprache</h2>
+<p>Neben Zutaten haben auch Mengenangaben regionale Formen: Dekagramm und Achterl in Österreich, Kaffeelöffel statt Teelöffel, dazu Deziliter. Diese Einheiten liest die Werkbank direkt und rechnet sie um. Wie das genau funktioniert, erklärt der Ratgeber <a href="/dag-in-gramm/">dag in Gramm und österreichische Mengenangaben</a>.</p>
+
+<h2>So nutzen Sie das Wörterbuch</h2>
+<p>Das Suchfeld durchsucht alle drei Länderspalten und den Erklärungstext. Wer „Hackfleisch“ eintippt, findet also auch „Faschiertes“; wer „Tomate“ sucht, landet bei „Paradeiser“. Mit dem Regionsfilter blenden Sie alle Einträge aus, die für ein Land keine Rolle spielen – praktisch, wenn Sie gezielt ein Schweizer oder österreichisches Rezept lesen. Jeder Eintrag hat eine feste Adresse: Ein Link wie /kuechenwoerterbuch/#obers führt direkt zum Begriff, etwa wenn Sie einem Gast erklären wollen, was im Rezept gemeint ist. Und wer gleich ein ganzes Rezept übersetzen will, wählt in der Werkbank einfach die Küchensprache – die übersetzbaren Begriffe aus diesem Wörterbuch werden dort automatisch ersetzt.</p>
+<h2>Wie das Wörterbuch wächst</h2>
+<p>Das Wörterbuch wird laufend erweitert. Aufgenommen wird ein Begriff erst, wenn er sich in einem Wörterbuch belegen lässt – mit Quelle, wie alle anderen. Einträge, die nur aus einem Satz bestehen würden, nehmen wir nicht auf; jeder Eintrag soll beim Kochen tatsächlich weiterhelfen.</p>
+
+<section class="quellen"><h2>Quellen</h2><ul>
+<li><a href="https://www.duden.de/" rel="noopener" target="_blank">Duden online</a> – Angaben zu Gebrauch und Bedeutung, je Eintrag verlinkt</li>
+<li><a href="https://de.wiktionary.org/" rel="noopener" target="_blank">Wiktionary (deutsch)</a> – Bedeutungen, regionale Synonyme, je Eintrag verlinkt</li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>

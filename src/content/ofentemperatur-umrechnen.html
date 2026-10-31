@@ -1,0 +1,57 @@
+<!--@werkzeug-->
+<section class="werkzeug" id="ofen" aria-labelledby="of-h">
+  <div class="werkzeug-kopf"><h2 id="of-h">Ofen-Rechner</h2><span class="kennung">Ober-/Unterhitze · Umluft · Fahrenheit</span></div>
+  <div class="spalten spalten-2">
+    <div class="nicht-drucken reihe">
+      <div class="feld"><label for="of-wert">Temperatur im Rezept</label><input type="number" id="of-wert" inputmode="decimal" step="5" value="180"></div>
+      <div class="feld"><label for="of-art">Angabe im Rezept</label><select id="of-art"><option value="ou">°C Ober-/Unterhitze</option><option value="umluft">°C Umluft</option><option value="f">°F (Fahrenheit)</option></select></div>
+    </div>
+    <div id="of-ergebnis" aria-live="polite"></div>
+  </div>
+</section>
+<!--@artikel-->
+<h2>Umluft: rund 20 °C weniger</h2>
+<p>Bei Ober- und Unterhitze heizen zwei Heizkörper oben und unten im Backraum, die Wärme verteilt sich vor allem durch Strahlung und natürliche Luftbewegung. Bei Umluft bläst ein Ventilator an der Rückwand die heiße Luft durch den Ofen. Bewegte Luft überträgt Wärme besser, deshalb kommt man mit einer niedrigeren Temperatur zum gleichen Ergebnis. Der Gerätehersteller NEFF nennt als Richtwert, die Temperatur bei Umluft <b>um etwa 20 °C</b> gegenüber Ober-/Unterhitze zu senken.</p>
+<p>Steht im Rezept also „180 °C Ober-/Unterhitze“, stellen Sie bei Umluft etwa 160 °C ein. Steht „160 °C Umluft“, entspricht das etwa 180 °C Ober-/Unterhitze. Der Rechner oben macht das für jede Temperatur und rundet auf 5 Grad – genauer lässt sich ein Haushaltsofen ohnehin kaum einstellen.</p>
+<p>Manche Geräte haben weiterentwickelte Heißluft-Systeme mit eigenem Namen. Für das System CircoTherm gibt NEFF an, dass es gegenüber Umluft noch einmal etwa 10 bis 20 °C weniger braucht; als Beispiel nennt der Hersteller 160 bis 170 °C statt 200 °C Ober-/Unterhitze. Wer ein solches Gerät hat, findet die genauen Empfehlungen in der Bedienungsanleitung.</p>
+{{ofen-tabelle}}
+
+<h2>Fahrenheit in Celsius</h2>
+<p>Amerikanische Rezepte nennen Temperaturen in Grad Fahrenheit. Die exakte Umrechnung nach dem US-Normungsinstitut NIST lautet: <b>Fahrenheit minus 32, dann geteilt durch 1,8</b>. Umgekehrt: Celsius mal 1,8, plus 32. Ein paar Rechenbeispiele:</p>
+<ul>
+<li>350 °F − 32 = 318; 318 ÷ 1,8 = 176,7 °C → gerundet 175 °C</li>
+<li>400 °F − 32 = 368; 368 ÷ 1,8 = 204,4 °C → gerundet 205 °C, praktisch 200 °C</li>
+<li>180 °C × 1,8 = 324; 324 + 32 = 356 °F → in US-Rezepten meist als 350 °F</li>
+</ul>
+{{fahrenheit-tabelle}}
+<p>Die <a href="/rezept-umrechnen/">Werkbank</a> übersetzt Fahrenheit-Angaben im Zubereitungstext automatisch: Aus „Bake at 350°F“ wird „Bake at 175 °C (350 °F)“. Die Originalangabe bleibt in Klammern stehen, damit Sie die Umrechnung nachvollziehen können. Mehr zu amerikanischen Rezepten steht im Ratgeber <a href="/us-rezepte-umrechnen/">US-Rezepte nachbacken</a>.</p>
+
+<h2>Wann Umluft, wann Ober-/Unterhitze?</h2>
+<p>Ob ein Rezept mit Umluft oder mit Ober- und Unterhitze besser gelingt, hängt vom Gebäck ab und vom eigenen Ofen. Ein paar Überlegungen helfen bei der Wahl:</p>
+<ul>
+<li><b>Mehrere Bleche gleichzeitig:</b> Mit Umluft verteilt sich die Wärme im ganzen Backraum, deshalb lassen sich mehrere Ebenen gleichzeitig nutzen. Bei Ober-/Unterhitze backt man in der Regel auf einer Ebene, meist in der Mitte.</li>
+<li><b>Empfindliche Teige:</b> Biskuit, Brandteig und hohe Kuchen werden in vielen Rezepten mit Ober-/Unterhitze gebacken, weil der Luftstrom die Oberfläche schneller austrocknen kann.</li>
+<li><b>Die Rezeptangabe als Ausgangspunkt:</b> Nennt ein Rezept ausdrücklich eine Heizart, ist diese erprobt. Wechseln Sie die Heizart, passen Sie die Temperatur an und beobachten Sie das Gebäck beim ersten Mal genauer.</li>
+</ul>
+
+<h2>Kein Ofen gleicht dem anderen</h2>
+<p>Die Temperatur, die Sie am Drehknopf einstellen, ist ein Sollwert. Wie genau der Ofen diesen Wert hält, ist von Gerät zu Gerät verschieden. Wenn Kuchen bei Ihnen regelmäßig schneller oder langsamer fertig werden als im Rezept, kann ein Backofenthermometer helfen, das auf den Rost gestellt wird. Damit sehen Sie, welche Temperatur tatsächlich herrscht, und können die Einstellung dauerhaft korrigieren.</p>
+<p>Auch die Position im Ofen zählt. Was nahe an der oberen Heizschlange steht, bräunt stärker; was am Boden steht, bekommt mehr Unterhitze. Bei Umluft spielt die Position eine geringere Rolle, ganz gleichmäßig ist aber auch sie nicht. Beim ersten Versuch mit einem neuen Rezept lohnt deshalb ein Blick durch die Scheibe ab etwa zwei Dritteln der Backzeit.</p>
+
+<h2>Vorheizen und Backzeit</h2>
+<p>Die meisten Backrezepte gehen davon aus, dass der Ofen beim Einschieben bereits die angegebene Temperatur erreicht hat. Wer ohne Vorheizen backt, muss mit einer längeren Backzeit rechnen, weil die ersten Minuten mit Aufheizen vergehen. Bei Aufläufen und Schmorgerichten fällt das kaum ins Gewicht, bei Biskuit und Brandteig dagegen schon.</p>
+<p>Die Backzeit selbst rechnet die Werkbank nicht um, weder beim Wechsel der Heizart noch beim Wechsel der Menge. Sie hängt an Teighöhe, Form und Ofen. Bewährt hat sich die Stäbchenprobe: ein Holzstäbchen in die Mitte stechen; bleibt kein feuchter Teig hängen, ist der Kuchen fertig.</p>
+
+<h2>Beispiel: ein Rezept vollständig umstellen</h2>
+<p>Ein amerikanisches Rezept für Bananenbrot nennt „350 °F, 60 minutes“. Umgerechnet sind das 176,7 °C, gerundet 175 °C Ober-/Unterhitze. Wer lieber mit Umluft backt, stellt nach der Faustregel des Herstellers etwa 155 °C ein. Die 60 Minuten bleiben der Ausgangspunkt; weil die Umrechnung nur die Temperatur betrifft, nicht die Form, prüfen Sie ab etwa 45 Minuten mit dem Holzstäbchen. Backen Sie das Brot zusätzlich in einer anderen Kastenform als im Rezept, rechnet der <a href="/backform-umrechnen/">Backform-Übersetzer</a> die Teigmenge um, damit die Teighöhe – und damit die Backzeit – vergleichbar bleibt.</p>
+<section class="faq" aria-labelledby="faq-h"><h2 id="faq-h">Häufige Fragen</h2>
+<details><summary>Wie viel Grad weniger bei Umluft?</summary><p>Etwa 20 °C weniger als bei Ober-/Unterhitze, so der Richtwert des Herstellers NEFF.</p></details>
+<details><summary>Wie rechne ich Fahrenheit in Celsius um?</summary><p>Fahrenheit minus 32, dann durch 1,8 teilen. 350 °F sind 176,7 °C.</p></details>
+<details><summary>180 °C Ober-/Unterhitze sind wie viel Umluft?</summary><p>Etwa 160 °C Umluft.</p></details>
+<details><summary>Was bedeutet 200 °C in Fahrenheit?</summary><p>392 °F. US-Rezepte nennen dafür meist 400 °F.</p></details>
+</section>
+
+<section class="quellen"><h2>Quellen</h2><ul>
+<li><a href="https://www.neff-home.com/de/neff-entdecken/produkt-design-highlights/funktionen-von-a-z/umluft-ober-unterhitze" rel="noopener" target="_blank">NEFF: Umluft und Ober-/Unterhitze</a> – Umluft etwa 20 °C weniger, CircoTherm zusätzlich 10–20 °C weniger, Beispiel 200 °C → 160–170 °C</li>
+<li><a href="https://www.nist.gov/pml/owm/approximate-conversions-us-customary-measures-metric" rel="noopener" target="_blank">NIST: Approximate Conversions from U.S. Customary Measures to Metric</a> – Formel Fahrenheit → Celsius</li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>

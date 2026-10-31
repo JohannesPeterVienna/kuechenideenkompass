@@ -1,0 +1,61 @@
+<!--@werkzeug-->
+<section class="werkzeug" id="einkauf" aria-labelledby="ek-h">
+  <div class="werkzeug-kopf"><h2 id="ek-h">Einkaufsliste</h2><span class="kennung">mehrere Rezepte · Vorrat · nach Bereich</span></div>
+  <div class="spalten spalten-2">
+    <div class="nicht-drucken">
+      <div id="ek-rezepte"></div>
+      <div class="knopf-reihe" style="margin-top:0"><button type="button" class="knopf zweit" id="ek-neu">+ Rezept hinzufügen</button><button type="button" class="knopf zweit" id="ek-beispiel">Beispiel laden</button></div>
+      <div class="feld" style="margin-top:1.2rem"><label for="ek-vorrat">Vorrat – was schon da ist</label>
+        <textarea id="ek-vorrat" rows="5" style="min-height:120px" placeholder="500 g Mehl&#10;Salz&#10;6 Eier"></textarea>
+        <p class="hilfe">Mit Menge wird abgezogen, ohne Menge gilt die Zutat als vorhanden. Gleiche Einheitenart nötig (g mit kg, ml mit l).</p></div>
+    </div>
+    <div>
+      <div class="blatt" id="ek-liste" aria-live="polite"></div>
+      <div class="knopf-reihe nicht-drucken"><button type="button" class="knopf" id="ek-drucken">Liste drucken</button><button type="button" class="knopf zweit" id="ek-leeren">Rezepte leeren</button></div>
+      <p class="status nicht-drucken" id="ek-gespeichert" role="status"></p>
+    </div>
+  </div>
+</section>
+<!--@artikel-->
+<h2>Eine Liste für alle Rezepte</h2>
+<p>Wer für eine Woche, ein Fest oder ein Wochenende mit Gästen einkauft, kocht selten nur ein Gericht. Zwiebeln stehen im Gulasch und in der Suppe, Milch im Palatschinkenteig und im Kaffee, Butter fast überall. Eine Einkaufsliste, die jedes Rezept einzeln abschreibt, führt zu doppelten Wegen oder zu der Frage, ob 250 g Butter plus 125 g Butter nun ein oder zwei Packungen sind. Die Einkaufsliste hier fasst gleiche Zutaten zusammen, zieht Ihren Vorrat ab und sortiert das Ergebnis nach Bereichen im Supermarkt.</p>
+<ol class="howto">
+<li><b>Rezepte einfügen.</b> Pro Rezept ein Feld, eine Zutat pro Zeile. Die Zeilen werden genauso gelesen wie in der Werkbank – mit Brüchen, Spannen, dag, Cups und Löffeln.</li>
+<li><b>Faktor setzen.</b> Neben jedem Rezept steht ein eigener Faktor. Ein Rezept für 4 Personen bei 8 Gästen bekommt Faktor 2.</li>
+<li><b>Vorrat eintragen.</b> Was schon im Schrank steht, kommt in das Vorratsfeld. Mit Menge wird abgezogen, ohne Menge gilt die Zutat als vorhanden.</li>
+<li><b>Abhaken und drucken.</b> Jede Zeile hat ein Kästchen. Die Liste bleibt in Ihrem Browser gespeichert und lässt sich drucken.</li>
+</ol>
+
+<h2>Zusammenfassen: wann zwei Zeilen eine werden</h2>
+<p>Zwei Zeilen werden zusammengezählt, wenn der Name der Zutat gleich ist und die Einheiten zueinander passen. Gewichte werden alle in Gramm umgerechnet (dag, kg, oz und lb inklusive), Volumen in Milliliter (l, dl, cl, Achterl). So werden „25 dag Mehl“ aus dem einen Rezept und „0,5 kg Mehl“ aus dem anderen zu 750 g Mehl. Löffel, Cups, Päckchen und Stück bleiben in ihrer Einheit und werden nur untereinander addiert – 2 EL plus 1 EL ergibt 3 EL, aber 2 EL und 100 g bleiben zwei Zeilen. Das ist Absicht: Ein Esslöffel Butter und 100 g Butter lassen sich ohne Annahmen nicht sicher zusammenzählen.</p>
+<p>Klammern im Namen werden für den Abgleich ignoriert. „Mehl (glatt)“ und „Mehl“ landen also in derselben Zeile. Unterschiedliche Wörter für dieselbe Zutat – „Obers“ im einen, „Sahne“ im anderen Rezept – werden dagegen nicht automatisch zusammengelegt. Wer Rezepte aus verschiedenen Ländern kombiniert, lässt sie vorher durch die <a href="/rezept-umrechnen/">Werkbank</a> laufen und wählt dieselbe Küchensprache; dann stimmen auch die Namen überein.</p>
+<div class="beispiel"><span class="beispiel-titel">Beispiel</span>
+<p>Rezept A (Faktor 1): 25 dag Mehl, ¼ l Milch, 2 Eier. Rezept B (Faktor 2): 250 g Mehl, 1 Ei, 1 Prise Salz. Vorrat: 500 g Mehl, Salz.</p>
+<p>Ergebnis: Mehl 750 g, davon 500 g im Vorrat → 250 g kaufen. Milch 250 ml. Eier 4 Stück. Salz: im Vorrat, abgehakt.</p></div>
+
+<h2>Vorrat abziehen</h2>
+<p>Das Vorratsfeld funktioniert wie ein Rezept, das abgezogen wird. „500 g Mehl“ zieht 500 g von der Mehlmenge ab; bleibt nichts übrig, wird die Zeile als „im Vorrat“ markiert und durchgestrichen. Steht eine Zutat ohne Menge im Vorrat – „Salz“, „Pfeffer“, „Öl“ –, gilt sie als ausreichend vorhanden und wird ebenfalls abgehakt. So bleiben auf der Liste nur die Dinge stehen, die Sie wirklich kaufen müssen.</p>
+<p>Der Vorrat zieht nur bei passender Einheit ab. „6 Eier“ im Vorrat werden von Eiern in Stück abgezogen; „1 Packung Butter“ im Vorrat wird nicht von „250 g Butter“ abgezogen, weil eine Packung je nach Land und Marke unterschiedlich viel wiegt. Schreiben Sie in solchen Fällen das Gewicht in den Vorrat.</p>
+
+<h2>Sortiert nach Supermarktbereichen</h2>
+<p>Die Liste gruppiert jede Zutat in einen von zehn Bereichen, in der Reihenfolge eines typischen Rundgangs: Obst und Gemüse, Milchprodukte und Eier, Fleisch und Fisch, Brot und Gebäck, Backzutaten, Nudeln, Reis und Konserven, Öl, Essig und Gewürze, Getränke, Tiefkühl und Sonstiges. Die Zuordnung erfolgt über Wortbestandteile – „Paradeiser“, „Tomaten“ und „Karotten“ landen bei Obst und Gemüse, „Topfen“, „Quark“ und „Schlagobers“ im Kühlregal, „Paprikapulver“ bei den Gewürzen, obwohl „Paprika“ darin steckt.</p>
+<p>Die Zuordnung ist eine Hilfe, keine Gewissheit. Ein „Rindsuppenwürfel“ landet bei den Konserven, ein ausgefallenes Gewürz vielleicht bei „Sonstiges“. Weil die Liste mit Kästchen zum Abhaken arbeitet, ist das im Laden kein Problem.</p>
+
+<h2>Gespeichert nur bei Ihnen</h2>
+<p>Die Einkaufsliste speichert Rezepte, Vorrat und abgehakte Zeilen im lokalen Speicher Ihres Browsers. Es gibt kein Konto und keinen Server, der Ihre Listen sieht. Das hat zwei Folgen: Die Liste ist auf einem anderen Gerät nicht verfügbar, und wenn Sie die Browserdaten löschen, ist sie weg. Zum Mitnehmen in den Laden drucken Sie die Liste aus oder speichern sie über den Druckdialog als PDF.</p>
+<p>Aus der <a href="/rezept-umrechnen/">Werkbank</a> können Sie ein umgerechnetes Rezept mit einem Klick auf „Auf die Einkaufsliste“ hierher übernehmen. Es erscheint als neues Rezeptfeld mit Faktor 1, weil die Mengen bereits umgerechnet sind.</p>
+
+<h2>Vom Vorratsplan zur Einkaufsliste</h2>
+<p>Früher gab es unter dieser Domain eigene Werkzeuge für den Wochenplan und den Vorrat. Ihre Aufgaben übernimmt jetzt diese eine Liste: Rezepte für die Woche einfügen, Vorrat eintragen, Rest einkaufen. Wer regelmäßig für die Woche plant, lässt die Rezepte einfach stehen und passt nur die Faktoren an.</p>
+
+<section class="faq" aria-labelledby="faq-h"><h2 id="faq-h">Häufige Fragen</h2>
+<details><summary>Werden meine Listen auf einem Server gespeichert?</summary><p>Nein. Alles liegt im lokalen Speicher Ihres Browsers auf diesem Gerät.</p></details>
+<details><summary>Warum werden Obers und Sahne nicht zusammengezählt?</summary><p>Die Liste vergleicht Namen wörtlich. Lassen Sie Rezepte aus verschiedenen Ländern vorher durch die Werkbank mit derselben Küchensprache laufen.</p></details>
+<details><summary>Warum bleiben 2 EL Butter und 100 g Butter getrennt?</summary><p>Löffel und Gramm lassen sich nur mit einer Annahme über die Dichte zusammenzählen. Die Liste addiert nur, was sicher zusammenpasst.</p></details>
+<details><summary>Wie bekomme ich die Liste aufs Handy?</summary><p>Öffnen Sie diese Seite auf dem Handy und fügen Sie die Rezepte dort ein, oder drucken Sie die Liste als PDF und senden Sie sie sich zu.</p></details>
+</section>
+
+<section class="quellen"><h2>Grundlagen</h2><ul>
+<li>Umrechnung der Gewichte und Volumen wie in der <a href="/so-rechnet-die-werkbank/">Methodik der Werkbank</a> beschrieben (dag nach Duden, oz/lb nach NIST)</li>
+<li>Bereichszuordnung über eine eigene Wortliste; Abweichungen sind möglich</li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>

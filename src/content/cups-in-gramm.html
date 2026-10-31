@@ -1,0 +1,57 @@
+<!--@werkzeug-->
+<section class="werkzeug" id="waage" aria-labelledby="wa-h">
+  <div class="werkzeug-kopf"><h2 id="wa-h">Zutaten-Waage</h2><span class="kennung">Cup · EL · TL → Gramm, mit Quelle</span></div>
+  <div class="spalten spalten-2">
+    <div class="nicht-drucken">
+      <div class="feld"><label for="wa-zutat">Zutat</label><select id="wa-zutat"></select></div>
+      <div class="reihe">
+        <div class="feld"><label for="wa-menge">Menge</label><input type="number" id="wa-menge" inputmode="decimal" min="0" step="0.25" value="1"></div>
+        <div class="feld"><label for="wa-einheit">Einheit</label><select id="wa-einheit"><option value="cup">Cup</option><option value="halb">½ Cup</option><option value="drittel">1/3 Cup</option><option value="viertel">¼ Cup</option><option value="el">EL (Tablespoon)</option><option value="tl">TL (Teaspoon)</option></select></div>
+      </div>
+      <p class="hilfe">Ganze Rezepte mit Cups rechnet die <a href="/rezept-umrechnen/">Werkbank</a> im Modus „metrisch“ auf einmal um.</p>
+    </div>
+    <div id="wa-ergebnis" aria-live="polite"></div>
+  </div>
+</section>
+<!--@artikel-->
+<h2>Warum ein Cup nicht immer gleich viel wiegt</h2>
+<p>Der Cup ist ein Hohlmaß. Er sagt, wie viel Raum eine Zutat einnimmt, nicht wie schwer sie ist. Ein Cup Wasser und ein Cup Mehl haben dasselbe Volumen, aber Mehl ist locker und voller Luft, Zucker ist dicht gepackt, und Butter liegt irgendwo dazwischen. Deshalb gibt es keine einzige Zahl für „1 Cup in Gramm“, sondern eine Zahl pro Zutat. Wer einen Cup Mehl mit 240 g ansetzt – weil 1 Cup ungefähr 240 ml fasst –, nimmt doppelt so viel Mehl wie gedacht, und der Kuchen wird trocken und fest.</p>
+<p>Amerikanische Rezepte arbeiten trotzdem mit Cups, weil das Abmessen ohne Waage schnell geht. Für uns ist die Waage das genauere Werkzeug. Die Zutaten-Waage übersetzt deshalb jede Cup-, Esslöffel- und Teelöffel-Angabe in Gramm – mit Werten, die eine große amerikanische Mühle für genau diesen Zweck veröffentlicht: das Ingredient Weight Chart von King Arthur Baking.</p>
+
+<h2>Die Werte und ihre Quelle</h2>
+<p>King Arthur Baking gibt für jede Zutat ein Volumen und das zugehörige Gewicht an – meistens für einen Cup, bei Butter für einen halben Cup (8 Esslöffel), bei Honig für einen Esslöffel, bei Backpulver für einen Teelöffel. Die Waage übernimmt jeden Originalwert und rechnet daraus die anderen Maße: Nach US-Definition hat ein Cup 16 Esslöffel und ein Esslöffel 3 Teelöffel. Milliliter rechnet die Waage nach dem US-Normungsinstitut NIST: 1 Cup ≈ 236,6 ml, 1 Esslöffel ≈ 14,79 ml, 1 Teelöffel ≈ 4,93 ml.</p>
+{{cup-tabelle}}
+<p>Die vollständige Liste mit allen 31 Zutaten steht unten. Werte, für die es keine belegte Quelle gibt, fehlen absichtlich. Lieber eine Lücke als eine erfundene Zahl – für eine Zutat ohne Wert rechnet die Werkbank in Milliliter weiter.</p>
+
+<h2>Die wichtigsten Zutaten im Detail</h2>
+<h3>Mehl</h3>
+<p>Ein Cup Allzweckmehl wiegt nach King Arthur 120 g. Wie dicht das Mehl im Becher liegt, verändert das Gewicht – King Arthur empfiehlt deshalb selbst, Zutaten mit einer digitalen Waage zu wiegen. Weil sich amerikanisches „all-purpose flour“ und unsere Mehltypen nicht eins zu eins entsprechen, behandelt die Waage den Wert als Volumenumrechnung für Weizenmehl und nicht als Aussage über Mehltypen. Vollkornmehl ist mit 113 g pro Cup etwas leichter, helles Roggenmehl mit 106 g noch leichter.</p>
+<h3>Zucker</h3>
+<p>Weißer Kristallzucker wiegt 198 g pro Cup, fest eingedrückter brauner Zucker 213 g, ungesiebter Staub- beziehungsweise Puderzucker nur 113 g. Der Unterschied zwischen Kristall- und Staubzucker ist beinahe der Faktor zwei – ein guter Grund, beim Umrechnen genau hinzusehen, welcher Zucker gemeint ist.</p>
+<h3>Butter und der „Stick“</h3>
+<p>Ein halber Cup Butter entspricht 8 Esslöffeln und wiegt 113 g. In den USA wird Butter in Stangen („sticks“) verkauft, und ein Stick ist genau diese Menge: ½ Cup, 8 Esslöffel, 113 g. Steht im Rezept „1 cup butter“, sind das also zwei Sticks oder 226 g. Mehr zu US-Besonderheiten erklärt der Ratgeber <a href="/us-rezepte-umrechnen/">US-Rezepte nachbacken</a>.</p>
+<h3>Milch, Obers und Öl</h3>
+<p>Flüssigkeiten misst man bei uns meist ohnehin in Millilitern. Für die Vollständigkeit nennt King Arthur auch Gewichte: 227 g pro Cup für Milch und für Obers beziehungsweise Sahne, 198 g für Pflanzenöl. In der Werkbank werden Flüssigkeiten deshalb in Milliliter umgerechnet, nicht in Gramm – das entspricht dem, was auf dem Messbecher steht.</p>
+
+<h2>Esslöffel und Teelöffel</h2>
+<p>Für kleine Mengen gibt die Waage auch Esslöffel und Teelöffel aus. Gemeint sind Messlöffel, gestrichen. Haushaltslöffel fassen je nach Form spürbar mehr oder weniger, und gehäufte Löffel können ein Mehrfaches eines gestrichenen enthalten. Eine ausführliche Tabelle mit allen Zutaten steht im Ratgeber <a href="/essloeffel-teeloeffel-gramm/">Esslöffel und Teelöffel in Gramm</a>.</p>
+
+<h2>Vollständige Tabelle</h2>
+{{waage-tabelle}}
+
+<h2>Was die Waage nicht tut</h2>
+<p>Die Waage rechnet Volumen in Gewicht, aber sie rät nicht. Es gibt Zutaten, für die sich die Werte je nach Hersteller oder Zubereitung stark unterscheiden – geriebener Käse, gehackte Kräuter, Kokosflocken. Für diese gibt es hier keinen Wert. Ebenso unterscheidet die Waage nicht zwischen Mehltypen im Detail; Spezialmehle können vom Durchschnittswert abweichen. Wo es auf jedes Gramm ankommt, ist ein Probewiegen mit dem eigenen Messbecher die sicherste Methode: einmal füllen wie im Rezept, wiegen, notieren.</p>
+
+<section class="faq" aria-labelledby="faq-h"><h2 id="faq-h">Häufige Fragen</h2>
+<details><summary>Wie viel Gramm sind 1 Cup Mehl?</summary><p>120 g Allzweckmehl nach King Arthur Baking.</p></details>
+<details><summary>Wie viel Gramm sind 1 Cup Zucker?</summary><p>198 g weißer Kristallzucker, 213 g fest eingedrückter brauner Zucker, 113 g ungesiebter Staubzucker.</p></details>
+<details><summary>Wie viel Gramm hat ein Stick Butter?</summary><p>113 g. Ein Stick entspricht ½ Cup oder 8 Esslöffeln.</p></details>
+<details><summary>Wie viele Milliliter hat ein Cup?</summary><p>Nach NIST etwa 236,6 ml; gerundet wird oft mit 240 ml gerechnet.</p></details>
+<details><summary>Ist eine deutsche Tasse dasselbe wie ein Cup?</summary><p>Nein, eine Kaffeetasse ist kein festes Maß. Die Werkbank rechnet „Tasse“ wie einen US-Cup und weist darauf hin.</p></details>
+</section>
+
+<section class="quellen"><h2>Quellen</h2><ul>
+<li><a href="https://www.kingarthurbaking.com/learn/ingredient-weight-chart" rel="noopener" target="_blank">King Arthur Baking: Ingredient Weight Chart</a> – alle Gewichtswerte</li>
+<li><a href="https://www.nist.gov/pml/owm/approximate-conversions-us-customary-measures-metric" rel="noopener" target="_blank">NIST: Approximate Conversions from U.S. Customary Measures to Metric</a> – Milliliter je Cup, EL, TL</li>
+<li><a href="https://cabotcreamery.com/blogs/food/how-many-tablespoons-in-a-stick-of-butter" rel="noopener" target="_blank">Cabot Creamery: How many tablespoons in a stick of butter</a> – 1 Stick = 8 EL = ½ Cup = 113 g</li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>

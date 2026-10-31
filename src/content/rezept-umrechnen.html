@@ -1,0 +1,116 @@
+<!--@werkzeug-->
+<section class="werkzeug" id="werkbank" aria-labelledby="wb-titel-h">
+  <div class="werkzeug-kopf"><h2 id="wb-titel-h">Rezept-Werkbank</h2><span class="kennung">Portionen · Form · Einheiten · Küchensprache</span></div>
+  <div class="spalten spalten-2">
+    <div class="nicht-drucken">
+      <div class="feld"><label for="wb-titel">Name des Rezepts</label><input type="text" id="wb-titel" placeholder="z. B. Marillenkuchen" autocomplete="off"></div>
+      <div class="feld"><label for="wb-zutaten">Zutaten – eine pro Zeile</label>
+        <textarea id="wb-zutaten" spellcheck="false" placeholder="25 dag Mehl&#10;½ l Milch&#10;2–3 Eier&#10;1 Pkg. Backpulver&#10;1 Prise Salz"></textarea>
+        <p class="hilfe">Erkennt Brüche (½, 1/4, 1 1/2), Spannen (2–3), dag, g, l, ml, EL, TL, Cups, Tassen, Sticks, Pkg., Würfel. Zeilen mit Doppelpunkt am Ende werden Zwischenüberschriften.</p></div>
+      <details class="feld" id="wb-schritte-box"><summary>Zubereitung mitübersetzen (optional)</summary>
+        <label for="wb-schritte" class="label" style="margin-top:.5rem">Zubereitungstext</label>
+        <textarea id="wb-schritte" spellcheck="false" style="min-height:120px" placeholder="Fahrenheit-Angaben und Regionalbegriffe werden übersetzt."></textarea></details>
+      <fieldset><legend>Grundlage der Umrechnung</legend>
+        <div class="wahl" role="radiogroup">
+          <label><input type="radio" name="grundlage" value="portionen" checked> Portionen</label>
+          <label><input type="radio" name="grundlage" value="form"> Backform</label>
+          <label><input type="radio" name="grundlage" value="faktor"> Freier Faktor</label>
+        </div>
+        <div id="wb-g-portionen" class="reihe" style="margin-top:.8rem">
+          <div class="feld"><label for="wb-von">Rezept ist für</label><input type="number" id="wb-von" inputmode="decimal" min="0.5" step="0.5" value="4"></div>
+          <div class="feld"><label for="wb-nach">Ich brauche</label><input type="number" id="wb-nach" inputmode="decimal" min="0.5" step="0.5" value="6"></div>
+        </div>
+        <div id="wb-g-form" hidden style="margin-top:.8rem">
+          <div class="reihe">
+            <div class="feld"><label for="wb-fv-typ">Form im Rezept</label><select id="wb-fv-typ"><option value="rund">rund (Springform)</option><option value="eckig">eckig</option><option value="kasten">Kastenform</option><option value="gugelhupf">Gugelhupf</option><option value="blech">Blech</option></select></div>
+            <div class="reihe reihe-3" id="wb-fv-masse"></div>
+          </div>
+          <div class="reihe">
+            <div class="feld"><label for="wb-fn-typ">Meine Form</label><select id="wb-fn-typ"><option value="rund">rund (Springform)</option><option value="eckig">eckig</option><option value="kasten">Kastenform</option><option value="gugelhupf">Gugelhupf</option><option value="blech">Blech</option></select></div>
+            <div class="reihe reihe-3" id="wb-fn-masse"></div>
+          </div>
+        </div>
+        <div id="wb-g-faktor" hidden class="reihe" style="margin-top:.8rem">
+          <div class="feld"><label for="wb-faktor">Faktor</label><input type="number" id="wb-faktor" inputmode="decimal" min="0.05" step="0.05" value="1.5"></div>
+        </div>
+      </fieldset>
+      <fieldset><legend>Einheiten</legend><div class="wahl">
+        <label><input type="radio" name="einheiten" value="original" checked> wie im Rezept</label>
+        <label><input type="radio" name="einheiten" value="metrisch"> metrisch (g/ml)</label>
+        <label><input type="radio" name="einheiten" value="at"> österreichisch (dag/l)</label>
+      </div></fieldset>
+      <fieldset><legend>Küchensprache</legend><div class="wahl">
+        <label><input type="radio" name="region" value="original" checked> unverändert</label>
+        <label><input type="radio" name="region" value="at"> Österreich</label>
+        <label><input type="radio" name="region" value="de"> Deutschland</label>
+        <label><input type="radio" name="region" value="ch"> Schweiz</label>
+      </div></fieldset>
+      <div class="knopf-reihe"><button type="button" class="knopf zweit" id="wb-beispiel">Beispiel laden</button><button type="button" class="knopf zweit" id="wb-leeren">Leeren</button></div>
+    </div>
+    <div>
+      <div class="blatt" id="wb-ergebnis" aria-live="polite"></div>
+      <div class="knopf-reihe nicht-drucken">
+        <button type="button" class="knopf" id="wb-drucken">Rezept drucken</button>
+        <button type="button" class="knopf zweit" id="wb-teilen">Teilen-Link kopieren</button>
+        <button type="button" class="knopf akzent" id="wb-liste">Auf die Einkaufsliste</button>
+      </div>
+      <p class="status nicht-drucken" id="wb-status" role="status"></p>
+    </div>
+  </div>
+</section>
+<!--@artikel-->
+<h2>So funktioniert die Werkbank</h2>
+<p>Die meisten Portionsrechner verlangen, dass man jede Zutat einzeln in ein Formular tippt. Die Werkbank geht den umgekehrten Weg: Sie kopieren das Rezept so, wie es ist, und das Werkzeug zerlegt jede Zeile selbst in Menge, Einheit und Zutat. Dabei versteht es die Schreibweisen, die in Kochbüchern aus Österreich, Deutschland und der Schweiz tatsächlich vorkommen – „25 dag“, „⅛ l Obers“, „1 Pkg. Backpulver“ –, aber auch amerikanische Angaben wie „1 ½ cups“ oder „1 stick butter“.</p>
+<ol class="howto">
+  <li><b>Rezept einfügen.</b> Zutatenliste in das linke Feld kopieren, eine Zutat pro Zeile. Aufzählungszeichen und Nummern am Zeilenanfang stören nicht.</li>
+  <li><b>Grundlage wählen.</b> Portionen (z. B. 4 → 6), Backform (z. B. Springform 26 cm → Blech) oder einen freien Faktor eintragen.</li>
+  <li><b>Einheiten festlegen.</b> „wie im Rezept“ lässt alle Einheiten stehen, „metrisch“ macht aus Cups und Löffeln Gramm oder Milliliter, „österreichisch“ schreibt dag und Liter in Bruchform.</li>
+  <li><b>Küchensprache wählen.</b> Obers wird zu Sahne oder Rahm, Topfen zu Quark, Germ zu Hefe – oder umgekehrt.</li>
+  <li><b>Hinweise lesen und drucken.</b> Der rot umrandete Kasten zeigt, was nicht linear mitwächst. Danach drucken, als Link teilen oder auf die Einkaufsliste legen.</li>
+</ol>
+<p>Alles passiert in Ihrem Browser. Das Rezept wird an keinen Server geschickt. Der Teilen-Link enthält das Rezept selbst in kodierter Kurzform – wer ihn öffnet, sieht genau Ihre Einstellung, ohne dass irgendwo etwas gespeichert wurde.</p>
+
+<h2>Was die Werkbank aus einer Zeile liest</h2>
+<p>Jede Zeile wird von links nach rechts gelesen: zuerst eine Menge, dann eine Einheit, dann der Name der Zutat. Die Menge darf eine ganze Zahl sein („3“), eine Dezimalzahl mit Komma oder Punkt („1,5“, „1.5“), ein Bruch („1/4“), ein gemischter Bruch („1 1/2“) oder ein Bruchzeichen („½“, „1½“). Spannen wie „2–3“, „2-3“ oder „2 bis 3“ bleiben Spannen und werden an beiden Enden umgerechnet. Ein „ca.“ oder „etwa“ vor der Zahl wird erkannt und stört die Rechnung nicht.</p>
+<p>Bei den Einheiten kennt die Werkbank Gewichte (mg, g, dag beziehungsweise dkg, kg, oz, lb), Volumen (ml, cl, dl, l, Achterl, Cup, Tasse, fl oz), Löffel (EL, TL, Kaffeelöffel) und Stückeinheiten wie Pkg., Würfel, Zehe, Bund, Dose oder Becher. Zeilen ohne Menge – „Salz, Pfeffer“ oder „Butter für die Form“ – bleiben unverändert stehen. Endet eine Zeile mit einem Doppelpunkt, etwa „Für die Fülle:“, wird sie als Zwischenüberschrift gesetzt.</p>
+<div class="beispiel"><span class="beispiel-titel">Beispiel</span>
+<p>„1 Becher Schlagobers (250 ml)“ wird bei Faktor 1,5 zu „1 ½ Becher Schlagobers (375 ml)“. Auch Mengen in Klammern rechnet die Werkbank mit – und mit Küchensprache Deutschland steht danach „Schlagsahne“ in der Zeile.</p></div>
+
+<h2>Was nicht linear mitwächst</h2>
+<p>Ein Rezept ist keine Tabelle, bei der man jede Zahl mit demselben Faktor malnimmt. Die Werkbank rechnet zwar zuerst alles linear – das ist der ehrlichste Ausgangspunkt –, markiert aber vier Gruppen, bei denen Sie mitdenken sollten:</p>
+<ul>
+  <li><b>Eier</b> werden auf ganze Stück gerundet. Ergibt die Rechnung 4,5 Eier, steht dort 5, und darunter, wie viel Gramm Ei eigentlich gemeint sind. Grundlage ist der Wert von King Arthur Baking: Ein großes Ei ohne Schale wiegt rund 50 g, ein Eigelb rund 14 g.</li>
+  <li><b>Salz und Gewürze</b> sind als „abschmecken“ markiert. Die hochgerechnete Menge ist ein Startwert; Prisen und Messerspitzen sind ohnehin keine genauen Maße.</li>
+  <li><b>Triebmittel</b> bekommen eine eigene Regel. Steht im Rezept eine Mehlmenge in Gramm (oder in Cups, die sich in Gramm umrechnen lassen), vergleicht die Werkbank Backpulver und Germ mit den Bezugsgrößen von Dr. Oetker: 1 Päckchen Backpulver (≈ 16 g) für 500 g Mehl, 7 g Trockengerm für etwa 500 g Mehl, 1 Würfel Frischgerm (42 g) für etwa 1 kg Mehl.</li>
+  <li><b>Form, Pfanne und Topf</b> wachsen nicht im selben Verhältnis. Bei gleicher Füllhöhe braucht die doppelte Menge die doppelte Bodenfläche – der Durchmesser steigt aber nur um den Faktor √2, also rund 1,41. Die Werkbank rechnet Ihnen das für 20, 24 und 28 cm vor.</li>
+</ul>
+<p>Garzeiten rechnet die Werkbank bewusst nicht um. Ob ein Kuchen länger braucht, hängt an der Teighöhe, nicht an der Menge. Wenn Sie über die Backform umrechnen, bleibt die Teighöhe gleich, und die Backzeit liegt meist nahe am Original; Details stehen beim <a href="/backform-umrechnen/">Backform-Übersetzer</a>.</p>
+
+<h2>Einheiten: wie im Rezept, metrisch oder österreichisch</h2>
+<p>Im Modus <b>metrisch</b> werden Cups, Tassen, Sticks, Unzen und Pfund (lb) umgerechnet. Für Zutaten, deren Gewicht pro Volumen veröffentlicht ist – Mehl, Zucker, Butter, Kakao, Haferflocken und gut zwei Dutzend weitere –, rechnet die Werkbank in Gramm und nennt in der Zeile die Quelle. Flüssigkeiten wie Milch, Obers oder Öl werden in Milliliter umgerechnet. Löffelangaben bleiben Löffel, außer es gibt für die Zutat einen belegten Gewichtswert. Alle Gewichte stehen in der <a href="/cups-in-gramm/">Zutaten-Waage</a>, die Herleitung in der <a href="/so-rechnet-die-werkbank/">Methodik</a>.</p>
+<p>Im Modus <b>österreichisch</b> werden Gramm ab 10 g in Dekagramm geschrieben und Milliliter ab 100 ml in Liter – bei Achteln als Bruch, wie man es aus Omas Kochbuch kennt: ⅛ l, ¼ l, ⅜ l. So passt das Ergebnis zu einem Rezept, das ohnehin österreichisch geschrieben ist. Was hinter dag und Achterl steckt, erklärt der Ratgeber <a href="/dag-in-gramm/">dag in Gramm</a>.</p>
+<p>Gerundet wird küchentauglich: Gramm unter 10 auf halbe Gramm, bis 100 auf ganze, darüber auf 5er-Schritte; Löffel auf Viertel, Cups auf Achtel oder Drittel. Ein „≈“ vor der Zahl zeigt, dass gerundet wurde.</p>
+
+<h2>Küchensprache: Obers, Sahne oder Rahm?</h2>
+<p>Die Übersetzung arbeitet mit einer kurzen, belegten Liste. Jedes Wortpaar ist im Duden oder im Wiktionary nachgeschlagen, und nur eindeutige Paare werden automatisch ersetzt – etwa Obers ↔ Sahne ↔ Rahm, Topfen ↔ Quark, Germ ↔ Hefe, Paradeiser ↔ Tomaten, Marillen ↔ Aprikosen oder Vogerlsalat ↔ Feldsalat ↔ Nüsslisalat. Zusammensetzungen wie „Marillenknödel“ oder „Germteig“ werden mitübersetzt. Mehrdeutige Wörter, etwa „Peperoni“ (in der Schweiz auch die Gemüsepaprika), lässt die Werkbank stehen und erklärt sie stattdessen im <a href="/kuechenwoerterbuch/">Küchenwörterbuch</a>.</p>
+{{regional-tabelle}}
+
+<h2>Grenzen – wann Sie selbst prüfen sollten</h2>
+<p>Sehr große Faktoren – etwa von 4 auf 40 Portionen – sind rechnerisch kein Problem, praktisch schon: Bratflächen, Herdplätze und Kühlschrankplatz wachsen nicht mit. Dafür gibt es den Ratgeber <a href="/fuer-viele-gaeste-kochen/">Für viele Gäste kochen</a>. Beim Halbieren sind halbe Eier und zu große Formen die häufigsten Stolpersteine; mehr dazu unter <a href="/rezept-halbieren/">Rezept halbieren</a>. Und wenn eine Zeile ungewöhnlich geschrieben ist („eine gute Handvoll“), bleibt sie unverändert – lieber eine sichtbare Lücke als eine erfundene Zahl.</p>
+
+<section class="faq" aria-labelledby="faq-h"><h2 id="faq-h">Häufige Fragen</h2>
+<details><summary>Wird mein Rezept irgendwo gespeichert?</summary><p>Nein. Die Werkbank rechnet im Browser. Nur wenn Sie „Auf die Einkaufsliste“ wählen, legt der Browser das Rezept lokal auf Ihrem Gerät ab; der Teilen-Link enthält das Rezept selbst.</p></details>
+<details><summary>Warum stehen bei Eiern ganze Zahlen, obwohl 4,5 herauskommt?</summary><p>Weil man im Laden keine halben Eier kauft. Die genaue Grammzahl steht in der Zeile darunter – für Biskuit und andere empfindliche Teige das Ei verquirlen und abwiegen.</p></details>
+<details><summary>Kann ich ein amerikanisches Rezept direkt einfügen?</summary><p>Ja. Cups, Tablespoons, Teaspoons, Sticks, Unzen und Fahrenheit-Angaben im Zubereitungstext werden erkannt. Im Modus „metrisch“ erhalten Sie Gramm und Milliliter.</p></details>
+<details><summary>Was bedeutet der Faktor genau?</summary><p>Mit dem Faktor wird jede Menge multipliziert. Von 4 auf 6 Portionen ergibt 1,5; von einer 26er- auf eine 28er-Springform ergibt sich das Flächenverhältnis 28² ÷ 26² ≈ 1,16.</p></details>
+<details><summary>Rechnet die Werkbank auch Backzeiten um?</summary><p>Nein, bewusst nicht. Die Backzeit hängt von der Teighöhe ab. Beim Umrechnen über die Form bleibt die Höhe gleich; prüfen Sie dann zur angegebenen Zeit mit der Stäbchenprobe.</p></details>
+</section>
+
+<section class="quellen"><h2>Quellen</h2><ul>
+<li><a href="https://www.kingarthurbaking.com/learn/ingredient-weight-chart" rel="noopener" target="_blank">King Arthur Baking: Ingredient Weight Chart</a> – Gewichte je Volumen, Ei 50 g, Eigelb 14 g</li>
+<li><a href="https://www.nist.gov/pml/owm/approximate-conversions-us-customary-measures-metric" rel="noopener" target="_blank">NIST: Approximate Conversions from U.S. Customary Measures to Metric</a> – Cup, EL, TL, Unze, Fahrenheit</li>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/wie-viel-backpulver-braucht-man" rel="noopener" target="_blank">Dr. Oetker Österreich: Wie viel Backpulver braucht man?</a></li>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/welche-arten-von-germ-gibt-es" rel="noopener" target="_blank">Dr. Oetker Österreich: Welche Arten von Germ gibt es?</a></li>
+<li><a href="https://cabotcreamery.com/blogs/food/how-many-tablespoons-in-a-stick-of-butter" rel="noopener" target="_blank">Cabot Creamery: Stick Butter = 8 EL = 113 g</a></li>
+<li>Duden und Wiktionary für alle Regionalbegriffe – Einzelnachweise im <a href="/kuechenwoerterbuch/">Küchenwörterbuch</a></li>
+</ul><p class="stand">Stand: Oktober 2026</p></section>
