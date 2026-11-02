@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261031c';
+const VERSION = '20261102a';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const url = (slug) => `${DOMAIN}/${slug ? slug + '/' : ''}`;
@@ -105,7 +105,10 @@ function seiteBauen(seite) {
   const krumen = seite.slug ? `<nav class="brotkrumen" aria-label="Brotkrumen"><ol><li><a href="/">Startseite</a></li><li aria-current="page">${esc(seite.kurz)}</li></ol></nav>` : '';
   const skripte = (seite.skripte || []).map((s) => `<script src="/assets/js/${s}?v=${VERSION}" defer></script>`).join('\n');
   const robots = seite.noindex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robots" content="index, follow, max-image-preview:large">';
-  const kopfZeile = seite.slug ? `${krumen}<h1>${esc(seite.h1)}</h1><p class="einleitung">${seite.einleitung}</p><p class="stand">Stand: Oktober 2026 · ${seite.typ === 'werkzeug' ? 'Werkzeug läuft vollständig in Ihrem Browser' : 'Werte mit Quellenangabe'}</p>` : '';
+  const kopfZeile = seite.slug ? `${krumen}<h1>${esc(seite.h1)}</h1><p class="einleitung">${seite.einleitung}</p><p class="stand">${seite.typ === 'pflicht' ? 'Stand: 2. November 2026' : `Stand: Oktober 2026 · ${seite.typ === 'werkzeug' ? 'Werkzeug läuft vollständig in Ihrem Browser' : 'Werte mit Quellenangabe'}`}</p>` : '';
+  // Kopf-Anzeigenplatz erst nach H1 + Einleitung. Werkzeugseiten: kein Kopfplatz – das Werkzeug beginnt dort
+  // weniger als 150 px darunter (erster Platz kommt nach dem Erklärtext). Ratgeber mit Werkzeugblock: nur ab 768 px.
+  const kopfAnzeige = werbung && seite.typ !== 'werkzeug' ? `<div class="anzeige" data-anzeige="kopf"${werkzeug ? ' data-nur-breit' : ''} hidden></div>` : '';
 
   const html = `<!doctype html>
 <html lang="de">
@@ -134,9 +137,9 @@ ${skripte}
 </head>
 <body data-werbung="${werbung ? 'ja' : 'nein'}" data-seitentyp="${seite.typ}">
 ${kopf(seite)}
-${werbung ? '<div class="rahmen"><div class="anzeige" data-anzeige="kopf" hidden></div></div>' : ''}
 <main id="inhalt" class="rahmen">
 ${kopfZeile}
+${kopfAnzeige}
 ${werkzeug}
 <div class="${mitSeitenleiste ? 'raster-layout' : ''}">
 <article class="artikel${seite.typ === 'werkzeug' ? ' erklaerung' : ''}">

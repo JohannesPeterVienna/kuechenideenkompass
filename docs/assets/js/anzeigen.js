@@ -22,9 +22,11 @@
 
   if (document.body.getAttribute('data-werbung') !== 'ja') return;
 
-  function wahl(platz) {
+  function wahl(platz, el) {
     var b = window.innerWidth;
     if (platz === 'kopf') {
+      // Werkzeugseiten: auf dem Handy kein Kopfplatz (Werkzeug folgt direkt darunter)
+      if (b < 768 && el && el.hasAttribute('data-nur-breit')) return null;
       if (b >= 1024 && SLOTS.billboard) return 'billboard';
       if (b >= 768 && SLOTS.leaderboard) return 'leaderboard';
       if (b < 768 && SLOTS.mobil) return 'mobil';
@@ -41,7 +43,7 @@
   var plaetze = document.querySelectorAll('[data-anzeige]');
   var befuellt = 0;
   Array.prototype.forEach.call(plaetze, function (el) {
-    var format = wahl(el.getAttribute('data-anzeige'));
+    var format = wahl(el.getAttribute('data-anzeige'), el);
     if (!format) { el.hidden = true; return; }
     var masz = FORMATE[format];
     var ins = document.createElement('ins');

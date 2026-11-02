@@ -37,6 +37,14 @@ for (const s of SEITEN) {
   const werbung = /data-anzeige=/.test(h) || /anzeigen\.js/.test(h) || /adsbygoogle/.test(h);
   if (['pflicht', 'uebersicht', 'info'].includes(s.typ) && werbung) f(s.slug, 'Werbung auf Pflicht-/Übersichtsseite');
   if (['ratgeber', 'werkzeug'].includes(s.typ) && !werbung) f(s.slug, 'Werbeplätze fehlen');
+  // Kopf-Anzeigenplatz erst nach H1 + Einleitung, auf Seiten mit Werkzeug nur breit
+  const kopfPlatz = h.indexOf('data-anzeige="kopf"');
+  if (kopfPlatz >= 0) {
+    if (kopfPlatz < h.indexOf('<p class="einleitung"') || kopfPlatz < h.indexOf('<h1')) f(s.slug, 'Kopf-Anzeigenplatz vor H1/Einleitung');
+    if (/<section class="werkzeug"/.test(h) && !/data-anzeige="kopf" data-nur-breit/.test(h)) f(s.slug, 'Kopfplatz über Werkzeugblock ohne data-nur-breit');
+    if (s.typ === 'werkzeug') f(s.slug, 'Kopfplatz auf Werkzeugseite (direkt über dem Werkzeug)');
+  }
+  if (s.typ === 'pflicht' && !/<p class="stand">Stand: 2\. November 2026<\/p>/.test(h)) f(s.slug, 'Stand-Zeile der Pflichtseite');
   // Werbung nie im Werkzeugblock
   const werkzeug = (h.match(/<section class="werkzeug"[\s\S]*?<\/section>\s*(?=<div class="(raster-layout|)")/) || [''])[0];
   if (/data-anzeige/.test(werkzeug)) f(s.slug, 'Werbeplatz im Werkzeugblock');

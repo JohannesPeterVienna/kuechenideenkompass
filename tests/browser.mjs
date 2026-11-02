@@ -32,8 +32,10 @@ for (const breite of [360, 390, 1366]) {
   await page.click('#wb-beispiel');
   const txt = await page.textContent('#wb-ergebnis');
   if (!/Topfen/.test(txt) || !/Was nicht linear mitwächst/.test(txt)) fehler.push('Werkbank-Beispiel ohne Ergebnis');
-  await page.check('input[name="region"][value="de"]');
-  await page.check('input[name="einheiten"][value="metrisch"]');
+  // Radios sind visuell versteckt (Pillen) – wie Nutzer auf die Pille klicken
+  await page.click('label:has(> input[name="region"][value="de"])');
+  await page.click('label:has(> input[name="einheiten"][value="metrisch"])');
+  if (!(await page.isChecked('input[name="region"][value="de"]')) || !(await page.isChecked('input[name="einheiten"][value="metrisch"]'))) fehler.push('Pillen-Auswahl wirkt nicht');
   const txt2 = await page.textContent('#wb-ergebnis');
   if (!/Quark/.test(txt2) || !/375/.test(txt2)) fehler.push('Werkbank: Übersetzung/Metrisch fehlerhaft: ' + txt2.slice(0, 200));
   await page.screenshot({ path: `${AUS}/${breite}-werkbank-ergebnis.png`, fullPage: true });

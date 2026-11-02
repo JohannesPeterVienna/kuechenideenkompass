@@ -141,8 +141,10 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
 .reihe { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); align-items: end; }
 .reihe-3 { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
 .wahl { display: flex; flex-wrap: wrap; gap: .4rem; }
-.wahl label { display: inline-flex; align-items: center; gap: .35rem; border: 1.5px solid #8FA394; border-radius: 999px; padding: .35rem .8rem; cursor: pointer; font-weight: 600; font-size: .92rem; background: #fff; min-height: 40px; color: var(--tinte); margin: 0; }
-.wahl input { accent-color: var(--rosmarin); margin: 0; }
+.wahl label { position: relative; display: inline-flex; align-items: center; gap: .35rem; border: 1.5px solid #8FA394; border-radius: 999px; padding: .35rem .8rem; cursor: pointer; font-weight: 600; font-size: .92rem; background: #fff; min-height: 40px; color: var(--tinte); margin: 0; }
+/* nativer Radio-Kreis unsichtbar (sr-only), bleibt fokussier- und per Tastatur bedienbar */
+.wahl input { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; opacity: 0; }
+.wahl label:has(input:focus-visible) { outline: 3px solid var(--eidotter); outline-offset: 2px; box-shadow: 0 0 0 2px var(--rosmarin-tief); }
 .wahl label:has(input:checked) { background: var(--rosmarin); color: #fff; border-color: var(--rosmarin); }
 .knopf { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; font: inherit; font-weight: 700; font-size: .95rem; padding: .6rem 1.05rem; min-height: 44px; border-radius: var(--radius); border: 2px solid var(--rosmarin); background: var(--rosmarin); color: #fff; cursor: pointer; text-decoration: none; }
 .knopf:hover { background: var(--rosmarin-tief); color: #fff; }

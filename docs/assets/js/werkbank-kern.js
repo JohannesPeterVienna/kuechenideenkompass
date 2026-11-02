@@ -372,6 +372,10 @@
       var m = z.menge * f, bis = z.bis !== null ? z.bis * f : null;
       var conv = einheitUmrechnen(m, z.einheit, z.name, opts.einheiten);
       var convBis = bis !== null ? einheitUmrechnen(bis, z.einheit, z.name, opts.einheiten) : null;
+      // Zielregion Deutschland/Schweiz: dag ist dort unüblich – bei „wie im Rezept“ in Gramm ausgeben
+      if (opts.einheiten === 'original' && (opts.region === 'de' || opts.region === 'ch')) {
+        [conv, convBis].forEach(function (c) { if (c && c.einheit === 'dag') { c.menge = c.menge * 10; c.einheit = 'g'; } });
+      }
       r.einheit = conv.einheit; r.quelle = conv.quelle; r.exakt = conv.menge; r.einheitHinweis = conv.hinweis;
       // Mehl zählen (für Triebmittel-Regel)
       if (z.klasse === 'mehl') {
@@ -398,7 +402,7 @@
       if (z.klasse === 'backpulver' || z.klasse === 'natron' || z.klasse === 'frischhefe' || z.klasse === 'trockenhefe') r.flags.push('trieb');
       if (z.einheit === 'pkg' || z.einheit === 'wuerfel') {
         var gp = pkgGramm(z);
-        if (gp) r.pkgHinweis = '≈ ' + deZahl(m * gp.g, 1) + ' g (' + gp.text + ')';
+        if (gp) r.pkgHinweis = '≈ ' + mengeRunden(m * gp.g, 'g').text + ' g (' + gp.text + ')'; // gleiche Rundung wie alle Grammwerte
       }
       return r;
     });

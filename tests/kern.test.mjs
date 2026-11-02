@@ -282,3 +282,24 @@ test('Backform: Volumenmodus verdoppelt die Füllhöhe', () => {
   const r = K.formFaktor({ typ: 'rund', d: 26, h: 5 }, { typ: 'rund', d: 26, h: 10 });
   nah(r.volumen, 2); nah(r.flaeche, 1);
 });
+
+test('Germ-Hinweis folgt der Grammrundung (bis 100 g ganze Gramm)', () => {
+  const z = zeile('½ Würfel Germ', 1.5);
+  assert.match(z.pkgHinweis, /^≈ 32 g \(1 Würfel Frischgerm = 42 g/);
+  assert.doesNotMatch(z.pkgHinweis, /31,5/);
+  assert.match(zeile('1 Würfel Germ', 1).pkgHinweis, /^≈ 42 g/);
+  assert.match(zeile('1 Pkg. Trockengerm', 0.5).pkgHinweis, /^≈ 3,5 g/);
+});
+
+test('Zielregion DE/CH: dag wird bei „wie im Rezept“ zu Gramm', () => {
+  const lauf = (region, einheiten = 'original') => K.skalieren(K.rezeptLesen('25 dag Topfen\n10–12 dag Butter'), { faktor: 1.5, einheiten, region }).zeilen;
+  for (const region of ['de', 'ch']) {
+    const [topfen, butter] = lauf(region);
+    assert.equal(topfen.einheit, 'g', region); assert.equal(topfen.text, '375', region);
+    assert.equal(butter.einheit, 'g', region); assert.equal(butter.text, '150–180', region);
+  }
+  assert.equal(lauf('de')[0].name, 'Quark');
+  assert.equal(lauf('at')[0].einheit, 'dag');
+  assert.equal(lauf('original')[0].einheit, 'dag');
+  assert.equal(lauf('de', 'at')[0].einheit, 'dag', 'ausdrücklich österreichische Einheiten bleiben dag');
+});

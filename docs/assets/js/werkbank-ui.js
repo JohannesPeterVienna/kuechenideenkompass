@@ -189,6 +189,10 @@
     var f = parseFloat(q.get('faktor'));
     if (f > 0) { setzen({ g: 'faktor', f: String(Math.round(f * 1000) / 1000) }); status('Faktor aus dem Backform-Übersetzer übernommen' + (q.get('info') ? ': ' + q.get('info') : '') + '.'); }
   }
+  // ohne geteilten Link, Faktor-Übergabe oder vom Browser wiederhergestellte Eingabe: Beispiel als echten Wert vorbelegen
+  if (!m && !q.get('faktor') && !$('wb-zutaten').value.trim() && !$('wb-titel').value.trim()) {
+    setzen({ t: BEISPIEL.titel, z: BEISPIEL.zutaten, v: BEISPIEL.von, n: BEISPIEL.nach });
+  }
   grundlageZeigen();
   rechnen();
 })();
