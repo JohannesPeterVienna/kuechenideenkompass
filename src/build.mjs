@@ -193,7 +193,7 @@ ${SEITEN.filter((s) => !s.noindex).map((s) => `  <url><loc>${url(s.slug)}</loc><
 fs.writeFileSync(path.join(DOCS, 'sitemap.xml'), sitemap);
 fs.writeFileSync(path.join(DOCS, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${DOMAIN}/sitemap.xml\n`);
 fs.writeFileSync(path.join(DOCS, 'ads.txt'), 'google.com, pub-7811071715414905, DIRECT, f08c47fec0942fa0\n');
-fs.writeFileSync(path.join(DOCS, 'CNAME'), 'kuechenideenkompass.de\n');
+fs.writeFileSync(path.join(DOCS, 'CNAME'), 'kuechenideenkompass.de');
 fs.writeFileSync(path.join(DOCS, '.nojekyll'), '');
 fs.writeFileSync(path.join(DOCS, 'favicon.svg'), LOGO.replace('aria-hidden="true" focusable="false"', 'xmlns="http://www.w3.org/2000/svg"'));
 

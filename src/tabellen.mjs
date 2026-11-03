@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const D = require('../docs/assets/js/kueche-daten.js');
 const K = require('../docs/assets/js/werkbank-kern.js');
+const MEHL = require('../docs/assets/js/mehl-daten.js');
 const z = (x, s = 0) => K.deZahl(x, s);
 const huelle = (cap, kopf, zeilen) => `<div class="tabelle-huelle"><table><caption>${cap}</caption><thead><tr>${kopf.map((k, i) => `<th scope="col"${i ? ' class="zahl"' : ''}>${k}</th>`).join('')}</tr></thead><tbody>${zeilen.map((r) => `<tr>${r.map((c, i) => (i ? `<td class="zahl">${c}</td>` : `<th scope="row">${c}</th>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
 const ka = `<a href="${D.QUELLEN.ka.url}" rel="noopener" target="_blank">King Arthur Ingredient Weight Chart</a>`;
@@ -79,6 +80,13 @@ export const TABELLEN = {
 
   'regional-tabelle': () => huelle('Was die Werkbank automatisch übersetzt', ['Österreich', 'Deutschland', 'Schweiz', 'Beleg'],
     D.REGIONAL.filter((r) => !['Faschiertem', 'Erdapfel', 'Marille', 'Ribisel', 'Semmel'].includes(r.at)).map((r) => [r.at, r.de, r.ch, `<small>${r.beleg}</small>`])),
+
+  'mehl-tabelle': () => ['weizen', 'roggen'].map((korn) => {
+    const reihen = MEHL.SORTEN.filter((s) => s.korn === korn).sort((a, b) => a.max - b.max);
+    const quelle = (s) => `<a href="${MEHL.QUELLEN[s.q].url}" rel="noopener" target="_blank">${s.q === 'ak' ? 'ÖLMB B 20 / AK' : s.q === 'din' ? 'DIN 10355' : 'VLpH Art. 63'}</a>`;
+    return huelle(`${korn === 'weizen' ? 'Weizen' : 'Roggen'}: Mineralstoffgehalt in % der Trockenmasse, nach Bereich sortiert`, ['Sorte', 'Land', 'Bereich', 'Quelle'],
+      reihen.map((s) => [s.name, MEHL.LAENDER[s.land], MEHL.bereichText(s), quelle(s)]));
+  }).join(''),
 
   'germ-tabelle': () => {
     const mehl = [250, 500, 750, 1000, 1500];

@@ -265,3 +265,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
   .marke-text small { font-size: .6rem; letter-spacing: .05em; }
   .menue > summary { padding: .45rem .6rem; font-size: .95rem; }
 }
+/* Mehltyp-Übersetzer */
+.mehl-ergebnis { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.mehl-ergebnis h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.mehl-ergebnis p { margin: .3rem 0; font-size: .95rem; }
+.liste-eng { margin: 0; padding-left: 1.1rem; font-size: .95rem; }
+.liste-eng li { margin: .25rem 0; }

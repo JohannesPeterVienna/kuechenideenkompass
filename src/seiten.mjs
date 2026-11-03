@@ -61,6 +61,13 @@ export const SEITEN = [
     einleitung: 'Topfenstrudel, Quarkkuchen, Käsekuchen: Gemeint ist dieselbe Zutat. Trotzdem gelingt ein Rezept aus dem Nachbarland manchmal nicht. Das liegt selten am Namen, sondern an Fettstufe und Wassergehalt.'
   },
   {
+    slug: 'mehltypen-oesterreich-deutschland', typ: 'ratgeber', kurz: 'Mehltypen AT · DE · CH', skripte: ['mehl-daten.js', 'mehl-ui.js'],
+    titel: 'Mehltypen übersetzen: W480, W700 & W1600 vs. Type 405, 550, 1050 und Ruchmehl',
+    beschreibung: 'Welches deutsche oder Schweizer Mehl entspricht W480, W700 oder W1600? Vergleich nach Normwerten, glatt und griffig erklärt, mit Mehltyp-Übersetzer und Mischrechner.',
+    h1: 'Mehltypen Österreich – Deutschland – Schweiz',
+    einleitung: 'W 700 ist Type 550 – so steht es in vielen Tabellen. Vergleicht man die Normwerte, stimmt das nicht ganz. Hier steht, welches Mehl wirklich zusammenpasst, was glatt und griffig bedeutet und wie Sie eine fehlende Type aus zwei anderen mischen.'
+  },
+  {
     slug: 'germ-umrechnen', typ: 'ratgeber', kurz: 'Germ umrechnen', skripte: [...KERN, 'helfer-ui.js'],
     titel: 'Germ umrechnen: Würfel, Trockengerm & Hefe – mit Rechner',
     beschreibung: '1 Würfel Frischgerm (42 g) entspricht 2 Päckchen Trockengerm à 7 g. Rechner für Frischgerm, Trockengerm und Mehlmenge, Herstellerangaben aus AT und CH.',
