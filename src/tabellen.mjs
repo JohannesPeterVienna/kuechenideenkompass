@@ -5,6 +5,7 @@ const require = createRequire(import.meta.url);
 const D = require('../docs/assets/js/kueche-daten.js');
 const K = require('../docs/assets/js/werkbank-kern.js');
 const MEHL = require('../docs/assets/js/mehl-daten.js');
+const EIER = require('../docs/assets/js/eier-daten.js');
 const z = (x, s = 0) => K.deZahl(x, s);
 const huelle = (cap, kopf, zeilen) => `<div class="tabelle-huelle"><table><caption>${cap}</caption><thead><tr>${kopf.map((k, i) => `<th scope="col"${i ? ' class="zahl"' : ''}>${k}</th>`).join('')}</tr></thead><tbody>${zeilen.map((r) => `<tr>${r.map((c, i) => (i ? `<td class="zahl">${c}</td>` : `<th scope="row">${c}</th>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
 const ka = `<a href="${D.QUELLEN.ka.url}" rel="noopener" target="_blank">King Arthur Ingredient Weight Chart</a>`;
@@ -80,6 +81,10 @@ export const TABELLEN = {
 
   'regional-tabelle': () => huelle('Was die Werkbank automatisch übersetzt', ['Österreich', 'Deutschland', 'Schweiz', 'Beleg'],
     D.REGIONAL.filter((r) => !['Faschiertem', 'Erdapfel', 'Marille', 'Ribisel', 'Semmel'].includes(r.at)).map((r) => [r.at, r.de, r.ch, `<small>${r.beleg}</small>`])),
+
+  'eier-tabelle': () => huelle('USA: Mindestgewicht je Dutzend und daraus je Ei – mit passender EU-Klasse', ['US-Größe', 'je Dutzend (Minimum)', 'je Ei im Schnitt (Minimum)', 'fällt in EU-Klasse'],
+      EIER.US.map((k) => [k.name, `${k.ozDutzend} oz = ${z(k.ozDutzend * EIER.UNZE)} g`, `${z(k.minProEi, 1)} g`, EIER.euKlasseFuer(k.minProEi).name]))
+    + `<p class="stand">Quelle: <a href="${EIER.QUELLEN.usda.url}" rel="noopener" target="_blank">USDA AMS, Minimum Net Weight for Various Egg Containers</a>; 1 oz = 28,35 g. EU-Klassen nach <a href="${EIER.QUELLEN.eu.url}" rel="noopener" target="_blank">VO (EU) 2023/2465, Art. 5</a>.</p>`,
 
   'mehl-tabelle': () => ['weizen', 'roggen'].map((korn) => {
     const reihen = MEHL.SORTEN.filter((s) => s.korn === korn).sort((a, b) => a.max - b.max);

@@ -68,6 +68,13 @@ export const SEITEN = [
     einleitung: 'W 700 ist Type 550 – so steht es in vielen Tabellen. Vergleicht man die Normwerte, stimmt das nicht ganz. Hier steht, welches Mehl wirklich zusammenpasst, was glatt und griffig bedeutet und wie Sie eine fehlende Type aus zwei anderen mischen.'
   },
   {
+    slug: 'eiergroessen-gramm', typ: 'ratgeber', kurz: 'Eiergrößen in Gramm', skripte: ['eier-daten.js', 'eier-ui.js'],
+    titel: 'Eiergrößen in Gramm: S, M, L, XL – und warum ein US-„large egg“ ein M ist',
+    beschreibung: 'Gewichtsklassen S, M, L und XL nach EU-Norm, US-Größen von Small bis Jumbo in Gramm, Ei ohne Schale und ein Rechner, wie viele Eier Ihrer Größe das Rezept braucht.',
+    h1: 'Eiergrößen in Gramm – EU und USA',
+    einleitung: '„2 large eggs“ im amerikanischen Rezept, „2 Eier Größe M“ im österreichischen: Ist das dasselbe? Fast. Ein US-„large“ entspricht nach Gewicht einem europäischen M, nicht einem L. Hier stehen die Grenzwerte beider Systeme und ein Rechner für den Austausch.'
+  },
+  {
     slug: 'germ-umrechnen', typ: 'ratgeber', kurz: 'Germ umrechnen', skripte: [...KERN, 'helfer-ui.js'],
     titel: 'Germ umrechnen: Würfel, Trockengerm & Hefe – mit Rechner',
     beschreibung: '1 Würfel Frischgerm (42 g) entspricht 2 Päckchen Trockengerm à 7 g. Rechner für Frischgerm, Trockengerm und Mehlmenge, Herstellerangaben aus AT und CH.',
