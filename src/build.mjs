@@ -13,7 +13,8 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261102a';
+const VERSION = '20261103a';
+export const INDEXNOW_KEY = '4f32b38e7905cc7a450953a78778a3f6';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const url = (slug) => `${DOMAIN}/${slug ? slug + '/' : ''}`;
@@ -194,6 +195,8 @@ fs.writeFileSync(path.join(DOCS, 'sitemap.xml'), sitemap);
 fs.writeFileSync(path.join(DOCS, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${DOMAIN}/sitemap.xml\n`);
 fs.writeFileSync(path.join(DOCS, 'ads.txt'), 'google.com, pub-7811071715414905, DIRECT, f08c47fec0942fa0\n');
 fs.writeFileSync(path.join(DOCS, 'CNAME'), 'kuechenideenkompass.de');
+// IndexNow-Schlüssel (öffentlich, Bing/Yandex u. a.) – Meldung neuer URLs: node src/indexnow.mjs
+fs.writeFileSync(path.join(DOCS, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 fs.writeFileSync(path.join(DOCS, '.nojekyll'), '');
 fs.writeFileSync(path.join(DOCS, 'favicon.svg'), LOGO.replace('aria-hidden="true" focusable="false"', 'xmlns="http://www.w3.org/2000/svg"'));
 
