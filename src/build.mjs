@@ -13,7 +13,12 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261102a';
+const VERSION = '20261104a';
+// Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
+// (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
+const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});window['ga-disable-G-T00HRG2YVF']=true;window.kikConsentStandard=true;</script>`;
+const LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7811071715414905" crossorigin="anonymous"></script>';
+const OHNE_LOADER = ['impressum', 'datenschutz', 'kontakt'];
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const url = (slug) => `${DOMAIN}/${slug ? slug + '/' : ''}`;
@@ -53,7 +58,7 @@ function fuss() {
 <div><h2>Ratgeber</h2><ul>${ratgeber}</ul></div>
 <div><h2>Projekt</h2><ul><li><a href="/so-rechnet-die-werkbank/">So rechnet die Werkbank</a></li><li><a href="/ueber-uns/">Über uns</a></li><li><a href="/kontakt/">Kontakt</a></li><li><a href="/impressum/">Impressum</a></li><li><a href="/datenschutz/">Datenschutz</a></li><li><button type="button" class="link-knopf" data-datenschutz-einstellungen>Datenschutz-Einstellungen</button></li></ul></div>
 </div>
-<p class="klein">© 2026 AdStern, Wien · Alle Rechenwerte mit Quellenangabe, Stand: Oktober 2026 · Rezepte und Listen bleiben in Ihrem Browser.</p>
+<p class="klein">© 2026 AdStern, Wien · Alle Rechenwerte mit Quellenangabe, Stand: November 2026 · Rezepte und Listen bleiben in Ihrem Browser.</p>
 </div></footer>`;
 }
 
@@ -105,7 +110,7 @@ function seiteBauen(seite) {
   const krumen = seite.slug ? `<nav class="brotkrumen" aria-label="Brotkrumen"><ol><li><a href="/">Startseite</a></li><li aria-current="page">${esc(seite.kurz)}</li></ol></nav>` : '';
   const skripte = (seite.skripte || []).map((s) => `<script src="/assets/js/${s}?v=${VERSION}" defer></script>`).join('\n');
   const robots = seite.noindex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robots" content="index, follow, max-image-preview:large">';
-  const kopfZeile = seite.slug ? `${krumen}<h1>${esc(seite.h1)}</h1><p class="einleitung">${seite.einleitung}</p><p class="stand">${seite.typ === 'pflicht' ? 'Stand: 2. November 2026' : `Stand: Oktober 2026 · ${seite.typ === 'werkzeug' ? 'Werkzeug läuft vollständig in Ihrem Browser' : 'Werte mit Quellenangabe'}`}</p>` : '';
+  const kopfZeile = seite.slug ? `${krumen}<h1>${esc(seite.h1)}</h1><p class="einleitung">${seite.einleitung}</p><p class="stand">${seite.typ === 'pflicht' ? `Stand: ${seite.stand || '2. November 2026'}` : `Stand: ${seite.stand || 'Oktober 2026'} · ${seite.typ === 'werkzeug' ? 'Werkzeug läuft vollständig in Ihrem Browser' : 'Werte mit Quellenangabe'}`}</p>` : '';
   // Kopf-Anzeigenplatz erst nach H1 + Einleitung. Werkzeugseiten: kein Kopfplatz – das Werkzeug beginnt dort
   // weniger als 150 px darunter (erster Platz kommt nach dem Erklärtext). Ratgeber mit Werkzeugblock: nur ab 768 px.
   const kopfAnzeige = werbung && seite.typ !== 'werkzeug' ? `<div class="anzeige" data-anzeige="kopf"${werkzeug ? ' data-nur-breit' : ''} hidden></div>` : '';
@@ -130,7 +135,8 @@ ${robots}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/figtree-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/werkbank.css?v=${VERSION}">
-${jsonLd(seite, faq, howto)}
+${CONSENT_DEFAULT}
+${!seite.noindex && !OHNE_LOADER.includes(seite.slug) ? LOADER + '\n' : ''}${jsonLd(seite, faq, howto)}
 <script src="/assets/js/einwilligung.js?v=${VERSION}" defer></script>
 ${werbung ? `<script src="/assets/js/anzeigen.js?v=${VERSION}" defer></script>` : ''}
 ${skripte}
@@ -184,7 +190,7 @@ for (const [alt, neu] of WEITERLEITUNGEN) {
   fs.mkdirSync(path.dirname(datei), { recursive: true });
   fs.writeFileSync(datei, weiterleitung(alt, neu));
 }
-const heute = '2026-10-31';
+const heute = '2026-11-04';
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${SEITEN.filter((s) => !s.noindex).map((s) => `  <url><loc>${url(s.slug)}</loc><lastmod>${heute}</lastmod></url>`).join('\n')}
@@ -193,7 +199,7 @@ ${SEITEN.filter((s) => !s.noindex).map((s) => `  <url><loc>${url(s.slug)}</loc><
 fs.writeFileSync(path.join(DOCS, 'sitemap.xml'), sitemap);
 fs.writeFileSync(path.join(DOCS, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${DOMAIN}/sitemap.xml\n`);
 fs.writeFileSync(path.join(DOCS, 'ads.txt'), 'google.com, pub-7811071715414905, DIRECT, f08c47fec0942fa0\n');
-fs.writeFileSync(path.join(DOCS, 'CNAME'), 'kuechenideenkompass.de\n');
+fs.writeFileSync(path.join(DOCS, 'CNAME'), 'kuechenideenkompass.de'); // ohne Zeilenumbruch, wie auf main
 fs.writeFileSync(path.join(DOCS, '.nojekyll'), '');
 fs.writeFileSync(path.join(DOCS, 'favicon.svg'), LOGO.replace('aria-hidden="true" focusable="false"', 'xmlns="http://www.w3.org/2000/svg"'));
 
@@ -201,6 +207,6 @@ fs.writeFileSync(path.join(DOCS, 'favicon.svg'), LOGO.replace('aria-hidden="true
 const s404 = fs.readFileSync(path.join(DOCS, 'index.html'), 'utf8');
 const start404 = s404.indexOf('<main'), ende404 = s404.indexOf('</main>') + 7;
 const seite404 = s404.slice(0, start404) + `<main id="inhalt" class="rahmen"><h1>Diese Seite gibt es nicht (mehr)</h1><p class="einleitung">Vielleicht hilft eines der Werkzeuge weiter:</p><div class="karten">${SEITEN.filter((s) => s.typ === 'werkzeug').map((s) => `<a class="karte werk" href="${href(s.slug)}"><b>${esc(s.kurz)}</b><span>${esc(s.beschreibung)}</span></a>`).join('')}</div></main>` + s404.slice(ende404);
-fs.writeFileSync(path.join(DOCS, '404.html'), seite404.replace(/<title>[^<]*<\/title>/, '<title>Seite nicht gefunden – Küchenideenkompass</title>').replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex">').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n/, ''));
+fs.writeFileSync(path.join(DOCS, '404.html'), seite404.replace(/<title>[^<]*<\/title>/, '<title>Seite nicht gefunden – Küchenideenkompass</title>').replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex">').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n/, '').replace(LOADER + '\n', ''));
 
 console.log(ergebnis.map((e) => `${(e.slug || '/').padEnd(30)} ${e.typ.padEnd(10)} ${e.woerter} Wörter`).join('\n'));

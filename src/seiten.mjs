@@ -125,6 +125,49 @@ export const SEITEN = [
     einleitung: '„2 EL Zucker“ ist schnell gelesen, aber wie viel ist das auf der Waage? Die Antwort hängt von der Zutat ab – und davon, ob der Löffel gestrichen oder gehäuft ist. Die Tabelle rechnet mit Messlöffeln.'
   },
   {
+    slug: 'mehltypen-at-de-ch', typ: 'ratgeber', kurz: 'Mehltypen AT · DE · CH', stand: 'November 2026',
+    titel: 'Mehltypen im Vergleich: W 480, Type 405, Weissmehl & Co. in AT, DE und CH',
+    beschreibung: 'Welches Mehl entspricht welchem? W 480, W 700, W 1600, Type 405, 550, 1050, Weissmehl, Halbweissmehl, Ruchmehl – mit Tabelle, glatt und griffig erklärt.',
+    h1: 'Mehltypen in Österreich, Deutschland und der Schweiz',
+    einleitung: 'Ein Rezept aus Köln verlangt Type 405, eines aus Wien W 480 glatt, eines aus Bern Halbweissmehl. Hier steht, was die Zahlen und Namen bedeuten und welches Mehl Sie im eigenen Land dafür nehmen.'
+  },
+  {
+    slug: 'eiergroessen', typ: 'ratgeber', kurz: 'Eiergrößen S bis XL', stand: 'November 2026',
+    titel: 'Eiergrößen S, M, L, XL: Gewichte in AT, DE, CH und USA – mit Tabelle',
+    beschreibung: 'Wie viel wiegt ein Ei der Größe M? EU-Gewichtsklassen, die Lage in der Schweiz, US-Größen, Richtwerte für Eiklar und Dotter und wann man Eier besser abwiegt.',
+    h1: 'Eiergrößen S bis XL – was ein Ei wiegt',
+    einleitung: '„3 Eier“ steht schnell im Rezept. Ob damit 150 g oder 190 g Ei gemeint sind, hängt von der Größe ab – und die ist in Österreich, Deutschland, der Schweiz und den USA unterschiedlich geregelt.'
+  },
+  {
+    slug: 'germteig-gehzeit', typ: 'ratgeber', kurz: 'Germteig-Gehzeit', stand: 'November 2026',
+    titel: 'Germteig-Gehzeit nach Raumtemperatur: Tabelle, Kühlschrank & Fingerprobe',
+    beschreibung: 'Wie lange muss Germteig gehen – bei 18, 22 oder 26 °C und über Nacht im Kühlschrank? Richtwerte, warum süße Teige länger brauchen und woran man erkennt, dass er fertig ist.',
+    h1: 'Germteig-Gehzeit nach Raumtemperatur',
+    einleitung: 'Im Rezept steht „eine Stunde gehen lassen“. In einer warmen Sommerküche reicht das, im kühlen Altbau im Jänner nicht. Dieser Ratgeber zeigt, wie stark die Temperatur die Gehzeit verändert – und worauf es wirklich ankommt.'
+  },
+  {
+    slug: 'backzeit-formgroesse', typ: 'ratgeber', kurz: 'Backzeit bei anderer Form', stand: 'November 2026',
+    titel: 'Backzeit und Temperatur bei anderer Formgröße – Teighöhe, Tabelle, Kerntemperatur',
+    beschreibung: 'Gleicher Teig, andere Form: wie viel höher oder flacher er wird, wann Sie Temperatur und Zeit ändern sollten und welche Kerntemperatur zeigt, dass Kuchen und Brot gar sind.',
+    h1: 'Backzeit und Temperatur bei anderer Formgröße',
+    einleitung: 'Die 26er-Springform ist gerade im Geschirrspüler, die 22er steht bereit. Was passiert mit Backzeit und Temperatur, wenn derselbe Teig in eine andere Form kommt? Die Antwort liegt in der Teighöhe.'
+  },
+  {
+    slug: 'rezept-verdoppeln', typ: 'ratgeber', kurz: 'Rezept verdoppeln', stand: 'November 2026',
+    titel: 'Rezept verdoppeln: Form, Topf, Würze und Zeit – die Fallstricke',
+    beschreibung: 'Doppelte Menge ohne Pannen: welche Form oder welches Blech passt, warum im großen Topf weniger verdampft, wie man würzt und warum sich die Backzeit nicht verdoppelt.',
+    h1: 'Rezept verdoppeln – Form, Topf, Würze, Zeit',
+    einleitung: 'Für Gäste, das Pfarrfest oder zum Einfrieren: Verdoppeln ist rechnerisch einfach. Schwierig wird es bei Form, Topf, Gewürzen und Zeit. So vermeiden Sie die typischen Fehler.',
+    howto: 'Ein Rezept verdoppeln'
+  },
+  {
+    slug: 'baeckerprozente-teigausbeute', typ: 'ratgeber', kurz: 'Bäckerprozente & Teigausbeute', stand: 'November 2026',
+    titel: 'Bäckerprozente und Teigausbeute (TA): Brotteig richtig umrechnen',
+    beschreibung: 'Mehl = 100 %: wie Bäckerprozente und die Teigausbeute funktionieren, was TA 160 oder 175 bedeutet und wie Sie jedes Brotrezept auf die gewünschte Teigmenge umrechnen.',
+    h1: 'Bäckerprozente und Teigausbeute',
+    einleitung: 'Brotrezepte lassen sich mit einem einfachen Trick auf jede Größe umrechnen: Man schreibt alle Zutaten als Anteil vom Mehl. Im deutschsprachigen Raum heißt die wichtigste Kennzahl dafür Teigausbeute.'
+  },
+  {
     slug: 'so-rechnet-die-werkbank', typ: 'info', kurz: 'So rechnet die Werkbank',
     titel: 'So rechnet die Werkbank: Methodik, Rundung & Quellen',
     beschreibung: 'Offene Methodik der Rezept-Werkbank: wie Zeilen gelesen, Mengen skaliert, Einheiten umgerechnet und gerundet werden – mit allen Quellen und Grenzen.',
@@ -132,11 +175,11 @@ export const SEITEN = [
     einleitung: 'Ein Rechenwerkzeug ist nur so gut wie seine Annahmen. Deshalb steht hier vollständig, wie die Werkbank liest, rechnet, rundet und übersetzt – und wo sie bewusst nicht rechnet.'
   },
   {
-    slug: 'ueber-uns', typ: 'pflicht', kurz: 'Über uns',
+    slug: 'ueber-uns', typ: 'pflicht', kurz: 'Über uns', stand: '4. November 2026',
     titel: 'Über uns – Küchenideenkompass',
     beschreibung: 'Wer hinter dem Küchenideenkompass steht, warum es die Rezept-Werkbank gibt und nach welchen Grundsätzen Werte, Quellen und Werbung behandelt werden.',
     h1: 'Über den Küchenideenkompass',
-    einleitung: 'Eine Werkbank für Rezepte aus drei Küchensprachen – gebaut in Wien.'
+    einleitung: 'Eine Werkbank für Rezepte aus drei Küchensprachen – gebaut in Wien. Hier steht, wer sie betreibt, wie sie rechnet und wovon sie lebt.'
   },
   {
     slug: 'kontakt', typ: 'pflicht', kurz: 'Kontakt',
@@ -153,7 +196,7 @@ export const SEITEN = [
     einleitung: 'Angaben gemäß § 5 E-Commerce-Gesetz (ECG), § 14 Unternehmensgesetzbuch und Offenlegung gemäß § 25 Mediengesetz.'
   },
   {
-    slug: 'datenschutz', typ: 'pflicht', kurz: 'Datenschutz',
+    slug: 'datenschutz', typ: 'pflicht', kurz: 'Datenschutz', stand: '4. November 2026',
     titel: 'Datenschutzerklärung – Küchenideenkompass',
     beschreibung: 'Datenschutzerklärung: Hosting über GitHub Pages, Google AdSense, Google Analytics 4 nur nach Einwilligung, Rezepte und Listen nur lokal im Browser.',
     h1: 'Datenschutzerklärung',

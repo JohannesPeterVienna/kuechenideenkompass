@@ -1,7 +1,7 @@
 /*
  * Küchenideenkompass – Einwilligung & Reichweitenmessung
- * 1. Setzt sofort die Consent-Mode-Grundwerte (alles abgelehnt, 500 ms Wartezeit),
- *    noch bevor irgendein Google-Skript geladen wird.
+ * 1. Consent-Mode-Grundwerte (alles abgelehnt, 500 ms Wartezeit) stehen inline im head,
+ *    vor dem AdSense-Loader; fehlen sie, setzt dieses Skript sie selbst.
  * 2. Lädt die Datenschutzmitteilung von Google (Funding Choices, IAB TCF).
  * 3. Google Analytics 4 (G-T00HRG2YVF) misst nur, wenn BEIDE Signale zustimmen:
  *    a) TCF: Zweck 1 und Anbieter 755 (Google) erlaubt,
@@ -31,13 +31,16 @@
     window.gtag = function () { window.dataLayer.push(arguments); };
   }
   window[AUS_SCHALTER] = true; // bis zur Zustimmung keine Messung
-  window.gtag('consent', 'default', {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    analytics_storage: 'denied',
-    wait_for_update: 500
-  });
+  // Die Grundwerte stehen normalerweise schon inline im head (vor dem AdSense-Loader); nur ohne sie hier setzen.
+  if (!window.kikConsentStandard) {
+    window.gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      wait_for_update: 500
+    });
+  }
 
   window.googlefc = window.googlefc || {};
   window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];

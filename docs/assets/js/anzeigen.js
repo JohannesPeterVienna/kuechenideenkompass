@@ -59,12 +59,15 @@
     befuellt++;
   });
 
-  // Die Bibliothek wird auf Inhaltsseiten immer geladen (Kontoprüfung durch AdSense);
+  // Die Bibliothek steht statisch im head jeder indexierbaren Seite (Kontoprüfung durch AdSense);
   // Anzeigen erscheinen nur in befüllten Plätzen.
-  var s = document.createElement('script');
-  s.async = true;
-  s.crossOrigin = 'anonymous';
-  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + KUNDE;
-  document.head.appendChild(s);
+  // Der Loader steht statisch im head; nur falls er fehlt, wird er hier einmal nachgeladen.
+  if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+    var s = document.createElement('script');
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + KUNDE;
+    document.head.appendChild(s);
+  }
   for (var i = 0; i < befuellt; i++) { (window.adsbygoogle = window.adsbygoogle || []).push({}); }
 })();

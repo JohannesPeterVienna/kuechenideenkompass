@@ -28,14 +28,25 @@ for (const s of SEITEN) {
   const artikel = (h.match(/<article class="artikel[^"]*">([\s\S]*?)<\/article>/) || [])[1] || '';
   const w = woerter(artikel);
   if (s.typ === 'ratgeber' && w < 900) f(s.slug, `Ratgeber nur ${w} Wörter`);
+  if (s.stand === 'November 2026' && s.typ === 'ratgeber' && w < 1000) f(s.slug, `neuer Ratgeber nur ${w} Wörter (mind. 1000)`);
+  if (s.typ === 'uebersicht' && w < 900) f(s.slug, `Startseite nur ${w} Wörter`);
+  if (s.slug === 'ueber-uns' && w < 700) f(s.slug, `Über uns nur ${w} Wörter`);
   if (s.typ === 'werkzeug' && w < 800) f(s.slug, `Werkzeug-Erklärteil nur ${w} Wörter`);
   if (['ratgeber', 'werkzeug'].includes(s.typ)) {
     if (!/<section class="quellen"/.test(artikel)) f(s.slug, 'Quellen fehlen');
-    if (!/Stand: Oktober 2026/.test(h)) f(s.slug, 'Stand fehlt');
+    if (!/Stand: (Oktober|November) 2026/.test(h)) f(s.slug, 'Stand fehlt');
   }
   if (s.typ === 'ratgeber' && !/<section class="faq"/.test(artikel)) f(s.slug, 'FAQ fehlt');
-  const werbung = /data-anzeige=/.test(h) || /anzeigen\.js/.test(h) || /adsbygoogle/.test(h);
-  if (['pflicht', 'uebersicht', 'info'].includes(s.typ) && werbung) f(s.slug, 'Werbung auf Pflicht-/Übersichtsseite');
+  const werbung = /data-anzeige=/.test(h) || /anzeigen\.js/.test(h);
+  if (['pflicht', 'uebersicht', 'info'].includes(s.typ) && werbung) f(s.slug, 'Werbeplätze auf Pflicht-/Übersichtsseite');
+  // AdSense-Loader: statisch im head aller indexierbaren Seiten außer Impressum, Datenschutz, Kontakt – genau einmal, nach den Consent-Grundwerten
+  const loader = (h.match(/<script async src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-7811071715414905" crossorigin="anonymous"><\/script>/g) || []).length;
+  const ohneLoader = ['impressum', 'datenschutz', 'kontakt'].includes(s.slug);
+  if (ohneLoader && /adsbygoogle/.test(h)) f(s.slug, 'AdSense-Loader auf Rechts-/Kontaktseite');
+  if (!ohneLoader && loader !== 1) f(s.slug, `AdSense-Loader ${loader}× statt einmal`);
+  const kopfEnde = h.indexOf('</head>'), cd = h.indexOf("gtag('consent','default'");
+  if (cd < 0 || cd > kopfEnde) f(s.slug, 'Consent-Grundwerte fehlen im head');
+  if (loader && (h.indexOf('adsbygoogle.js') < cd || h.indexOf('adsbygoogle.js') > kopfEnde)) f(s.slug, 'AdSense-Loader nicht nach den Consent-Grundwerten im head');
   if (['ratgeber', 'werkzeug'].includes(s.typ) && !werbung) f(s.slug, 'Werbeplätze fehlen');
   // Kopf-Anzeigenplatz erst nach H1 + Einleitung, auf Seiten mit Werkzeug nur breit
   const kopfPlatz = h.indexOf('data-anzeige="kopf"');
@@ -44,7 +55,7 @@ for (const s of SEITEN) {
     if (/<section class="werkzeug"/.test(h) && !/data-anzeige="kopf" data-nur-breit/.test(h)) f(s.slug, 'Kopfplatz über Werkzeugblock ohne data-nur-breit');
     if (s.typ === 'werkzeug') f(s.slug, 'Kopfplatz auf Werkzeugseite (direkt über dem Werkzeug)');
   }
-  if (s.typ === 'pflicht' && !/<p class="stand">Stand: 2\. November 2026<\/p>/.test(h)) f(s.slug, 'Stand-Zeile der Pflichtseite');
+  if (s.typ === 'pflicht' && !/<p class="stand">Stand: \d{1,2}\. November 2026<\/p>/.test(h)) f(s.slug, 'Stand-Zeile der Pflichtseite');
   // Werbung nie im Werkzeugblock
   const werkzeug = (h.match(/<section class="werkzeug"[\s\S]*?<\/section>\s*(?=<div class="(raster-layout|)")/) || [''])[0];
   if (/data-anzeige/.test(werkzeug)) f(s.slug, 'Werbeplatz im Werkzeugblock');
@@ -70,6 +81,9 @@ for (const s of SEITEN) {
   if (/\b(Tel\.|Telefon|\+43)/.test(text(h))) f(s.slug, 'Telefonangabe gefunden');
   console.log(`${(s.slug || '/').padEnd(30)} ${s.typ.padEnd(10)} ${String(w).padStart(5)} Wörter  ${t.length} T / ${d.length} D`);
 }
+if (/adsbygoogle/.test(fs.readFileSync(path.join(DOCS, '404.html'), 'utf8'))) f('404.html', 'AdSense-Loader auf der 404-Seite');
+if (fs.readFileSync(path.join(DOCS, 'CNAME'), 'utf8') !== 'kuechenideenkompass.de') f('CNAME', 'muss genau kuechenideenkompass.de ohne Zeilenumbruch sein');
+for (const m of fs.readFileSync(path.join(DOCS, 'sitemap.xml'), 'utf8').matchAll(/<lastmod>([^<]*)<\/lastmod>/g)) if (m[1] !== '2026-11-04') { f('sitemap.xml', 'lastmod ' + m[1]); break; }
 for (const [alt, neu] of WEITERLEITUNGEN) {
   const h = fs.readFileSync(path.join(DOCS, alt), 'utf8');
   if (!/noindex/.test(h) || !h.includes(`url=${DOMAIN}/${neu ? neu + '/' : ''}`) || !h.includes(`rel="canonical" href="${DOMAIN}/${neu ? neu + '/' : ''}"`)) f(alt, 'Weiterleitung fehlerhaft');
