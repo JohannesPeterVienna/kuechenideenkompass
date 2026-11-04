@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261104a';
+const VERSION = '20261104b';
 // Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
 // (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
 const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});window['ga-disable-G-T00HRG2YVF']=true;window.kikConsentStandard=true;</script>`;
