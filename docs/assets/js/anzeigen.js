@@ -29,7 +29,7 @@
       if (b < 768 && el && el.hasAttribute('data-nur-breit')) return null;
       if (b >= 1024 && SLOTS.billboard) return 'billboard';
       if (b >= 768 && SLOTS.leaderboard) return 'leaderboard';
-      if (b < 768 && SLOTS.mobil) return 'mobil';
+      if (b < 768 && b >= 360 && SLOTS.mobil) return 'mobil'; // 320 px Banner braucht Platz für den Seitenrand
       return null;
     }
     if (platz === 'seite') {

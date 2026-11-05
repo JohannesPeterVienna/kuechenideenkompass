@@ -296,4 +296,5 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
   body.druck-karte .druckbar .zutaten{width:100%}
   body.druck-karte .nichtlinear{font-size:8.5pt}
   @page karte{size:A5 landscape;margin:8mm}
+  body.druck-karte .werkzeug .spalten>div:first-child,body.druck-karte .meine,body.druck-karte .knopf-reihe,body.druck-karte .status{display:none!important}
 }

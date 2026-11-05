@@ -163,13 +163,13 @@
   });
   $('wb-leeren').addEventListener('click', function () { $('wb-titel').value = ''; $('wb-zutaten').value = ''; $('wb-schritte').value = ''; rechnen(); $('wb-zutaten').focus(); });
   // Ereignis an Google Analytics – wirkt nur nach Einwilligung (einwilligung.js)
-  function zaehlen(name, p) { try { if (typeof window.gtag === 'function') window.gtag('event', name, p || {}); } catch (e) {} }
+  function zaehlen(name, p) { try { if (typeof window.gtag === 'function' && window['ga-disable-G-T00HRG2YVF'] === false) window.gtag('event', name, p || {}); } catch (e) {} }
   $('wb-drucken').addEventListener('click', function () { rechnen(); zaehlen('rezept_drucken'); window.print(); });
   $('wb-karte').addEventListener('click', function () {
     rechnen(); if (!letztes) { status('Erst ein Rezept eingeben.'); return; }
     document.body.classList.add('druck-karte'); zaehlen('rezeptkarte_drucken');
     var fertig = function () { document.body.classList.remove('druck-karte'); window.removeEventListener('afterprint', fertig); };
-    window.addEventListener('afterprint', fertig); window.print(); setTimeout(fertig, 1500);
+    window.addEventListener('afterprint', fertig); window.print();
   });
 
   // „Meine Rezepte“: umgerechnete Rezepte merken – nur im Browser (localStorage „kik-rezepte-v1“), höchstens 30
