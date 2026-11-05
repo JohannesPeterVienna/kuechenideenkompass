@@ -165,10 +165,13 @@
       var status = $('ek-gespeichert');
       if (!zeilen.length) { status.textContent = 'Die Liste ist leer – oder alles ist schon abgehakt.'; return; }
       var text = 'Einkaufsliste\n\n' + zeilen.join('\n') + '\n(erstellt mit kuechenideenkompass.de)';
-      try { if (typeof window.gtag === 'function') window.gtag('event', 'einkaufsliste_handy'); } catch (e) {}
+      try { if (typeof window.gtag === 'function' && window['ga-disable-G-T00HRG2YVF'] === false) window.gtag('event', 'einkaufsliste_handy'); } catch (e) {}
       if (navigator.share) { navigator.share({ title: 'Einkaufsliste', text: text }).catch(function () {}); return; }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { status.textContent = 'Liste kopiert – in WhatsApp, SMS oder Notizen einfügen.'; }, function () {});
-      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
+      // Ohne Teilen-Dialog (meist am Computer): nur kopieren. WhatsApp öffnet sich erst, wenn man den Link bewusst anklickt.
+      var wa = 'https://wa.me/?text=' + encodeURIComponent(text);
+      var zeigen = function (t) { status.innerHTML = ''; status.appendChild(document.createTextNode(t + ' ')); var a = document.createElement('a'); a.href = wa; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'In WhatsApp öffnen'; status.appendChild(a); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { zeigen('Liste kopiert – in SMS oder Notizen einfügen, oder:'); }, function () { zeigen('Kopieren nicht möglich.'); });
+      else zeigen('Teilen ist hier nicht verfügbar:');
     });
     $('ek-leeren').addEventListener('click', function () { daten = { rezepte: [{ titel: '', text: '', faktor: 1 }], vorrat: daten.vorrat, abgehakt: {} }; kartenZeichnen(); speichern(); liste(); });
     $('ek-beispiel').addEventListener('click', function () {
