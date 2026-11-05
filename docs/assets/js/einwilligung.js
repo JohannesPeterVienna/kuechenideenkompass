@@ -6,11 +6,13 @@
  * 3. Google Analytics 4 (G-T00HRG2YVF) misst nur, wenn BEIDE Signale zustimmen:
  *    a) TCF: Zweck 1 und Anbieter 755 (Google) erlaubt,
  *    b) Consent Mode der Google-CMP: analytics_storage = GRANTED.
- *    Gilt die DSGVO laut CMP nicht (gdprApplies === false), wird nur gemessen,
- *    wenn der Analyticswert GRANTED (1) oder NOT_APPLICABLE (3) ist und die CMP
- *    ausdrücklich keinen US-Opt-out meldet (usstatesoptout Status 1 oder 2).
- *    Fehlend, UNKNOWN (0), DENIED (2), NOT_CONFIGURED (4), ein offener Dialog
- *    oder ein Fehler einer CMP-Schnittstelle zählen als Nein. Ein eindeutiges
+ *    Gilt die DSGVO laut CMP nicht (gdprApplies === false), wird nur nach ausdrücklicher
+ *    Zustimmung gemessen: Analyticswert GRANTED (1) und die CMP meldet ausdrücklich keinen
+ *    US-Opt-out (usstatesoptout Status 1 oder 2) – oder „Zustimmen“ im Küchenzettel (unten).
+ *    NOT_APPLICABLE (3) ist keine Einwilligung: dann fragt der Zettel (seit 5.11.2026).
+ *    DENIED (2) oder gemeldeter US-Opt-out (3) = Nein ohne Zettel.
+ *    Fehlend, UNKNOWN (0), NOT_CONFIGURED (4), ein offener Dialog
+ *    oder ein Fehler einer CMP-Schnittstelle zählen als keine Zustimmung. Ein eindeutiges
  *    TCF-Nein schaltet sofort ab, bevor weitere CMP-Schnittstellen gefragt werden.
  *    Werte: developers.google.com/funding-choices/fc-api-docs
  * 4. Ablehnung oder Widerruf: consent update „denied“, ga-disable-Schalter an,
@@ -19,9 +21,9 @@
  *
  * Übergang ab 5.11.2026 – der „Küchenzettel“ (eigenes Fenster nur für die Statistik):
  *  - Hat die Google-CMP 3 s nach dem Laden weder entschieden (useractioncomplete, tcloaded mit
- *    tcString, gdprApplies === false) noch einen sichtbaren Dialog gemeldet (cmpuishown mit
- *    displayStatus „hidden“/„disabled“ zählt NICHT als sichtbar; fehlt __tcfapi, ebenso), fragt
- *    der Zettel unten rechts – nur nach Google Analytics, nie nach Werbung.
+ *    tcString; bei gdprApplies === false eine ausdrückliche Statistik-Entscheidung) noch einen
+ *    sichtbaren Dialog gemeldet (cmpuishown mit displayStatus „hidden“/„disabled“ zählt NICHT als
+ *    sichtbar; fehlt __tcfapi, ebenso), fragt der Zettel unten rechts – nur nach Google Analytics, nie nach Werbung.
  *  - Zustimmen: nur analytics_storage „granted“, gtag.js einmal laden (Signale/Werbepersonalisierung aus).
  *    ad_storage, ad_user_data, ad_personalization fasst der Zettel nie an (bleiben „denied“).
  *  - Ablehnen/Widerruf: ga-disable an, analytics_storage „denied“, Cookies _ga/_ga_* aller
@@ -46,12 +48,20 @@
     WARTEN: 3000,       // so lange bekommt die Google-CMP Zeit
     UHR_KULANZ: 60000,  // erlaubte Uhrabweichung für den gespeicherten Zeitpunkt
 
-    // Google-CMP hat entschieden (oder meldet: DSGVO gilt nicht) → nur ihre Logik gilt
+    // Google-CMP hat echt entschieden (Nutzeraktion oder geladene gespeicherte Wahl) → nur ihre Logik gilt.
+    // Bei gdprApplies === false zählt stattdessen aussenWert (ausdrückliche Statistik-Entscheidung), siehe lage().
     googleEntschieden: function (tc) {
       if (!tc) return false;
-      if (tc.gdprApplies === false) return true;
       if (tc.eventStatus === 'useractioncomplete') return true;
       return tc.eventStatus === 'tcloaded' && typeof tc.tcString === 'string' && tc.tcString !== '';
+    },
+    // Außerhalb der DSGVO: ausdrückliche Entscheidung der Google-CMP aus Consent-Mode-Wert (cm) und US-Status (us).
+    // 'ja' nur bei GRANTED (1) und bestätigt ohne US-Opt-out (1/2); 'nein' bei DENIED (2) oder US-Opt-out (3);
+    // sonst null – NOT_APPLICABLE (3) ist keine Einwilligung, dann fragt der Küchenzettel.
+    aussenWert: function (cm, us) {
+      if (us === 3 || cm === 2) return 'nein';
+      if (cm === 1 && (us === 1 || us === 2)) return 'ja';
+      return null;
     },
     // Google-Dialog ist wirklich zu sehen (hidden/disabled zählen nicht)
     googleDialogSichtbar: function (tc) {
@@ -74,9 +84,10 @@
       if (jetzt >= ZETTEL_REGELN.ablauf(z)) return null;
       return eintrag.wahl;
     },
-    // 'gpc' | 'google' | 'dialog' | 'ja' | 'nein' | 'fragen'
+    // 'gpc' | 'google' | 'dialog' | 'ja' | 'nein' | 'fragen'; o.aussen: aussenWert bei gdprApplies === false
     lage: function (o) {
       if (o.gpc) return 'gpc';
+      if (o.tc && o.tc.gdprApplies === false) return o.aussen ? 'google' : (ZETTEL_REGELN.gueltigeWahl(o.eintrag, o.jetzt) || 'fragen');
       if (ZETTEL_REGELN.googleEntschieden(o.tc)) return 'google';
       if (ZETTEL_REGELN.googleDialogSichtbar(o.tc)) return 'dialog';
       return ZETTEL_REGELN.gueltigeWahl(o.eintrag, o.jetzt) || 'fragen';
@@ -104,7 +115,6 @@
   var GA_ID = 'G-T00HRG2YVF';
   var AUS_SCHALTER = 'ga-disable-' + GA_ID;
   var CM = { UNBEKANNT: 0, ERTEILT: 1, ABGELEHNT: 2, NICHT_ANWENDBAR: 3, NICHT_KONFIGURIERT: 4 };
-  var US_OHNE_WIDERSPRUCH = [1, 2]; // usstatesoptout: DOES_NOT_APPLY, NOT_OPTED_OUT (0 UNKNOWN, 3 OPTED_OUT sperren)
   var GPC = !!(window.navigator && window.navigator.globalPrivacyControl === true);
   var HIER_MESSEN = !(document.body && document.body.getAttribute('data-statistik') === 'aus');
 
@@ -175,7 +185,14 @@
   };
 
   function lageJetzt() {
-    return ZETTEL_REGELN.lage({ tc: letzteTcDaten, gpc: GPC, eintrag: ablage.lesen(), jetzt: Date.now() });
+    var tc = letzteTcDaten;
+    return ZETTEL_REGELN.lage({ tc: tc, gpc: GPC, eintrag: ablage.lesen(), jetzt: Date.now(), aussen: tc && tc.gdprApplies === false ? aussen() : null });
+  }
+  // Google hat Vorrang: echte Entscheidung oder – außerhalb der DSGVO – eine ausdrückliche Statistik-Entscheidung
+  function googleVorrang(tc) {
+    if (!tc) return false;
+    if (tc.gdprApplies === false) return aussen() !== null;
+    return ZETTEL_REGELN.googleEntschieden(tc);
   }
   // Der Zettel entscheidet, solange Google nichts entschieden hat und keinen Dialog zeigt
   function zettelZustaendig() {
@@ -207,21 +224,25 @@
     } catch (err) { return CM.UNBEKANNT; }
   }
 
-  // US-Bundesstaaten: true, solange die CMP nicht ausdrücklich „kein Opt-out“ meldet; Fehler = Opt-out.
-  function usWiderspruch() {
+  // US-Bundesstaaten-Status der CMP: 0 UNKNOWN, 1 DOES_NOT_APPLY, 2 NOT_OPTED_OUT, 3 OPTED_OUT; fehlt/Fehler → 0
+  function usStatus() {
     try {
       var u = window.googlefc && window.googlefc.usstatesoptout;
-      return !(u && typeof u.getInitialUsStatesOptOutStatus === 'function' && US_OHNE_WIDERSPRUCH.indexOf(u.getInitialUsStatesOptOutStatus()) !== -1);
-    } catch (err) { return true; }
+      if (!u || typeof u.getInitialUsStatesOptOutStatus !== 'function') return 0;
+      var st = u.getInitialUsStatesOptOutStatus();
+      return typeof st === 'number' ? st : 0;
+    } catch (err) { return 0; }
   }
+  // Außerhalb der DSGVO: 'ja' | 'nein' | null (dann fragt der Küchenzettel)
+  function aussen() { return ZETTEL_REGELN.aussenWert(statistikWert(), usStatus()); }
 
   // Entscheidung allein nach der Google-CMP: true / false / null (noch keine)
   function googleEntscheidung() {
     var tc = letzteTcDaten;
     if (!tc) return null;
     if (tc.gdprApplies === false) {
-      var w = statistikWert();
-      return (w === CM.ERTEILT || w === CM.NICHT_ANWENDBAR) && !usWiderspruch();
+      var a = aussen();
+      return a === 'ja' ? true : (a === 'nein' ? false : null);
     }
     if (tc.eventStatus !== 'tcloaded' && tc.eventStatus !== 'useractioncomplete') return null;
     var zweck1 = !!(tc.purpose && tc.purpose.consents && tc.purpose.consents[1]);
@@ -458,7 +479,7 @@
 
     // jede TCF-Meldung: eine Google-Entscheidung ersetzt die eigene Wahl und schließt den Zettel
     googleMeldung: function (tc) {
-      if (ZETTEL_REGELN.googleEntschieden(tc)) {
+      if (googleVorrang(tc)) {
         ablage.loeschen();
         if (this.offen()) this.schliessen(); // auch der GPC-Hinweis: ab jetzt gilt allein Google
       } else if (ZETTEL_REGELN.googleDialogSichtbar(tc) && this.offen() && !this.ausloeser) {
@@ -469,7 +490,7 @@
     // Knopf „Datenschutz-Einstellungen“: Google-CMP, wenn sie aktiv ist, sonst der Zettel
     einstellungen: function (knopf) {
       var tc = letzteTcDaten;
-      if (ZETTEL_REGELN.googleEntschieden(tc) || ZETTEL_REGELN.googleDialogSichtbar(tc)) {
+      if (googleVorrang(tc) || ZETTEL_REGELN.googleDialogSichtbar(tc)) {
         window.googlefc.callbackQueue.push(function () {
           if (typeof window.googlefc.showRevocationMessage === 'function') window.googlefc.showRevocationMessage();
         });
@@ -483,7 +504,9 @@
   // lehnt Google die Statistik ab, Analytics-Cookies löschen – auch wenn der Zettel nie aktiv war.
   function nachGoogle() {
     abgleichen();
-    if (ZETTEL_REGELN.googleEntschieden(letzteTcDaten) && entscheidung() === false) gaKekseLoeschen();
+    if (googleVorrang(letzteTcDaten) && entscheidung() === false) gaKekseLoeschen();
+    // außerhalb der DSGVO: Consent-Mode-Wert nachgereicht → ausdrückliche Google-Entscheidung schließt den Zettel
+    if (googleVorrang(letzteTcDaten) && zettel.offen()) zettel.schliessen();
   }
 
   function aufTcf(versuche) {
@@ -493,8 +516,8 @@
         letzteTcDaten = tc;
         zettel.googleMeldung(tc);
         abgleichen();
-        if (ZETTEL_REGELN.googleEntschieden(tc)) setTimeout(nachGoogle, 300);
-        else zettel.fragenFallsNoetig();
+        if (googleVorrang(tc) || tc.gdprApplies === false) setTimeout(nachGoogle, 300);
+        if (!googleVorrang(tc)) zettel.fragenFallsNoetig();
       });
       return;
     }
@@ -504,9 +527,9 @@
   // Beim Laden: gespeichertes „nein“ (oder GPC) → vorhandene Analytics-Cookies löschen
   if (GPC || ZETTEL_REGELN.gueltigeWahl(ablage.lesen(), Date.now()) === 'nein') gaKekseLoeschen();
 
-  window.googlefc.callbackQueue.push({ CONSENT_MODE_DATA_READY: abgleichen });
-  window.googlefc.callbackQueue.push({ CONSENT_DATA_READY: abgleichen });
-  window.googlefc.callbackQueue.push({ INITIAL_US_STATES_OPT_OUT_DATA_READY: abgleichen });
+  window.googlefc.callbackQueue.push({ CONSENT_MODE_DATA_READY: nachGoogle });
+  window.googlefc.callbackQueue.push({ CONSENT_DATA_READY: nachGoogle });
+  window.googlefc.callbackQueue.push({ INITIAL_US_STATES_OPT_OUT_DATA_READY: nachGoogle });
 
   skript('https://fundingchoicesmessages.google.com/i/' + PUB + '?ers=1');
   signalSetzen();
