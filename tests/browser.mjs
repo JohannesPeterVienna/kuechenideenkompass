@@ -48,7 +48,15 @@ for (const breite of [390, 1366]) {
     const info = await page.evaluate(() => {
       const ueber = document.documentElement.scrollWidth - window.innerWidth;
       const plaetze = [...document.querySelectorAll('[data-anzeige]')];
-      for (const a of plaetze) { a.hidden = false; a.style.minHeight = '250px'; }
+      // Ohne gelieferte Anzeige darf kein Platz sichtbar sein (keine Höhe, kein Schild „Anzeige“)
+      const leer = plaetze.filter((a) => a.getBoundingClientRect().height > 0).map((a) => `leerer Platz ${a.dataset.anzeige} sichtbar`);
+      // Danach jeden Platz als gefüllt erzwingen (data-ad-status="filled"), um den Abstand zu Bedienelementen zu messen
+      for (const a of plaetze) {
+        a.hidden = false; a.style.minHeight = '250px';
+        let ins = a.querySelector('ins.adsbygoogle');
+        if (!ins) { ins = document.createElement('ins'); ins.className = 'adsbygoogle'; a.appendChild(ins); }
+        ins.setAttribute('data-ad-status', 'filled');
+      }
       const ctl = [...document.querySelectorAll('button, input, select, textarea, summary')].filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden'; });
       const nah = [];
       for (const a of plaetze) {
@@ -59,12 +67,43 @@ for (const breite of [390, 1366]) {
           if (d < 150) nah.push(`Platz ${a.dataset.anzeige} nur ${Math.round(d)} px von ${c.tagName.toLowerCase()}${c.id ? '#' + c.id : ''} „${(c.textContent || c.name || '').trim().slice(0, 30)}“`);
         }
       }
-      return { ueber, nah };
+      return { ueber, nah, leer };
     });
     if (info.ueber > 1) probs.push(`horizontaler Überlauf ${info.ueber}px`);
-    probs.push(...info.nah);
+    probs.push(...info.nah, ...info.leer);
     for (const p of probs) fehler.push(`${breite}px /${s}: ${p}`);
     await page.close();
+  }
+  await ctx.close();
+}
+
+// Leere Anzeigenplätze mit einem adsbygoogle-Stub, der nie etwas füllt: nichts sichtbar; mit data-ad-status="filled"
+// erscheint der Platz samt Schild „Anzeige“; "unfilled" bleibt zu.
+for (const breite of [390, 1366]) {
+  const ctx = await browser.newContext({ viewport: { width: breite, height: 900 } });
+  await ctx.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '/* Stub: keine Anzeige */' }));
+  const page = await ctx.newPage();
+  page.on('pageerror', (e) => fehler.push(`${breite}px Stub: JS-Fehler ${e.message}`));
+  for (const s of ['germteig-gehzeit/', 'mehltypen-at-de-ch/', 'backzeit-formgroesse/']) {
+    await geh(page, BASIS + '/' + s);
+    const z = await page.evaluate(async () => {
+      const plaetze = [...document.querySelectorAll('.anzeige')];
+      const warte = () => new Promise((ok) => setTimeout(ok, 0));   // MutationObserver meldet asynchron
+      const sicht = () => plaetze.filter((a) => { const cs = getComputedStyle(a); return cs.display !== 'none' && (a.getBoundingClientRect().height > 0 || parseFloat(cs.marginTop) > 0 || parseFloat(cs.marginBottom) > 0); }).length;
+      const ins = [...document.querySelectorAll('.anzeige:not([hidden]) ins.adsbygoogle')];
+      const vorher = sicht();
+      ins.forEach((i) => i.setAttribute('data-ad-status', 'unfilled'));
+      await warte();
+      const unfilled = sicht();
+      ins.forEach((i) => i.setAttribute('data-ad-status', 'filled'));
+      await warte();
+      return { vorher, unfilled, ins: ins.length, nachher: sicht(),
+               schild: ins.every((i) => getComputedStyle(i.parentElement, '::before').content.includes('Anzeige')),
+               klasse: ins.every((i) => i.parentElement.classList.contains('anzeige--geliefert')) };
+    });
+    if (z.vorher || z.unfilled) fehler.push(`${breite}px /${s}: leerer Anzeigenplatz sichtbar (${z.vorher}/${z.unfilled})`);
+    if (!z.ins) fehler.push(`${breite}px /${s}: kein Anzeigenplatz befüllt`);
+    if (z.nachher !== z.ins || !z.schild || !z.klasse) fehler.push(`${breite}px /${s}: gefüllter Platz nicht sichtbar (${z.nachher} von ${z.ins}, Schild ${z.schild}, Klasse ${z.klasse})`);
   }
   await ctx.close();
 }

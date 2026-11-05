@@ -1,7 +1,8 @@
 /*
  * Küchenideenkompass – Anzeigenplätze
  * Ein Platz wird erst reserviert und befüllt, wenn unten eine Slot-ID eingetragen ist.
- * Leere ID = Platz bleibt verborgen, es entsteht keine Lücke.
+ * Leere ID = Platz bleibt verborgen, es entsteht keine Lücke. Auch mit ID bleibt der Platz zu, bis Google
+ * wirklich eine Anzeige liefert (data-ad-status="filled", siehe werkbank.css).
  * Plätze nur in Kopf, Seitenleiste und Fließtext – nie im Werkzeugblock.
  */
 (function () {
@@ -56,8 +57,21 @@
     el.style.minHeight = (masz[1] + 20) + 'px';
     el.appendChild(ins);
     el.hidden = false;
+    erstMitAnzeigeZeigen(el, ins);
     befuellt++;
   });
+
+  // Rückfall für Browser ohne :has(): Der Platz bekommt .anzeige--geliefert (werkbank.css zeigt ihn dann)
+  // erst, wenn Google data-ad-status="filled" setzt. "unfilled" oder keine Antwort: bleibt zu.
+  function erstMitAnzeigeZeigen(el, ins) {
+    if (!(window.CSS && CSS.supports && CSS.supports('selector(:has(a))'))) document.documentElement.classList.add('kein-has');
+    var pruefen = function () {
+      if (ins.getAttribute('data-ad-status') === 'filled') el.classList.add('anzeige--geliefert');
+      else el.classList.remove('anzeige--geliefert');
+    };
+    pruefen();
+    if (typeof MutationObserver === 'function') new MutationObserver(pruefen).observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
+  }
 
   // Die Bibliothek steht statisch im head jeder indexierbaren Seite (Kontoprüfung durch AdSense);
   // Anzeigen erscheinen nur in befüllten Plätzen.

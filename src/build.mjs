@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261105b';
+const VERSION = '20261105c';
 // Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
 // (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
 // Impressum, Datenschutz, Kontakt und 404 tragen data-statistik="aus": dort lädt einwilligung.js nie Google Analytics.
