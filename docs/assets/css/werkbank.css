@@ -298,3 +298,54 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
   @page karte{size:A5 landscape;margin:8mm}
   body.druck-karte .werkzeug .spalten>div:first-child,body.druck-karte .meine,body.druck-karte .knopf-reihe,body.druck-karte .status{display:none!important}
 }
+
+/* ---------- Küchenzettel: Übergangsfenster nur für die Statistik (einwilligung.js) ----------
+   Karteikarte mit Randlinie wie ein Rezeptzettel; fixiert unten rechts, mobil unten über volle Breite.
+   Nicht modal, verschiebt nichts (position: fixed); beide Antworten gleich groß und gleich gestaltet. */
+.kik-zettel {
+  position: fixed; z-index: 70; right: 16px; bottom: 16px;
+  width: min(420px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+  background: var(--platte); color: var(--tinte);
+  border: 1px solid var(--linie); border-left: 6px solid var(--paprika); border-radius: var(--radius);
+  box-shadow: 0 14px 36px rgba(37, 26, 20, .28), 0 2px 0 var(--eidotter) inset;
+  padding: 0 18px 16px 20px; font-size: .95rem; line-height: 1.55;
+}
+.kik-zettel[hidden] { display: none !important; }
+.kik-zettel .kik-zettel__kopf {
+  display: flex; justify-content: space-between; gap: 12px; margin: 0 -18px 12px -20px; padding: 8px 18px 8px 20px;
+  background: var(--eidotter-hell); color: var(--rosmarin-tief); border-bottom: 1px dashed var(--eidotter);
+  font: 800 .7rem/1.2 var(--schrift); letter-spacing: .14em; text-transform: uppercase;
+}
+.kik-zettel h2 { font-family: var(--titel); font-size: 1.28rem; line-height: 1.2; margin: 0 0 .45em; padding-right: 44px; color: var(--rosmarin-tief); }
+.kik-zettel h2:focus { outline: none; }
+.kik-zettel h2:focus-visible { outline: 3px solid var(--eidotter); outline-offset: 3px; }
+.kik-zettel p { margin: 0 0 .55em; }
+.kik-zettel a { color: var(--paprika-tief); }
+.kik-zettel .kik-zettel__stand { color: var(--tinte-2); font-size: .85rem; line-height: 1.35; padding: 4px 0 4px 10px; border-left: 3px solid var(--eidotter); margin: .2em 0 0; }
+.kik-zettel__wahl { display: flex; gap: 10px; margin-top: 14px; }
+.kik-zettel__knopf {
+  flex: 1 1 0; min-width: 0; min-height: 44px; padding: 10px 12px; cursor: pointer;
+  font: 700 .98rem/1.2 var(--schrift); color: var(--rosmarin-tief); background: var(--salbei);
+  border: 2px solid var(--rosmarin); border-radius: var(--radius);
+}
+.kik-zettel__knopf:hover { background: var(--rosmarin-hell); }
+.kik-zettel__wahl--eins .kik-zettel__knopf { flex: 0 1 auto; padding: 10px 22px; }
+.kik-zettel__zu {
+  position: absolute; top: 34px; right: 6px; width: 44px; height: 44px; padding: 0; cursor: pointer;
+  border: 0; border-radius: 50%; background: transparent; color: var(--tinte-2); font: 400 1.5rem/1 var(--schrift);
+}
+.kik-zettel__zu:hover { background: var(--rosmarin-hell); color: var(--tinte); }
+.kik-zettel-ansage { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+@media (max-width: 600px) {
+  .kik-zettel { left: 0; right: 0; bottom: 0; width: auto; max-height: 70vh; border-radius: var(--radius) var(--radius) 0 0;
+    border-left-width: 1px; border-top: 5px solid var(--paprika); padding: 0 14px 14px; font-size: .9rem; line-height: 1.45; }
+  .kik-zettel .kik-zettel__kopf { margin: 0 -14px 10px; padding: 7px 14px; }
+  .kik-zettel h2 { font-size: 1.12rem; }
+  .kik-zettel__zu { top: 30px; right: 2px; }
+}
+@media (max-width: 360px) {
+  .kik-zettel .kik-zettel__kopf { display: none; }
+  .kik-zettel { padding-top: 10px; }
+  .kik-zettel__zu { top: 2px; }
+}
+@media print { .kik-zettel, .kik-zettel-ansage { display: none !important; } }

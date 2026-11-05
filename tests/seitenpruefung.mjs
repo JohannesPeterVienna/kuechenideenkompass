@@ -95,5 +95,10 @@ const imp = fs.readFileSync(path.join(DOCS, 'impressum/index.html'), 'utf8');
 for (const pflicht of ['AdStern', 'Seilerstätte 8', '1010 Wien', 'office@adstern.com', 'ATU54682507', 'Magistratisches Bezirksamt für den 1./8. Bezirk', 'Fachgruppe Werbung und Marktkommunikation', 'Werbeagentur', 'Gewerbeordnung', 'ris.bka.gv.at']) if (!imp.includes(pflicht)) f('impressum', `fehlt: ${pflicht}`);
 const ds = fs.readFileSync(path.join(DOCS, 'datenschutz/index.html'), 'utf8');
 for (const pflicht of ['GitHub Pages', 'Drittanbieter, einschließlich Google, verwenden Cookies', 'adssettings.google.com', 'youronlinechoices.com', 'aboutads.info', 'G-T00HRG2YVF', 'Barichgasse 40–42', 'localStorage']) if (!ds.includes(pflicht)) f('datenschutz', `fehlt: ${pflicht}`);
+// Statistik-Zettel: Seiten ohne Statistik markiert, Datenschutzerklärung mit eigenem Abschnitt
+for (const slug of ['impressum', 'datenschutz', 'kontakt']) if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, slug, 'index.html'), 'utf8'))) f(slug, 'data-statistik="aus" fehlt');
+if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, '404.html'), 'utf8'))) f('404.html', 'data-statistik="aus" fehlt');
+for (const s of SEITEN) if (!['impressum', 'datenschutz', 'kontakt'].includes(s.slug) && /data-statistik=/.test(fs.readFileSync(path.join(DOCS, s.slug, 'index.html'), 'utf8'))) f(s.slug, 'data-statistik auf Inhaltsseite');
+for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 5. November 2026']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
 console.log(fehler.length ? `\n${fehler.length} FEHLER:\n` + fehler.join('\n') : '\nAlle Prüfungen bestanden.');
 process.exit(fehler.length ? 1 : 0);
