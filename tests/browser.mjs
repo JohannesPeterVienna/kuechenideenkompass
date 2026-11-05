@@ -48,8 +48,19 @@ for (const breite of [390, 1366]) {
     const info = await page.evaluate(() => {
       const ueber = document.documentElement.scrollWidth - window.innerWidth;
       const plaetze = [...document.querySelectorAll('[data-anzeige]')];
-      // Ohne gelieferte Anzeige darf kein Platz sichtbar sein (keine Höhe, kein Schild „Anzeige“)
-      const leer = plaetze.filter((a) => a.getBoundingClientRect().height > 0).map((a) => `leerer Platz ${a.dataset.anzeige} sichtbar`);
+      // Ohne Antwort von Google: das <ins> bleibt sichtbar und ungeschnitten (AdSense-Hilfe 10762946),
+      // aber kein Schild „Anzeige“, keine Mindesthöhe, kein Abstand
+      const leer = [];
+      for (const a of plaetze.filter((p) => !p.hidden)) {
+        const cs = getComputedStyle(a), ins = a.querySelector('ins.adsbygoogle');
+        if (cs.content !== 'none' && getComputedStyle(a, '::before').content.includes('Anzeige')) leer.push(`leerer Platz ${a.dataset.anzeige}: Schild sichtbar`);
+        if (parseFloat(cs.marginTop) || parseFloat(cs.marginBottom) || cs.minHeight !== '0px') leer.push(`leerer Platz ${a.dataset.anzeige}: Abstand/Mindesthöhe`);
+        if (ins) {
+          const ci = getComputedStyle(ins);
+          if (ci.display === 'none' || ci.visibility !== 'visible' || !ins.getBoundingClientRect().width) leer.push(`Platz ${a.dataset.anzeige}: ins versteckt`);
+          if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible' || cs.visibility !== 'visible' || a.getBoundingClientRect().height < ins.getBoundingClientRect().height) leer.push(`Platz ${a.dataset.anzeige}: schneidet das ins ab`);
+        }
+      }
       // Danach jeden Platz als gefüllt erzwingen (data-ad-status="filled"), um den Abstand zu Bedienelementen zu messen
       for (const a of plaetze) {
         a.hidden = false; a.style.minHeight = '250px';
@@ -77,34 +88,58 @@ for (const breite of [390, 1366]) {
   await ctx.close();
 }
 
-// Leere Anzeigenplätze mit einem adsbygoogle-Stub, der nie etwas füllt: nichts sichtbar; mit data-ad-status="filled"
-// erscheint der Platz samt Schild „Anzeige“; "unfilled" bleibt zu.
+// Anzeigenplätze mit einem adsbygoogle-Stub, der nie etwas füllt (AdSense-Hilfe 10762946):
+// ohne Status bleibt das <ins> sichtbar und ungeschnitten, nur Schild „Anzeige“ und Abstände fehlen;
+// "unfilled" → ins display:none, kein Beiwerk; "filled" und "unfill-optimized" → Platz samt Schild und Abstand.
 for (const breite of [390, 1366]) {
   const ctx = await browser.newContext({ viewport: { width: breite, height: 900 } });
   await ctx.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '/* Stub: keine Anzeige */' }));
   const page = await ctx.newPage();
   page.on('pageerror', (e) => fehler.push(`${breite}px Stub: JS-Fehler ${e.message}`));
   for (const s of ['germteig-gehzeit/', 'mehltypen-at-de-ch/', 'backzeit-formgroesse/']) {
-    await geh(page, BASIS + '/' + s);
-    const z = await page.evaluate(async () => {
-      const plaetze = [...document.querySelectorAll('.anzeige')];
-      const warte = () => new Promise((ok) => setTimeout(ok, 0));   // MutationObserver meldet asynchron
-      const sicht = () => plaetze.filter((a) => { const cs = getComputedStyle(a); return cs.display !== 'none' && (a.getBoundingClientRect().height > 0 || parseFloat(cs.marginTop) > 0 || parseFloat(cs.marginBottom) > 0); }).length;
-      const ins = [...document.querySelectorAll('.anzeige:not([hidden]) ins.adsbygoogle')];
-      const vorher = sicht();
-      ins.forEach((i) => i.setAttribute('data-ad-status', 'unfilled'));
-      await warte();
-      const unfilled = sicht();
-      ins.forEach((i) => i.setAttribute('data-ad-status', 'filled'));
-      await warte();
-      return { vorher, unfilled, ins: ins.length, nachher: sicht(),
-               schild: ins.every((i) => getComputedStyle(i.parentElement, '::before').content.includes('Anzeige')),
-               klasse: ins.every((i) => i.parentElement.classList.contains('anzeige--geliefert')) };
-    });
-    if (z.vorher || z.unfilled) fehler.push(`${breite}px /${s}: leerer Anzeigenplatz sichtbar (${z.vorher}/${z.unfilled})`);
-    if (!z.ins) fehler.push(`${breite}px /${s}: kein Anzeigenplatz befüllt`);
-    if (z.nachher !== z.ins || !z.schild || !z.klasse) fehler.push(`${breite}px /${s}: gefüllter Platz nicht sichtbar (${z.nachher} von ${z.ins}, Schild ${z.schild}, Klasse ${z.klasse})`);
+    for (const status of ['filled', 'unfill-optimized']) {
+      await geh(page, BASIS + '/' + s);
+      const z = await page.evaluate(async (status) => {
+        const warte = () => new Promise((ok) => setTimeout(ok, 0));   // MutationObserver meldet asynchron
+        const ins = [...document.querySelectorAll('.anzeige:not([hidden]) ins.adsbygoogle')];
+        const lage = () => ins.map((i) => {
+          const a = i.parentElement, ca = getComputedStyle(a), ci = getComputedStyle(i), ri = i.getBoundingClientRect();
+          return { insDisplay: ci.display, insSicht: ci.visibility, breite: ri.width, insH: ri.height, boxH: a.getBoundingClientRect().height,
+                   ueberlauf: ca.overflowX + '/' + ca.overflowY, boxSicht: ca.visibility,
+                   schild: getComputedStyle(a, '::before').content.includes('Anzeige'), abstand: parseFloat(ca.marginTop) + parseFloat(ca.marginBottom) };
+        });
+        const ohne = lage();
+        ins.forEach((i) => i.setAttribute('data-ad-status', 'unfilled'));
+        await warte();
+        const unfilled = lage();
+        ins.forEach((i) => i.setAttribute('data-ad-status', status));
+        await warte();
+        return { ins: ins.length, ohne, unfilled, nachher: lage(),
+                 klasse: ins.every((i) => i.parentElement.classList.contains('anzeige--geliefert')) };
+      }, status);
+      const wo = `${breite}px /${s}`;
+      if (!z.ins) fehler.push(`${wo}: kein Anzeigenplatz befüllt`);
+      if (!z.ohne.every((x) => x.insDisplay !== 'none' && x.insSicht === 'visible' && x.breite > 0 && x.ueberlauf === 'visible/visible' && x.boxSicht === 'visible' && x.boxH >= x.insH))
+        fehler.push(`${wo}: ohne Status ist das ins versteckt oder geschnitten ${JSON.stringify(z.ohne)}`);
+      if (z.ohne.some((x) => x.schild || x.abstand)) fehler.push(`${wo}: ohne Status Schild/Abstand sichtbar`);
+      if (!z.unfilled.every((x) => x.insDisplay === 'none' && !x.schild && x.boxH === 0)) fehler.push(`${wo}: unfilled nicht ausgeblendet ${JSON.stringify(z.unfilled)}`);
+      if (!z.nachher.every((x) => x.schild && x.boxH > 0 && x.abstand > 0) || !z.klasse) fehler.push(`${wo}: ${status} – Platz nicht vollständig sichtbar (Klasse ${z.klasse}) ${JSON.stringify(z.nachher)}`);
+    }
   }
+  // Browser ohne :has(): :has()-Regeln entfernen, Rückfall-Klasse erzwingen
+  await geh(page, BASIS + '/germteig-gehzeit/');
+  const r = await page.evaluate(async () => {
+    for (const sh of document.styleSheets) { try { for (let k = sh.cssRules.length - 1; k >= 0; k--) if (sh.cssRules[k].cssText.includes(':has(')) sh.deleteRule(k); } catch (e) {} }
+    document.documentElement.classList.add('kein-has');
+    const ins = [...document.querySelectorAll('.anzeige:not([hidden]) ins.adsbygoogle')];
+    const lage = () => ins.map((i) => ({ sicht: getComputedStyle(i).display !== 'none' && i.getBoundingClientRect().width > 0 && getComputedStyle(i.parentElement).overflowY === 'visible',
+                                         schild: getComputedStyle(i.parentElement, '::before').content.includes('Anzeige') }));
+    const ohne = lage();
+    ins.forEach((i) => i.setAttribute('data-ad-status', 'unfill-optimized'));
+    await new Promise((ok) => setTimeout(ok, 0));
+    return { n: ins.length, ohne, nachher: lage() };
+  });
+  if (!r.n || !r.ohne.every((x) => x.sicht && !x.schild) || !r.nachher.every((x) => x.schild)) fehler.push(`${breite}px ohne :has(): Rückfall falsch ${JSON.stringify(r)}`);
   await ctx.close();
 }
 

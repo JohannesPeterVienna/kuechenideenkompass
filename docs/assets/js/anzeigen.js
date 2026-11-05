@@ -1,8 +1,9 @@
 /*
  * Küchenideenkompass – Anzeigenplätze
  * Ein Platz wird erst reserviert und befüllt, wenn unten eine Slot-ID eingetragen ist.
- * Leere ID = Platz bleibt verborgen, es entsteht keine Lücke. Auch mit ID bleibt der Platz zu, bis Google
- * wirklich eine Anzeige liefert (data-ad-status="filled", siehe werkbank.css).
+ * Leere ID = Platz bleibt verborgen, es entsteht keine Lücke. Mit ID bleibt das <ins> immer sichtbar (AdSense-Hilfe
+ * 10762946); Schild „Anzeige“, Mindesthöhe und Abstände erst, wenn Google antwortet (data-ad-status="filled" oder
+ * "unfill-optimized", siehe werkbank.css).
  * Plätze nur in Kopf, Seitenleiste und Fließtext – nie im Werkzeugblock.
  */
 (function () {
@@ -61,12 +62,13 @@
     befuellt++;
   });
 
-  // Rückfall für Browser ohne :has(): Der Platz bekommt .anzeige--geliefert (werkbank.css zeigt ihn dann)
-  // erst, wenn Google data-ad-status="filled" setzt. "unfilled" oder keine Antwort: bleibt zu.
+  // Rückfall für Browser ohne :has(): Der Platz bekommt .anzeige--geliefert (werkbank.css zeigt dann Schild,
+  // Mindesthöhe und Abstände) erst, wenn Google data-ad-status="filled" oder "unfill-optimized" setzt.
   function erstMitAnzeigeZeigen(el, ins) {
     if (!(window.CSS && CSS.supports && CSS.supports('selector(:has(a))'))) document.documentElement.classList.add('kein-has');
     var pruefen = function () {
-      if (ins.getAttribute('data-ad-status') === 'filled') el.classList.add('anzeige--geliefert');
+      var st = ins.getAttribute('data-ad-status');
+      if (st === 'filled' || st === 'unfill-optimized') el.classList.add('anzeige--geliefert');
       else el.classList.remove('anzeige--geliefert');
     };
     pruefen();
