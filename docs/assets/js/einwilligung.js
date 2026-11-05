@@ -382,7 +382,17 @@
       var hatteFokus = this.el.contains(document.activeElement);
       this.el.hidden = true;
       this.platz();
-      if (hatteFokus && this.ausloeser && document.contains(this.ausloeser)) this.ausloeser.focus({ preventScroll: true });
+      if (hatteFokus) {
+        if (this.ausloeser && document.contains(this.ausloeser)) this.ausloeser.focus({ preventScroll: true });
+        else {
+          // von selbst erschienen: Fokus nicht auf body fallen lassen, sondern an den Anfang des Hauptinhalts
+          var ziel = document.getElementById('inhalt');
+          if (ziel) {
+            if (!ziel.hasAttribute('tabindex')) ziel.setAttribute('tabindex', '-1');
+            ziel.focus({ preventScroll: true });
+          }
+        }
+      }
       this.ausloeser = null;
     },
 
@@ -417,7 +427,7 @@
     googleMeldung: function (tc) {
       if (ZETTEL_REGELN.googleEntschieden(tc)) {
         ablage.loeschen();
-        if (this.offen() && this.el.getAttribute('data-art') !== 'gpc') this.schliessen();
+        if (this.offen()) this.schliessen(); // auch der GPC-Hinweis: ab jetzt gilt allein Google
       } else if (ZETTEL_REGELN.googleDialogSichtbar(tc) && this.offen() && !this.ausloeser) {
         this.schliessen(); // Google zeigt doch noch seinen Dialog
       }

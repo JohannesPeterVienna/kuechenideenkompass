@@ -348,4 +348,4 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
   .kik-zettel { padding-top: 10px; }
   .kik-zettel__zu { top: 2px; }
 }
-@media print { .kik-zettel, .kik-zettel-ansage { display: none !important; } }
+@media print { .kik-zettel, .kik-zettel-ansage { display: none !important; } body { padding-bottom: 0 !important; } }

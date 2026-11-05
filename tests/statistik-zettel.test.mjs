@@ -51,10 +51,12 @@ function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGe
   if (statistikAus) body.setAttribute('data-statistik', 'aus');
   const sprung = element('a'); sprung.className = 'uebersprung'; sprung.parentNode = body;
   const knopf = element('button');
+  const inhalt = element('main'); inhalt.id = 'inhalt';
   const doc = {
     head: { appendChild(s) { skripte.push(s.src); } }, body, activeElement: null,
     createElement: element,
     querySelector: (s) => (s === '.uebersprung' ? sprung : null),
+    getElementById: (id) => (id === 'inhalt' ? inhalt : null),
     addEventListener: (t, f) => { if (t === 'click') klick.push(f); },
     contains: (x) => x === knopf || body.kinder.includes(x),
     get cookie() { return [...jar].map(([k, v]) => `${k}=${v}`).join('; '); },
@@ -92,7 +94,7 @@ function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGe
   vm.runInContext(CODE, ctx, { filename: 'einwilligung.js' });
 
   Object.assign(api, {
-    win, doc, speicher, jar, keksSchreiben, skripte, knopf,
+    win, doc, inhalt, speicher, jar, keksSchreiben, skripte, knopf,
     vorspulen(ms) {
       const ziel = uhr.jetzt + ms;
       for (;;) {
@@ -379,4 +381,32 @@ test('GA-Ereignisse nur mit ga-disable === false (alle Skripte)', () => {
       assert.match(davor, /\['ga-disable-G-T00HRG2YVF'\] === false/, `${f}: Ereignis ohne Schalterprüfung`);
     }
   }
+});
+
+test('Escape im selbst erschienenen Zettel: Fokus geht an den Hauptinhalt, nicht auf body', () => {
+  const s = seite({ tcf: HIDDEN });
+  s.vorspulen(3000);
+  s.doc.activeElement = s.zettel(); // Nutzer ist per Tab in den Zettel gegangen
+  s.taste('Escape');
+  assert.equal(s.offen(), false);
+  assert.equal(s.doc.activeElement, s.inhalt);
+  assert.equal(s.inhalt.getAttribute('tabindex'), '-1');
+  const t = seite({ tcf: HIDDEN });
+  t.vorspulen(3000);
+  t.taste('Escape'); // Fokus war nicht im Zettel → bleibt, wo er war
+  assert.equal(t.doc.activeElement, null);
+});
+
+test('GPC-Hinweis schließt sich, sobald Google entscheidet', () => {
+  const s = seite({ tcf: HIDDEN, gpc: true });
+  s.einstellungen();
+  assert.equal(s.zettel().getAttribute('data-art'), 'gpc');
+  assert.equal(s.offen(), true);
+  s.melden(NEIN_GOOGLE);
+  assert.equal(s.offen(), false);
+});
+
+test('Druck: Zettel und Platzhalter-Abstand ausgeblendet', () => {
+  const css = fs.readFileSync(path.resolve(JS, '..', 'css', 'werkbank.css'), 'utf8');
+  assert.match(css, /@media print \{ \.kik-zettel, \.kik-zettel-ansage \{ display: none !important; \} body \{ padding-bottom: 0 !important; \} \}/);
 });
