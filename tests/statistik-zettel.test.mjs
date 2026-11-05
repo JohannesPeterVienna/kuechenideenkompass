@@ -22,13 +22,15 @@ const HIDDEN = { eventStatus: 'cmpuishown', displayStatus: 'hidden', gdprApplies
 const JA_GOOGLE = { eventStatus: 'useractioncomplete', gdprApplies: true, tcString: 'CP-ja', purpose: { consents: { 1: true } }, vendor: { consents: { 755: true } } };
 const NEIN_GOOGLE = { eventStatus: 'useractioncomplete', gdprApplies: true, tcString: 'CP-nein', purpose: { consents: {} }, vendor: { consents: {} } };
 
-function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGesperrt = false, statistikAus = false, host = 'kuechenideenkompass.de', cm = 0 } = {}) {
+function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGesperrt = false, schreibenGesperrt = false, statistikAus = false, host = 'kuechenideenkompass.de', cm = 0 } = {}) {
   const uhr = { jetzt: JETZT, timer: [] };
   const speicher = new Map(gespeichert !== undefined ? [[R.SCHLUESSEL, typeof gespeichert === 'string' ? gespeichert : JSON.stringify(gespeichert)]] : []);
   const jar = new Map(kekse.map((k) => [k, '1']));
   const keksSchreiben = [];
   const skripte = [];
   const klick = [];
+  const tasten = new Set();
+  const offeneElemente = { menue: false };
   const tcfHoerer = [];
   const api = { widerruf: 0 };
 
@@ -55,9 +57,10 @@ function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGe
   const doc = {
     head: { appendChild(s) { skripte.push(s.src); } }, body, activeElement: null,
     createElement: element,
-    querySelector: (s) => (s === '.uebersprung' ? sprung : null),
+    querySelector: (s) => (s === '.uebersprung' ? sprung : (/details\.menue\[open\]/.test(s) && offeneElemente.menue ? {} : null)),
     getElementById: (id) => (id === 'inhalt' ? inhalt : null),
-    addEventListener: (t, f) => { if (t === 'click') klick.push(f); },
+    addEventListener: (t, f) => { if (t === 'click') klick.push(f); if (t === 'keydown') tasten.add(f); },
+    removeEventListener: (t, f) => { if (t === 'keydown') tasten.delete(f); },
     contains: (x) => x === knopf || body.kinder.includes(x),
     get cookie() { return [...jar].map(([k, v]) => `${k}=${v}`).join('; '); },
     set cookie(v) {
@@ -72,7 +75,8 @@ function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGe
     document: doc, navigator: { globalPrivacyControl: gpc }, location: { hostname: host }, frames: {},
     localStorage: speicherGesperrt ? { getItem: gesperrt, setItem: gesperrt, removeItem: gesperrt } : {
       getItem: (k) => (speicher.has(k) ? speicher.get(k) : null),
-      setItem: (k, v) => speicher.set(k, String(v)), removeItem: (k) => speicher.delete(k)
+      setItem: (k, v) => { if (schreibenGesperrt) throw new Error('QuotaExceeded'); speicher.set(k, String(v)); },
+      removeItem: (k) => { if (schreibenGesperrt) throw new Error('SecurityError'); speicher.delete(k); }
     },
     googlefc: {
       callbackQueue: { push(x) { if (typeof x === 'function') x(); } },
@@ -94,7 +98,8 @@ function seite({ tcf = 'still', gpc = false, gespeichert, kekse = [], speicherGe
   vm.runInContext(CODE, ctx, { filename: 'einwilligung.js' });
 
   Object.assign(api, {
-    win, doc, inhalt, speicher, jar, keksSchreiben, skripte, knopf,
+    win, doc, inhalt, speicher, offeneElemente,
+    seitenTaste(key) { const e = { key, defaultPrevented: false }; [...tasten].forEach((f) => f(e)); return tasten.size; }, jar, keksSchreiben, skripte, knopf,
     vorspulen(ms) {
       const ziel = uhr.jetzt + ms;
       for (;;) {
@@ -409,4 +414,61 @@ test('GPC-Hinweis schließt sich, sobald Google entscheidet', () => {
 test('Druck: Zettel und Platzhalter-Abstand ausgeblendet', () => {
   const css = fs.readFileSync(path.resolve(JS, '..', 'css', 'werkbank.css'), 'utf8');
   assert.match(css, /@media print \{ \.kik-zettel, \.kik-zettel-ansage \{ display: none !important; \} body \{ padding-bottom: 0 !important; \} \}/);
+});
+
+test('E2: Knopf zu Googles Einstellungen nur im per „Datenschutz-Einstellungen“ geöffneten Zettel, ruft nur den Widerruf auf', () => {
+  const s = seite({ tcf: HIDDEN });
+  s.vorspulen(3000);
+  assert.doesNotMatch(s.zettel().innerHTML, /data-zettel="google"/, 'nicht im automatisch erschienenen Zettel');
+  s.waehlen('zu');
+  s.einstellungen();
+  assert.match(s.zettel().innerHTML, /data-zettel="google"/);
+  const vorher = s.skripte.length;
+  s.waehlen('google');
+  assert.equal(s.widerruf, 1);
+  assert.equal(s.skripte.length, vorher, 'nichts nachgeladen');
+  keineWerbefreigabe(s);
+  const g = seite({ tcf: HIDDEN, gpc: true });
+  g.einstellungen();
+  assert.match(g.zettel().innerHTML, /data-zettel="google"/, 'auch im GPC-Hinweis');
+});
+
+test('E3: Escape auf der Seite schließt den offenen Zettel, nicht bei offenem Menü; Hörer nur solange offen', () => {
+  const s = seite({ tcf: HIDDEN });
+  s.vorspulen(3000);
+  s.offeneElemente.menue = true;
+  s.seitenTaste('Escape');
+  assert.equal(s.offen(), true);
+  s.offeneElemente.menue = false;
+  s.seitenTaste('Escape');
+  assert.equal(s.offen(), false);
+  assert.equal(s.seitenTaste('Escape'), 0, 'Hörer entfernt');
+});
+
+test('E5: Schließen ohne Wahl – kein erneutes automatisches Öffnen im selben Seitenaufruf', () => {
+  const s = seite({ tcf: HIDDEN });
+  s.vorspulen(3000);
+  s.waehlen('zu');
+  s.melden(HIDDEN);
+  s.vorspulen(10000);
+  assert.equal(s.offen(), false);
+  const m = seite({ tcf: HIDDEN });
+  m.vorspulen(1000);
+  m.einstellungen();
+  m.taste('Escape');
+  m.vorspulen(5000);
+  assert.equal(m.offen(), false, '3-s-Start öffnet nach manuellem Schließen nicht erneut');
+});
+
+test('(b) getItem geht, setItem/removeItem scheitern: Wahl dieses Aufrufs gilt trotzdem', () => {
+  const s = seite({ tcf: HIDDEN, schreibenGesperrt: true, gespeichert: { v: 1, wahl: 'ja', zeit: JETZT - TAG } });
+  s.vorspulen(3000);
+  assert.equal(s.gaAus(), false);
+  s.einstellungen();
+  s.waehlen('nein');
+  assert.equal(s.gaAus(), true);
+  s.einstellungen();
+  assert.match(s.zettel().innerHTML, /abgelehnt am/);
+  s.vorspulen(1000);
+  assert.equal(s.gaAus(), true);
 });

@@ -99,6 +99,6 @@ for (const pflicht of ['GitHub Pages', 'Drittanbieter, einschließlich Google, v
 for (const slug of ['impressum', 'datenschutz', 'kontakt']) if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, slug, 'index.html'), 'utf8'))) f(slug, 'data-statistik="aus" fehlt');
 if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, '404.html'), 'utf8'))) f('404.html', 'data-statistik="aus" fehlt');
 for (const s of SEITEN) if (!['impressum', 'datenschutz', 'kontakt'].includes(s.slug) && /data-statistik=/.test(fs.readFileSync(path.join(DOCS, s.slug, 'index.html'), 'utf8'))) f(s.slug, 'data-statistik auf Inhaltsseite');
-for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 5. November 2026']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
+for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 5. November 2026', 'wird nichts gespeichert', 'eine früher gespeicherte Auswahl bleibt bestehen']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
 console.log(fehler.length ? `\n${fehler.length} FEHLER:\n` + fehler.join('\n') : '\nAlle Prüfungen bestanden.');
 process.exit(fehler.length ? 1 : 0);

@@ -154,18 +154,22 @@
   }
 
   // --- Ablage der Zettel-Wahl; ohne localStorage gilt sie nur für diesen Seitenaufruf ---
+  // Nach einem Schreiben/Löschen in diesem Seitenaufruf gilt der Ersatzwert – auch wenn getItem
+  // funktioniert, setItem/removeItem aber scheitern (Speicher voll, Teilsperre).
   var ablage = {
     ersatz: null,
+    ersatzGilt: false,
     lesen: function () {
+      if (this.ersatzGilt) return this.ersatz;
       try { var r = window.localStorage.getItem(ZETTEL_REGELN.SCHLUESSEL); return r ? JSON.parse(r) : null; }
-      catch (err) { return this.ersatz; }
+      catch (err) { return null; }
     },
     schreiben: function (e) {
-      this.ersatz = e;
+      this.ersatz = e; this.ersatzGilt = true;
       try { window.localStorage.setItem(ZETTEL_REGELN.SCHLUESSEL, JSON.stringify(e)); } catch (err) {}
     },
     loeschen: function () {
-      this.ersatz = null;
+      this.ersatz = null; this.ersatzGilt = true;
       try { window.localStorage.removeItem(ZETTEL_REGELN.SCHLUESSEL); } catch (err) {}
     }
   };
@@ -305,7 +309,9 @@
         var k = e.target && e.target.closest && e.target.closest('[data-zettel]');
         if (!k) return;
         var w = k.getAttribute('data-zettel');
-        if (w === 'zu') self.schliessen(); else self.entscheiden(w);
+        if (w === 'zu') self.schliessen();
+        else if (w === 'google') self.googleOeffnen();
+        else self.entscheiden(w);
       });
       var ansage = document.createElement('p');
       ansage.className = 'kik-zettel-ansage';
@@ -327,10 +333,12 @@
     inhalt: function (art) {
       var kopf = '<p class="kik-zettel__kopf" aria-hidden="true"><span>Küchenzettel</span><span>nur Statistik</span></p>';
       var link = '<a href="/datenschutz/#statistik-fenster">Datenschutzerklärung</a>';
+      // nur im über „Datenschutz-Einstellungen“ geöffneten Zettel: Weg zu Googles Einstellungen (Werbung, US-Wahl)
+      var google = this.ausloeser ? '<p class="kik-zettel__google"><button type="button" class="link-knopf kik-zettel__weiter" data-zettel="google">Werbe-Einstellungen von Google öffnen</button></p>' : '';
       if (art === 'gpc') {
         return kopf + '<h2 id="kik-zettel-titel" tabindex="-1">Statistik bleibt aus</h2>' +
           '<div id="kik-zettel-text"><p>Ihr Browser sendet das Signal „Global Privacy Control“. Daran halten wir uns: Google Analytics bleibt ausgeschaltet, und wir fragen nicht nach. Mehr in der ' + link + '.</p></div>' +
-          '<div class="kik-zettel__wahl kik-zettel__wahl--eins"><button type="button" class="kik-zettel__knopf" data-zettel="zu">Schließen</button></div>';
+          '<div class="kik-zettel__wahl kik-zettel__wahl--eins"><button type="button" class="kik-zettel__knopf" data-zettel="zu">Schließen</button></div>' + google;
       }
       var eintrag = ablage.lesen();
       var w = ZETTEL_REGELN.gueltigeWahl(eintrag, Date.now());
@@ -342,7 +350,7 @@
         '<div id="kik-zettel-text"><p>Mit Ihrer Zustimmung zählt Google Analytics (Google Ireland Limited), welche Seiten und Werkzeuge genutzt werden. Google setzt dafür Cookies; Daten können in die USA gelangen. Ihre Rezepte und Eingaben werden nicht übertragen.</p>' +
         '<p>Das ist <b>keine</b> Einwilligung in Werbung. Ändern oder widerrufen jederzeit über „Datenschutz-Einstellungen“ im Seitenfuß. ' + link + '</p></div>' +
         (stand ? '<p class="kik-zettel__stand">' + stand + '</p>' : '') +
-        '<div class="kik-zettel__wahl"><button type="button" class="kik-zettel__knopf" data-zettel="ja">Zustimmen</button><button type="button" class="kik-zettel__knopf" data-zettel="nein">Ablehnen</button></div>' +
+        '<div class="kik-zettel__wahl"><button type="button" class="kik-zettel__knopf" data-zettel="ja">Zustimmen</button><button type="button" class="kik-zettel__knopf" data-zettel="nein">Ablehnen</button></div>' + google +
         '<button type="button" class="kik-zettel__zu" data-zettel="zu" aria-label="Schließen ohne Auswahl – Statistik bleibt aus">×</button>';
     },
 
@@ -355,6 +363,7 @@
       el.innerHTML = this.inhalt(art);
       el.hidden = false;
       this.platz();
+      this.escapeHoeren(true);
       if (this.ausloeser) {
         var t = el.querySelector('#kik-zettel-titel');
         if (t) t.focus({ preventScroll: true });
@@ -377,8 +386,32 @@
       }
     },
 
+    // Escape schließt auch ohne Fokus im Zettel – außer ein anderes Element braucht Escape selbst
+    escapeHoeren: function (an) {
+      var self = this;
+      if (!this.escHoerer) {
+        this.escHoerer = function (e) {
+          if ((e.key !== 'Escape' && e.key !== 'Esc') || e.defaultPrevented || !self.offen()) return;
+          if (document.querySelector('details.menue[open], dialog[open], [aria-modal="true"]')) return;
+          self.schliessen();
+        };
+      }
+      if (an && !this.escAktiv) { document.addEventListener('keydown', this.escHoerer); this.escAktiv = true; }
+      if (!an && this.escAktiv) { document.removeEventListener('keydown', this.escHoerer); this.escAktiv = false; }
+    },
+
+    // Google-Einstellungen: CMP lädt auf jeder Seite schon – nichts nachladen, nur Widerruf bzw. US-Dialog aufrufen
+    googleOeffnen: function () {
+      window.googlefc.callbackQueue.push(function () {
+        var fc = window.googlefc;
+        if (typeof fc.showRevocationMessage === 'function') fc.showRevocationMessage();
+        else if (fc.usstatesoptout && typeof fc.usstatesoptout.openConfirmationDialog === 'function') fc.usstatesoptout.openConfirmationDialog(function () {});
+      });
+    },
+
     schliessen: function () {
       if (!this.offen()) return;
+      this.escapeHoeren(false);
       var hatteFokus = this.el.contains(document.activeElement);
       this.el.hidden = true;
       this.platz();
