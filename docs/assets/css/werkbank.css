@@ -233,9 +233,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
 /* Solange Google keine Anzeige ausliefert, bleibt der Platz unsichtbar: kein „Anzeige“-Schild, keine Mindesthöhe,
    kein Außenabstand. Erst data-ad-status="filled" am <ins> öffnet ihn; die Breite bleibt für die AdSense-Messung.
    :has() ist die Grundlage; ohne :has() setzt anzeigen.js html.kein-has und .anzeige--geliefert (MutationObserver). */
-.anzeige:not(:has(ins.adsbygoogle[data-ad-status="filled"])),
+.anzeige:not(:has(ins.adsbygoogle[data-ad-status="filled"])) { height: 0 !important; min-height: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; padding: 0 !important; border: 0 !important; overflow: hidden !important; }
 .kein-has .anzeige:not(.anzeige--geliefert) { height: 0 !important; min-height: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; padding: 0 !important; border: 0 !important; overflow: hidden !important; }
-.anzeige:not(:has(ins.adsbygoogle[data-ad-status="filled"]))::before,
+.anzeige:not(:has(ins.adsbygoogle[data-ad-status="filled"]))::before { content: none; }
 .kein-has .anzeige:not(.anzeige--geliefert)::before { content: none; }
 
 /* ---------- Fuß ---------- */
