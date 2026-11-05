@@ -151,6 +151,25 @@
     });
     $('ek-neu').addEventListener('click', function () { daten.rezepte.push({ titel: '', text: '', faktor: 1 }); kartenZeichnen(); speichern(); var n = daten.rezepte.length - 1; $('ek-z' + n).focus(); });
     $('ek-drucken').addEventListener('click', function () { window.print(); });
+    // Liste als Text aufs Handy: Teilen-Dialog des Geräts, sonst WhatsApp-Link und Zwischenablage. Abgehakte Posten fehlen.
+    $('ek-handy').addEventListener('click', function () {
+      var zeilen = [];
+      Array.prototype.forEach.call($('ek-liste').querySelectorAll('.liste-gruppe'), function (g) {
+        var posten = [];
+        Array.prototype.forEach.call(g.querySelectorAll('li'), function (li) {
+          var c = li.querySelector('input'); if (c && c.checked) return;
+          posten.push('☐ ' + Array.prototype.map.call(li.childNodes, function (n) { return (n.textContent || '').trim(); }).filter(Boolean).join(' ').replace(/\s+/g, ' '));
+        });
+        if (posten.length) zeilen.push(g.querySelector('h3').textContent.toUpperCase(), posten.join('\n'), '');
+      });
+      var status = $('ek-gespeichert');
+      if (!zeilen.length) { status.textContent = 'Die Liste ist leer – oder alles ist schon abgehakt.'; return; }
+      var text = 'Einkaufsliste\n\n' + zeilen.join('\n') + '\n(erstellt mit kuechenideenkompass.de)';
+      try { if (typeof window.gtag === 'function') window.gtag('event', 'einkaufsliste_handy'); } catch (e) {}
+      if (navigator.share) { navigator.share({ title: 'Einkaufsliste', text: text }).catch(function () {}); return; }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { status.textContent = 'Liste kopiert – in WhatsApp, SMS oder Notizen einfügen.'; }, function () {});
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    });
     $('ek-leeren').addEventListener('click', function () { daten = { rezepte: [{ titel: '', text: '', faktor: 1 }], vorrat: daten.vorrat, abgehakt: {} }; kartenZeichnen(); speichern(); liste(); });
     $('ek-beispiel').addEventListener('click', function () {
       daten.rezepte = [

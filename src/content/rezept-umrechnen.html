@@ -51,16 +51,20 @@
       <div class="blatt" id="wb-ergebnis" aria-live="polite"></div>
       <div class="knopf-reihe nicht-drucken">
         <button type="button" class="knopf" id="wb-drucken">Rezept drucken</button>
+        <button type="button" class="knopf zweit" id="wb-karte">Als Rezeptkarte (A5)</button>
+        <button type="button" class="knopf zweit" id="wb-merken">In „Meine Rezepte“</button>
         <button type="button" class="knopf zweit" id="wb-teilen">Teilen-Link kopieren</button>
         <button type="button" class="knopf akzent" id="wb-liste">Auf die Einkaufsliste</button>
       </div>
       <p class="status nicht-drucken" id="wb-status" role="status"></p>
+      <div class="meine nicht-drucken" id="wb-meine" hidden><h3>Meine Rezepte</h3><ul id="wb-meine-liste"></ul><p class="hilfe">Nur in diesem Browser gespeichert.</p></div>
     </div>
   </div>
 </section>
 <!--@artikel-->
 <h2>So funktioniert die Werkbank</h2>
 <p>Die meisten Portionsrechner verlangen, dass man jede Zutat einzeln in ein Formular tippt. Die Werkbank geht den umgekehrten Weg: Sie kopieren das Rezept so, wie es ist, und das Werkzeug zerlegt jede Zeile selbst in Menge, Einheit und Zutat. Dabei versteht es die Schreibweisen, die in Kochbüchern aus Österreich, Deutschland und der Schweiz tatsächlich vorkommen – „25 dag“, „⅛ l Obers“, „1 Pkg. Backpulver“ –, aber auch amerikanische Angaben wie „1 ½ cups“ oder „1 stick butter“.</p>
+<figure class="foto"><picture><source type="image/webp" srcset="/assets/img/kraeuter-720.webp 720w, /assets/img/kraeuter-1200.webp 1200w" sizes="(max-width: 800px) 100vw, 760px"><img src="/assets/img/kraeuter-1200.jpg" srcset="/assets/img/kraeuter-720.jpg 720w, /assets/img/kraeuter-1200.jpg 1200w" sizes="(max-width: 800px) 100vw, 760px" width="1200" height="800" alt="Schale mit frischem Rosmarin und Thymian auf einem rustikalen Holztisch" loading="lazy" decoding="async"></picture><figcaption>Foto: Mila / Unsplash</figcaption></figure>
 <ol class="howto">
   <li><b>Rezept einfügen.</b> Zutatenliste in das linke Feld kopieren, eine Zutat pro Zeile. Aufzählungszeichen und Nummern am Zeilenanfang stören nicht.</li>
   <li><b>Grundlage wählen.</b> Portionen (z. B. 4 → 6), Backform (z. B. Springform 26 cm → Blech) oder einen freien Faktor eintragen.</li>

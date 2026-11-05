@@ -6,7 +6,7 @@ const KERN = ['kueche-daten.js', 'werkbank-kern.js'];
 export const SEITEN = [
   {
     slug: '', typ: 'uebersicht', kurz: 'Startseite',
-    titel: 'Rezept-Werkbank AT · DE · CH – Rezepte umrechnen & übersetzen | Küchenideenkompass',
+    titel: 'Rezept-Werkbank AT · DE · CH: Rezepte umrechnen & übersetzen',
     beschreibung: 'Rezept einfügen und in einem Durchgang auf Portionen, Backform und Einheiten umrechnen – mit dag, Obers, Topfen und Germ. Druckfertig, mit Einkaufsliste.',
     h1: 'Rezept-Werkbank für Österreich, Deutschland und die Schweiz'
   },
@@ -27,14 +27,14 @@ export const SEITEN = [
   },
   {
     slug: 'springform-umrechnen', typ: 'ratgeber', kurz: 'Springform 26 cm umrechnen',
-    titel: 'Springform 26 cm auf 28, 24 oder 20 cm umrechnen – Tabelle & Faktoren',
+    titel: 'Springform 26 cm auf 28, 24 oder 20 cm umrechnen',
     beschreibung: 'Wie viel Teig für eine 28er, 24er oder 20er Springform, wenn das Rezept für 26 cm gedacht ist? Faktoren, Tabelle mit Beispielmengen, Eier und Backzeit.',
     h1: 'Springform 26 cm umrechnen: auf 28, 24 oder 20 cm',
     einleitung: 'Sehr viele Kuchenrezepte im deutschsprachigen Raum sind für eine Springform mit 26 cm Durchmesser geschrieben. Hier stehen die Faktoren für die gängigen anderen Größen – und was beim Umrechnen wirklich zählt.'
   },
   {
     slug: 'cups-in-gramm', typ: 'werkzeug', kurz: 'Cups in Gramm (Zutaten-Waage)', skripte: [...KERN, 'helfer-ui.js'],
-    titel: 'Cups in Gramm umrechnen: Mehl, Zucker, Butter, Milch – mit Quelle je Wert',
+    titel: 'Cups in Gramm umrechnen: Mehl, Zucker, Butter, Milch',
     beschreibung: 'Zutaten-Waage: 1 Cup Mehl, Zucker, Butter oder Milch in Gramm und Milliliter, dazu EL und TL. Jeder Wert mit Quelle (King Arthur Ingredient Weight Chart).',
     h1: 'Cups in Gramm – die Zutaten-Waage',
     einleitung: 'Ein Cup ist ein Hohlmaß, Gramm sind ein Gewicht. Wie viel ein Cup wiegt, hängt deshalb von der Zutat ab. Die Zutaten-Waage rechnet mit veröffentlichten Messwerten und nennt zu jedem Wert die Quelle.'
@@ -48,14 +48,14 @@ export const SEITEN = [
   },
   {
     slug: 'obers-sahne-rahm', typ: 'ratgeber', kurz: 'Obers, Sahne, Rahm',
-    titel: 'Obers, Sahne oder Rahm? Die Begriffe in Österreich, Deutschland & der Schweiz',
+    titel: 'Obers, Sahne oder Rahm? Die Begriffe in AT, DE und CH',
     beschreibung: 'Obers, Schlagobers, Sahne, Rahm, Nidel, Sauerrahm: was in AT, DE und CH gemeint ist, welcher Becher ins Rezept passt und wie man Mengen umrechnet.',
     h1: 'Obers, Sahne, Rahm – ein Produkt, drei Länder',
     einleitung: 'Wer ein Wiener Rezept in Hamburg nachkocht oder ein Zürcher Rezept in Graz, stolpert zuerst über das Milchregal. Hier steht, welches Wort wo was bedeutet – und woran man im Zweifel den richtigen Becher erkennt.'
   },
   {
     slug: 'topfen-quark', typ: 'ratgeber', kurz: 'Topfen und Quark',
-    titel: 'Topfen und Quark: gleiches Produkt, andere Namen – und worauf es beim Backen ankommt',
+    titel: 'Topfen und Quark: gleiches Produkt, andere Namen beim Backen',
     beschreibung: 'Topfen ist Quark – aber nicht jeder Becher backt gleich. Begriffe in AT, DE und CH, Fettstufen, Wassergehalt, Umrechnung von Rezepten und typische Fehler.',
     h1: 'Topfen und Quark',
     einleitung: 'Topfenstrudel, Quarkkuchen, Käsekuchen: Gemeint ist dieselbe Zutat. Trotzdem gelingt ein Rezept aus dem Nachbarland manchmal nicht. Das liegt selten am Namen, sondern an Fettstufe und Wassergehalt.'
@@ -69,14 +69,14 @@ export const SEITEN = [
   },
   {
     slug: 'triebmittel-verdoppeln', typ: 'ratgeber', kurz: 'Triebmittel beim Verdoppeln',
-    titel: 'Hefe, Backpulver & Natron beim Verdoppeln oder Halbieren richtig dosieren',
+    titel: 'Hefe, Backpulver & Natron beim Verdoppeln richtig dosieren',
     beschreibung: 'Wächst das Backpulver einfach mit? Faustregeln der Hersteller je 500 g Mehl, Unterschiede zwischen Backpulver, Natron und Germ, Beispiele und typische Fehler.',
     h1: 'Hefe, Backpulver und Natron beim Verdoppeln',
     einleitung: 'Triebmittel sind die Zutaten, bei denen „einfach mal zwei“ am häufigsten Fragen auslöst. Die gute Nachricht: Die Hersteller geben klare Bezugsgrößen an. Die Werkbank vergleicht Ihr Rezept automatisch damit.'
   },
   {
     slug: 'rezept-halbieren', typ: 'ratgeber', kurz: 'Rezept halbieren',
-    titel: 'Rezept halbieren: Eier, Backzeit, Form – so gelingt die kleine Menge',
+    titel: 'Rezept halbieren: Eier, Backzeit und Form richtig anpassen',
     beschreibung: 'Ein Rezept halbieren ohne Pannen: halbe Eier abwiegen, die passende kleinere Form finden, Backzeit einschätzen, Gewürze anpassen. Mit Schritt-für-Schritt-Anleitung.',
     h1: 'Rezept halbieren – Eier, Backzeit, Form',
     einleitung: 'Halbieren klingt nach Division durch zwei. In der Praxis scheitert es an drei Stellen: am halben Ei, an der zu großen Form und an der Backzeit. So lösen Sie alle drei.',
@@ -84,7 +84,7 @@ export const SEITEN = [
   },
   {
     slug: 'fuer-viele-gaeste-kochen', typ: 'ratgeber', kurz: 'Für viele Gäste kochen',
-    titel: 'Für viele Gäste kochen: Mengen hochrechnen, Töpfe wählen, Reihenfolge planen',
+    titel: 'Für viele Gäste kochen: Mengen, Töpfe und Ablauf planen',
     beschreibung: 'Von 4 auf 20 Portionen: Was linear mitwächst, was nicht, welche Topf- und Pfannengröße passt und wie man Arbeit und Herdplätze sinnvoll einteilt.',
     h1: 'Für viele Gäste kochen',
     einleitung: 'Ein Rezept für vier auf zwanzig Personen hochzurechnen, dauert mit der Werkbank Sekunden. Schwieriger ist alles drumherum: Topfgröße, Bratflächen, Herdplätze und Zeitplan. Dieser Ratgeber sortiert das.'
@@ -105,14 +105,14 @@ export const SEITEN = [
   },
   {
     slug: 'einkaufsliste', typ: 'werkzeug', kurz: 'Einkaufsliste aus Rezepten', skripte: [...KERN, 'helfer-ui.js'],
-    titel: 'Einkaufsliste aus mehreren Rezepten – nach Supermarkt sortiert, mit Vorrat',
+    titel: 'Einkaufsliste aus mehreren Rezepten – sortiert, mit Vorrat',
     beschreibung: 'Mehrere Rezepte einfügen, Mengen zusammenzählen, Vorrat abziehen: Die Einkaufsliste sortiert nach Supermarktbereich, lässt sich drucken und bleibt lokal gespeichert.',
     h1: 'Einkaufsliste aus mehreren Rezepten',
     einleitung: 'Für ein Wochenende, ein Fest oder die ganze Woche: Rezepte einfügen, Portionsfaktor setzen, Vorrat eintragen. Die Liste fasst gleiche Zutaten zusammen und sortiert sie so, wie man durch den Markt geht.'
   },
   {
     slug: 'kuechenwoerterbuch', typ: 'werkzeug', kurz: 'Küchenwörterbuch AT–DE–CH', skripte: [...KERN, 'helfer-ui.js'],
-    titel: 'Küchenwörterbuch Österreich – Deutschland – Schweiz: Obers, Topfen, Germ & Co.',
+    titel: 'Küchenwörterbuch AT · DE · CH: Obers, Topfen, Germ & Co.',
     beschreibung: 'Durchsuchbares Küchenwörterbuch mit belegten Einträgen: von Erdäpfeln über Paradeiser bis Rüebli. Jeder Begriff mit Bedeutung, Region, Praxistipp und Quelle.',
     h1: 'Küchenwörterbuch AT · DE · CH',
     einleitung: 'Paradeiser, Rüebli, Faschiertes, Nüsslisalat: Jedes Land hat seine Küchenwörter. Hier sind die wichtigsten mit Bedeutung, Region und Quelle versammelt – dieselbe Liste übersetzt in der Werkbank automatisch.'
@@ -126,28 +126,28 @@ export const SEITEN = [
   },
   {
     slug: 'mehltypen-at-de-ch', typ: 'ratgeber', kurz: 'Mehltypen AT · DE · CH', stand: 'November 2026',
-    titel: 'Mehltypen im Vergleich: W 480, Type 405, Weissmehl & Co. in AT, DE und CH',
+    titel: 'Mehltypen AT · DE · CH: W 480, Type 405, Weissmehl & Co.',
     beschreibung: 'Welches Mehl entspricht welchem? W 480, W 700, W 1600, Type 405, 550, 1050, Weissmehl, Halbweissmehl, Ruchmehl – mit Tabelle, glatt und griffig erklärt.',
     h1: 'Mehltypen in Österreich, Deutschland und der Schweiz',
     einleitung: 'Ein Rezept aus Köln verlangt Type 405, eines aus Wien W 480 glatt, eines aus Bern Halbweissmehl. Hier steht, was die Zahlen und Namen bedeuten und welches Mehl Sie im eigenen Land dafür nehmen.'
   },
   {
     slug: 'eiergroessen', typ: 'ratgeber', kurz: 'Eiergrößen S bis XL', stand: 'November 2026',
-    titel: 'Eiergrößen S, M, L, XL: Gewichte in AT, DE, CH und USA – mit Tabelle',
+    titel: 'Eiergrößen S, M, L, XL: Gewichte in AT, DE, CH und USA',
     beschreibung: 'Wie viel wiegt ein Ei der Größe M? EU-Gewichtsklassen, die Lage in der Schweiz, US-Größen, Richtwerte für Eiklar und Dotter und wann man Eier besser abwiegt.',
     h1: 'Eiergrößen S bis XL – was ein Ei wiegt',
     einleitung: '„3 Eier“ steht schnell im Rezept. Ob damit 150 g oder 190 g Ei gemeint sind, hängt von der Größe ab – und die ist in Österreich, Deutschland, der Schweiz und den USA unterschiedlich geregelt.'
   },
   {
     slug: 'germteig-gehzeit', typ: 'ratgeber', kurz: 'Germteig-Gehzeit', stand: 'November 2026',
-    titel: 'Germteig-Gehzeit nach Raumtemperatur: Tabelle, Kühlschrank & Fingerprobe',
+    titel: 'Germteig-Gehzeit nach Temperatur: Tabelle & Fingerprobe',
     beschreibung: 'Wie lange muss Germteig gehen – bei 18, 22 oder 26 °C und über Nacht im Kühlschrank? Richtwerte, warum süße Teige länger brauchen und woran man erkennt, dass er fertig ist.',
     h1: 'Germteig-Gehzeit nach Raumtemperatur',
     einleitung: 'Im Rezept steht „eine Stunde gehen lassen“. In einer warmen Sommerküche reicht das, im kühlen Altbau im Jänner nicht. Dieser Ratgeber zeigt, wie stark die Temperatur die Gehzeit verändert – und worauf es wirklich ankommt.'
   },
   {
     slug: 'backzeit-formgroesse', typ: 'ratgeber', kurz: 'Backzeit bei anderer Form', stand: 'November 2026',
-    titel: 'Backzeit und Temperatur bei anderer Formgröße – Teighöhe, Tabelle, Kerntemperatur',
+    titel: 'Backzeit bei anderer Formgröße: Teighöhe, Tabelle, Temperatur',
     beschreibung: 'Gleicher Teig, andere Form: wie viel höher oder flacher er wird, wann Sie Temperatur und Zeit ändern sollten und welche Kerntemperatur zeigt, dass Kuchen und Brot gar sind.',
     h1: 'Backzeit und Temperatur bei anderer Formgröße',
     einleitung: 'Die 26er-Springform ist gerade im Geschirrspüler, die 22er steht bereit. Was passiert mit Backzeit und Temperatur, wenn derselbe Teig in eine andere Form kommt? Die Antwort liegt in der Teighöhe.'

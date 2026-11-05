@@ -1,21 +1,21 @@
-/* Küchenideenkompass – Arbeitsplatte statt Food-Blog */
+/* Küchenideenkompass – Arbeitsplatte statt Food-Blog. Farben aus den Fotos: dunkles Holz, Leinen, Brotkruste, Terrakotta */
 @font-face { font-family: 'Young Serif'; src: url('../fonts/young-serif-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Figtree'; src: url('../fonts/figtree-var.woff2') format('woff2'); font-weight: 300 900; font-style: normal; font-display: swap; }
 
 :root {
-  --rosmarin: #2E4A3A;
-  --rosmarin-tief: #1F3328;
-  --rosmarin-hell: #DCE5DD;
+  --rosmarin: #3B2A20;
+  --rosmarin-tief: #251A14;
+  --rosmarin-hell: #EADFD2;
   --paprika: #B4441E;
   --paprika-tief: #93361A;
-  --eidotter: #E9B53C;
-  --eidotter-hell: #FBEFCB;
-  --salbei: #F3F5EF;
+  --eidotter: #D49A3A;
+  --eidotter-hell: #F6E7CC;
+  --salbei: #F5F0E8;
   --platte: #FFFFFF;
-  --tinte: #1C2A22;
-  --tinte-2: #46574C;
-  --linie: #C9D3C9;
-  --raster: rgba(46, 74, 58, 0.07);
+  --tinte: #241C17;
+  --tinte-2: #5A4A3F;
+  --linie: #D9CCBC;
+  --raster: rgba(59, 42, 32, 0.07);
   --radius: 6px;
   --schrift: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   --titel: 'Young Serif', Georgia, 'Times New Roman', serif;
@@ -93,7 +93,7 @@ p, ul, ol { margin: 0 0 1em; }
 table { border-collapse: collapse; width: 100%; font-size: .95rem; }
 caption { text-align: left; padding: .7rem .9rem; font-weight: 700; color: var(--rosmarin-tief); border-bottom: 1px solid var(--linie); }
 th, td { padding: .55rem .9rem; text-align: left; border-bottom: 1px solid var(--rosmarin-hell); vertical-align: top; }
-th { background: #F7F9F5; font-weight: 700; color: var(--rosmarin-tief); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+th { background: #FAF6F0; font-weight: 700; color: var(--rosmarin-tief); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
 td.zahl, th.zahl { text-align: right; white-space: nowrap; }
 tr:last-child td { border-bottom: 0; }
 
@@ -134,14 +134,14 @@ fieldset { border: 1px solid var(--linie); border-radius: var(--radius); padding
 fieldset legend { padding: 0 .3rem; }
 input[type="text"], input[type="number"], input[type="search"], select, textarea {
   width: 100%; font: inherit; font-size: 1rem; color: var(--tinte); background: #fff;
-  border: 1.5px solid #8FA394; border-radius: var(--radius); padding: .55rem .7rem; min-height: 44px;
+  border: 1.5px solid #A8927E; border-radius: var(--radius); padding: .55rem .7rem; min-height: 44px;
 }
 textarea { min-height: 220px; resize: vertical; line-height: 1.5; font-variant-numeric: tabular-nums; }
 input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outline: 3px solid rgba(233, 181, 60, .55); outline-offset: 0; }
 .reihe { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); align-items: end; }
 .reihe-3 { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
 .wahl { display: flex; flex-wrap: wrap; gap: .4rem; }
-.wahl label { position: relative; display: inline-flex; align-items: center; gap: .35rem; border: 1.5px solid #8FA394; border-radius: 999px; padding: .35rem .8rem; cursor: pointer; font-weight: 600; font-size: .92rem; background: #fff; min-height: 40px; color: var(--tinte); margin: 0; }
+.wahl label { position: relative; display: inline-flex; align-items: center; gap: .35rem; border: 1.5px solid #A8927E; border-radius: 999px; padding: .35rem .8rem; cursor: pointer; font-weight: 600; font-size: .92rem; background: #fff; min-height: 40px; color: var(--tinte); margin: 0; }
 /* nativer Radio-Kreis unsichtbar (sr-only), bleibt fokussier- und per Tastatur bedienbar */
 .wahl input { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; opacity: 0; }
 .wahl label:has(input:focus-visible) { outline: 3px solid var(--eidotter); outline-offset: 2px; box-shadow: 0 0 0 2px var(--rosmarin-tief); }
@@ -169,8 +169,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
 .marke-klein { display: inline-block; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: .05rem .4rem; border-radius: 4px; margin-left: .3rem; vertical-align: 1px; }
 .m-ab { background: var(--eidotter-hell); color: #6B4D00; border: 1px solid var(--eidotter); }
 .m-ei { background: #FBE3D9; color: var(--paprika-tief); border: 1px solid #E8A88F; }
-.m-tr { background: var(--rosmarin-hell); color: var(--rosmarin-tief); border: 1px solid #9FB5A4; }
-.m-reg { background: #EEF1EA; color: var(--tinte-2); border: 1px solid var(--linie); }
+.m-tr { background: var(--rosmarin-hell); color: var(--rosmarin-tief); border: 1px solid #B9A28C; }
+.m-reg { background: #F0E9DF; color: var(--tinte-2); border: 1px solid var(--linie); }
 .nichtlinear { margin-top: 1rem; border: 2px solid var(--paprika); border-radius: var(--radius); background: #FFF8F4; padding: .9rem 1rem; }
 .nichtlinear h4 { margin: 0 0 .5rem; font-family: var(--schrift); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; color: var(--paprika-tief); }
 .nichtlinear dl { margin: 0; }
@@ -194,7 +194,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
 .wort { background: #fff; border: 1px solid var(--linie); border-radius: var(--radius); padding: 1rem 1.1rem; scroll-margin-top: 1rem; }
 .wort h3 { margin: 0 0 .3rem; font-size: 1.25rem; }
 .wort .trio { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .4rem; margin: .5rem 0 .7rem; font-size: .92rem; }
-.wort .trio div { background: #F7F9F5; border: 1px solid var(--rosmarin-hell); border-radius: 4px; padding: .35rem .5rem; }
+.wort .trio div { background: #FAF6F0; border: 1px solid var(--rosmarin-hell); border-radius: 4px; padding: .35rem .5rem; }
 .wort .trio b { display: block; font-size: .7rem; letter-spacing: .1em; color: var(--tinte-2); }
 .wort p { margin: 0 0 .5rem; }
 .wort .beleg { font-size: .82rem; color: var(--tinte-2); margin: 0; }
@@ -211,7 +211,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
 .liste-gruppe li .lh { font-size: .8rem; color: var(--tinte-2); display: block; }
 .rezept-karte { border: 1px solid var(--linie); border-radius: var(--radius); background: #fff; padding: .8rem; margin-bottom: .8rem; }
 .rezept-karte .reihe { grid-template-columns: 1fr auto auto; }
-.klein-knopf { font: inherit; font-size: .85rem; font-weight: 700; padding: .3rem .6rem; min-height: 36px; border: 1.5px solid #8FA394; background: #fff; color: var(--rosmarin-tief); border-radius: var(--radius); cursor: pointer; }
+.klein-knopf { font: inherit; font-size: .85rem; font-weight: 700; padding: .3rem .6rem; min-height: 36px; border: 1.5px solid #A8927E; background: #fff; color: var(--rosmarin-tief); border-radius: var(--radius); cursor: pointer; }
 
 /* Karten (Übersicht) */
 .karten { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); margin: 1rem 0 2rem; }
@@ -232,7 +232,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
 .seitenleiste .anzeige { margin-top: 24px; }
 
 /* ---------- Fuß ---------- */
-.fuss { background: var(--rosmarin-tief); color: #E6ECE6; margin-top: 4rem; padding: 2.4rem 0 1.6rem; font-size: .93rem; }
+.fuss { background: var(--rosmarin-tief); color: #ECE3D7; margin-top: 4rem; padding: 2.4rem 0 1.6rem; font-size: .93rem; }
 .fuss a { color: #fff; }
 .fuss-raster { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 .fuss h2 { color: #fff; font-family: var(--schrift); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 .6rem; font-weight: 800; }
@@ -264,4 +264,36 @@ input:focus, select:focus, textarea:focus { border-color: var(--rosmarin); outli
   .marke-text { font-size: 1.02rem; }
   .marke-text small { font-size: .6rem; letter-spacing: .05em; }
   .menue > summary { padding: .45rem .6rem; font-size: .95rem; }
+}
+
+/* Vorteile */
+.vorteile{margin:2rem 0 1rem}
+.vorteile ul{list-style:none;padding:0;margin:.6rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 1.5rem;border-top:2px solid #3B2A20}
+.vorteile li{display:flex;flex-direction:column;gap:2px;padding:.8rem 0;border-bottom:1px solid #E3D8CB}
+.vorteile b{font-size:1.02rem}
+.vorteile b::before{content:"✓";color:#B4441E;margin-right:.45rem;font-weight:700}
+.vorteile span{color:#5A4A3F;font-size:.93rem}
+
+/* Fotos */
+.foto{margin:1.6rem 0;padding:0}
+.foto img{display:block;width:100%;height:auto;border-radius:6px;background:#2a2a28}
+.foto figcaption{font-size:.78rem;color:#7A6A5E;margin-top:.35rem;text-align:right}
+.foto.breit img{aspect-ratio:3/2;object-fit:cover}
+
+/* Meine Rezepte */
+.meine{margin-top:1rem;border-top:1px dashed #D6C8B7;padding-top:.6rem}
+.meine h3{margin:.2rem 0 .4rem;font-size:1rem}
+.meine ul{list-style:none;padding:0;margin:0}
+.meine li{display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap;padding:.3rem 0;border-bottom:1px dotted #E3D8CB}
+.meine li .klein{color:#7A6A5E;font-size:.82rem}
+.meine li [data-loeschen]{margin-left:auto}
+
+@media print{
+  .vorteile,.foto{display:none!important}
+  /* Rezeptkarte: A5 quer, Karteikarten-Rahmen */
+  body.druck-karte .druckbar{page:karte;border:1.5pt solid #000;padding:8mm 9mm;font-size:10pt}
+  body.druck-karte .druckbar h3{font-size:16pt;margin:0 0 2mm}
+  body.druck-karte .druckbar .zutaten{width:100%}
+  body.druck-karte .nichtlinear{font-size:8.5pt}
+  @page karte{size:A5 landscape;margin:8mm}
 }
