@@ -8,12 +8,12 @@
   'use strict';
   var KUNDE = 'ca-pub-7811071715414905';
   var SLOTS = {
-    billboard: '',   // 970×250, ab 1024 px, unter dem Kopf
-    leaderboard: '', // 728×90, ab 768 px, unter dem Kopf
-    mobil: '',       // 320×100, unter 768 px, unter dem Kopf
-    halfpage: '',    // 300×600, Seitenleiste ab 1200 px (nicht klebend)
-    skyscraper: '',  // 160×600, Ersatz für die Seitenleiste
-    inartikel: ''    // 300×250, nach dem 3. Absatz langer Ratgeber
+    billboard: '7497607759',   // 970×250, ab 1024 px, unter dem Kopf (responsiver Block in fester Größe)
+    leaderboard: '5774811012', // 728×90, ab 768 px, unter dem Kopf
+    mobil: '5396758258',       // 320×100, unter 768 px, unter dem Kopf
+    halfpage: '1292301217',    // 300×600, Seitenleiste ab 1200 px (responsiver Block in fester Größe)
+    skyscraper: '5064364572',  // 160×600, Ersatz für die Seitenleiste
+    inartikel: '9522484334'    // 300×250, nach dem 3. Absatz langer Ratgeber
   };
   var FORMATE = {
     billboard: [970, 250], leaderboard: [728, 90], mobil: [320, 100],

@@ -162,7 +162,41 @@
     rechnen(); status('Beispiel geladen – ändern Sie Portionen, Einheiten oder Küchensprache.');
   });
   $('wb-leeren').addEventListener('click', function () { $('wb-titel').value = ''; $('wb-zutaten').value = ''; $('wb-schritte').value = ''; rechnen(); $('wb-zutaten').focus(); });
-  $('wb-drucken').addEventListener('click', function () { rechnen(); window.print(); });
+  // Ereignis an Google Analytics – wirkt nur nach Einwilligung (einwilligung.js)
+  function zaehlen(name, p) { try { if (typeof window.gtag === 'function') window.gtag('event', name, p || {}); } catch (e) {} }
+  $('wb-drucken').addEventListener('click', function () { rechnen(); zaehlen('rezept_drucken'); window.print(); });
+  $('wb-karte').addEventListener('click', function () {
+    rechnen(); if (!letztes) { status('Erst ein Rezept eingeben.'); return; }
+    document.body.classList.add('druck-karte'); zaehlen('rezeptkarte_drucken');
+    var fertig = function () { document.body.classList.remove('druck-karte'); window.removeEventListener('afterprint', fertig); };
+    window.addEventListener('afterprint', fertig); window.print(); setTimeout(fertig, 1500);
+  });
+
+  // „Meine Rezepte“: umgerechnete Rezepte merken – nur im Browser (localStorage „kik-rezepte-v1“), höchstens 30
+  var MEINE = 'kik-rezepte-v1';
+  function meineLaden() { try { var l = JSON.parse(localStorage.getItem(MEINE) || '[]'); return Array.isArray(l) ? l.filter(function (x) { return x && x.z && typeof x.titel === 'string'; }) : []; } catch (e) { return []; } }
+  function meineZeigen() {
+    var l = meineLaden(), box = $('wb-meine');
+    box.hidden = !l.length;
+    $('wb-meine-liste').innerHTML = l.map(function (x, i) {
+      return '<li><button type="button" class="link-knopf" data-oeffnen="' + i + '">' + h(x.titel) + '</button><span class="klein">' + h(x.info || '') + '</span><button type="button" class="link-knopf klein" data-loeschen="' + i + '" aria-label="' + h(x.titel) + ' löschen">löschen</button></li>';
+    }).join('');
+  }
+  $('wb-merken').addEventListener('click', function () {
+    rechnen(); if (!letztes) { status('Erst ein Rezept eingeben.'); return; }
+    var l = meineLaden(), z = zustand(), titel = ($('wb-titel').value.trim() || 'Mein Rezept').slice(0, 60);
+    l = l.filter(function (x) { return x.titel !== titel; });
+    l.unshift({ titel: titel, info: faktorBestimmen().text || '', z: z, ts: Date.now() });
+    try { localStorage.setItem(MEINE, JSON.stringify(l.slice(0, 30))); status('In „Meine Rezepte“ gespeichert – nur in diesem Browser.'); zaehlen('rezept_merken'); }
+    catch (e) { status('Speichern ist in diesem Browser nicht möglich.'); }
+    meineZeigen();
+  });
+  $('wb-meine').addEventListener('click', function (e) {
+    var o = e.target.getAttribute('data-oeffnen'), d = e.target.getAttribute('data-loeschen'), l = meineLaden();
+    if (o !== null && l[+o]) { setzen(l[+o].z); rechnen(); status('„' + l[+o].titel + '“ geöffnet.'); zaehlen('rezept_oeffnen'); $('wb-ergebnis').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (d !== null) { l.splice(+d, 1); try { localStorage.setItem(MEINE, JSON.stringify(l)); } catch (er) {} meineZeigen(); }
+  });
+  meineZeigen();
   $('wb-teilen').addEventListener('click', function () {
     var url = location.origin + location.pathname + '#r=' + K.kodieren(zustand());
     history.replaceState(null, '', url);
@@ -177,7 +211,7 @@
       daten.rezepte = daten.rezepte || [];
       daten.rezepte.push({ titel: letztes.titel, text: alsText() });
       localStorage.setItem('kik-einkauf-v1', JSON.stringify(daten));
-      status('Auf die Einkaufsliste gelegt (' + daten.rezepte.length + ' Rezept' + (daten.rezepte.length > 1 ? 'e' : '') + ').');
+      status('Auf die Einkaufsliste gelegt (' + daten.rezepte.length + ' Rezept' + (daten.rezepte.length > 1 ? 'e' : '') + ').'); zaehlen('einkaufsliste_uebernehmen');
     } catch (e) { status('Speichern ist in diesem Browser nicht möglich.'); }
   });
 

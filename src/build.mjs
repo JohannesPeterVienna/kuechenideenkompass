@@ -13,7 +13,7 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261104b';
+const VERSION = '20261105a';
 // Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
 // (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
 const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});window['ga-disable-G-T00HRG2YVF']=true;window.kikConsentStandard=true;</script>`;
@@ -26,7 +26,7 @@ const href = (slug) => `/${slug ? slug + '/' : ''}`;
 const nurText = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim();
 const ankerId = (t) => nurText(t).toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
 
-const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="#1F3328" stroke="#E9B53C" stroke-width="3"/><g stroke="#F3F5EF" stroke-width="2" stroke-linecap="round"><path d="M24 7v4M24 37v4M7 24h4M37 24h4"/><path d="M12 12l2.5 2.5M33.5 33.5L36 36M36 12l-2.5 2.5M14.5 33.5L12 36" stroke-width="1.4"/></g><path d="M24 24L33 13" stroke="#B4441E" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="3.2" fill="#E9B53C"/></svg>`;
+const LOGO = `<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21" fill="#251A14" stroke="#D49A3A" stroke-width="3"/><g stroke="#F5F0E8" stroke-width="2" stroke-linecap="round"><path d="M24 7v4M24 37v4M7 24h4M37 24h4"/><path d="M12 12l2.5 2.5M33.5 33.5L36 36M36 12l-2.5 2.5M14.5 33.5L12 36" stroke-width="1.4"/></g><path d="M24 24L33 13" stroke="#B4441E" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="3.2" fill="#D49A3A"/></svg>`;
 
 const NAV = [
   ['rezept-umrechnen', 'Werkbank'],
@@ -131,7 +131,11 @@ ${robots}
 <meta property="og:title" content="${esc(seite.titel)}">
 <meta property="og:description" content="${esc(seite.beschreibung)}">
 <meta property="og:url" content="${url(seite.slug)}">
-<meta name="theme-color" content="#2E4A3A">
+<meta property="og:image" content="${DOMAIN}/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3B2A20">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/figtree-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/werkbank.css?v=${VERSION}">
@@ -176,7 +180,7 @@ function weiterleitung(alt, neu) {
 <meta http-equiv="refresh" content="0; url=${ziel}">
 <meta name="google-adsense-account" content="ca-pub-7811071715414905">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>body{font-family:system-ui,sans-serif;background:#F3F5EF;color:#1C2A22;margin:0;padding:3rem 16px}a{color:#93361A}</style>
+<style>body{font-family:system-ui,sans-serif;background:#F5F0E8;color:#241C17;margin:0;padding:3rem 16px}a{color:#93361A}</style>
 </head>
 <body><p>Diese Seite ist umgezogen: <a href="${ziel}">${esc(ziel)}</a></p></body>
 </html>
