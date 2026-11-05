@@ -196,7 +196,7 @@ export const SEITEN = [
     einleitung: 'Angaben gemäß § 5 E-Commerce-Gesetz (ECG), § 14 Unternehmensgesetzbuch und Offenlegung gemäß § 25 Mediengesetz.'
   },
   {
-    slug: 'datenschutz', typ: 'pflicht', kurz: 'Datenschutz', stand: '4. November 2026',
+    slug: 'datenschutz', typ: 'pflicht', kurz: 'Datenschutz', stand: '5. November 2026',
     titel: 'Datenschutzerklärung – Küchenideenkompass',
     beschreibung: 'Datenschutzerklärung: Hosting über GitHub Pages, Google AdSense, Google Analytics 4 nur nach Einwilligung, Rezepte und Listen nur lokal im Browser.',
     h1: 'Datenschutzerklärung',

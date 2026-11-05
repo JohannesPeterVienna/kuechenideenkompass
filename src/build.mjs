@@ -13,9 +13,10 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261105a';
+const VERSION = '20261105b';
 // Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
 // (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
+// Impressum, Datenschutz, Kontakt und 404 tragen data-statistik="aus": dort lädt einwilligung.js nie Google Analytics.
 const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});window['ga-disable-G-T00HRG2YVF']=true;window.kikConsentStandard=true;</script>`;
 const LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7811071715414905" crossorigin="anonymous"></script>';
 const OHNE_LOADER = ['impressum', 'datenschutz', 'kontakt'];
@@ -145,7 +146,7 @@ ${!seite.noindex && !OHNE_LOADER.includes(seite.slug) ? LOADER + '\n' : ''}${jso
 ${werbung ? `<script src="/assets/js/anzeigen.js?v=${VERSION}" defer></script>` : ''}
 ${skripte}
 </head>
-<body data-werbung="${werbung ? 'ja' : 'nein'}" data-seitentyp="${seite.typ}">
+<body data-werbung="${werbung ? 'ja' : 'nein'}" data-seitentyp="${seite.typ}"${OHNE_LOADER.includes(seite.slug) ? ' data-statistik="aus"' : ''}>
 ${kopf(seite)}
 <main id="inhalt" class="rahmen">
 ${kopfZeile}
@@ -211,6 +212,6 @@ fs.writeFileSync(path.join(DOCS, 'favicon.svg'), LOGO.replace('aria-hidden="true
 const s404 = fs.readFileSync(path.join(DOCS, 'index.html'), 'utf8');
 const start404 = s404.indexOf('<main'), ende404 = s404.indexOf('</main>') + 7;
 const seite404 = s404.slice(0, start404) + `<main id="inhalt" class="rahmen"><h1>Diese Seite gibt es nicht (mehr)</h1><p class="einleitung">Vielleicht hilft eines der Werkzeuge weiter:</p><div class="karten">${SEITEN.filter((s) => s.typ === 'werkzeug').map((s) => `<a class="karte werk" href="${href(s.slug)}"><b>${esc(s.kurz)}</b><span>${esc(s.beschreibung)}</span></a>`).join('')}</div></main>` + s404.slice(ende404);
-fs.writeFileSync(path.join(DOCS, '404.html'), seite404.replace(/<title>[^<]*<\/title>/, '<title>Seite nicht gefunden – Küchenideenkompass</title>').replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex">').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n/, '').replace(LOADER + '\n', ''));
+fs.writeFileSync(path.join(DOCS, '404.html'), seite404.replace(/<title>[^<]*<\/title>/, '<title>Seite nicht gefunden – Küchenideenkompass</title>').replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex">').replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\n/, '').replace(LOADER + '\n', '').replace('<body ', '<body data-statistik="aus" '));
 
 console.log(ergebnis.map((e) => `${(e.slug || '/').padEnd(30)} ${e.typ.padEnd(10)} ${e.woerter} Wörter`).join('\n'));
