@@ -92,7 +92,7 @@ for (const d of ['CNAME', '.nojekyll', 'ads.txt', 'robots.txt', 'sitemap.xml', '
 if (fs.readFileSync(path.join(DOCS, 'ads.txt'), 'utf8').trim() !== 'google.com, pub-7811071715414905, DIRECT, f08c47fec0942fa0') f('ads.txt', 'Inhalt falsch');
 if (fs.readFileSync(path.join(DOCS, 'CNAME'), 'utf8').trim() !== 'kuechenideenkompass.de') f('CNAME', 'Inhalt falsch');
 const imp = fs.readFileSync(path.join(DOCS, 'impressum/index.html'), 'utf8');
-for (const pflicht of ['AdStern', 'Seilerstätte 8', '1010 Wien', 'office@adstern.com', 'ATU54682507', 'Magistratisches Bezirksamt für den 1./8. Bezirk', 'Fachgruppe Werbung und Marktkommunikation', 'Werbeagentur', 'Gewerbeordnung', 'ris.bka.gv.at']) if (!imp.includes(pflicht)) f('impressum', `fehlt: ${pflicht}`);
+for (const pflicht of ['AdStern', 'Seilerstätte 8/8', '1010 Wien', 'office@adstern.com', 'ATU54682507', 'Magistratisches Bezirksamt für den 1./8. Bezirk', 'Fachgruppe Werbung und Marktkommunikation', 'Werbeagentur', 'Gewerbeordnung', 'ris.bka.gv.at']) if (!imp.includes(pflicht)) f('impressum', `fehlt: ${pflicht}`);
 const ds = fs.readFileSync(path.join(DOCS, 'datenschutz/index.html'), 'utf8');
 for (const pflicht of ['GitHub Pages', 'Drittanbieter, einschließlich Google, verwenden Cookies', 'adssettings.google.com', 'youronlinechoices.com', 'aboutads.info', 'G-T00HRG2YVF', 'Barichgasse 40–42', 'localStorage']) if (!ds.includes(pflicht)) f('datenschutz', `fehlt: ${pflicht}`);
 // Statistik-Zettel: Seiten ohne Statistik markiert, Datenschutzerklärung mit eigenem Abschnitt
