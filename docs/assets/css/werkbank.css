@@ -398,3 +398,4 @@ a.klein-knopf { display: inline-flex; align-items: center; text-decoration: none
 }
 .tabelle-huelle { position: relative; } /* hält .nur-vorlesen innerhalb des scrollbaren Rahmens */
 .spalten > * { min-width: 0; }
+.link-feld { display: block; width: 100%; margin-top: .3rem; font-size: .85rem; }

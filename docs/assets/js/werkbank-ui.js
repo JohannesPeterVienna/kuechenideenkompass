@@ -199,10 +199,16 @@
   meineZeigen();
   $('wb-teilen').addEventListener('click', function () {
     var url = location.origin + location.pathname + '#r=' + K.kodieren(zustand());
-    history.replaceState(null, '', url);
+    // Die Adresse bleibt unverändert: Der Link geht nur in die Zwischenablage (oder in ein Feld zum Kopieren).
+    $('wb-teilen').setAttribute('data-link', url);
     var fertig = function () { status('Link kopiert. Das Rezept steckt vollständig im Link – gespeichert wird nichts.'); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(fertig, function () { status('Link steht jetzt in der Adresszeile.'); });
-    else status('Link steht jetzt in der Adresszeile.');
+    var zeigen = function () {
+      $('wb-status').textContent = 'Kopieren nicht möglich – bitte den Link aus dem Feld kopieren: ';
+      var f = document.createElement('input'); f.type = 'text'; f.readOnly = true; f.value = url; f.className = 'link-feld'; f.setAttribute('aria-label', 'Teilen-Link');
+      $('wb-status').appendChild(f); f.focus(); f.select();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(fertig, zeigen);
+    else zeigen();
   });
   $('wb-liste').addEventListener('click', function () {
     if (!letztes) { status('Erst ein Rezept eingeben.'); return; }
@@ -216,7 +222,9 @@
   });
 
   // Startzustand: geteilter Link > Parameter aus dem Backform-Übersetzer
-  var m = location.hash.match(/#r=([A-Za-z0-9_-]+)/);
+  // Das Kopf-Skript der Seite hat ein Rezept-Fragment schon aus der Adresse genommen und in window.kikFragment gelegt
+  var m = String(window.kikFragment || location.hash).match(/^#r=([A-Za-z0-9_-]+)$/);
+  window.kikFragment = '';
   if (m) setzen(K.dekodieren(m[1]));
   var q = new URLSearchParams(location.search);
   if (q.get('faktor')) {

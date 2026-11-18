@@ -46,6 +46,9 @@ for (const s of SEITEN) {
   if (!ohneLoader && loader !== 1) f(s.slug, `AdSense-Loader ${loader}× statt einmal`);
   const kopfEnde = h.indexOf('</head>'), cd = h.indexOf("gtag('consent','default'");
   if (cd < 0 || cd > kopfEnde) f(s.slug, 'Consent-Grundwerte fehlen im head');
+  // Fragment-Skript (geteilte Links) steht vor allen Google-Skripten
+  const fr = h.indexOf('window.kikFragment=h');
+  if (fr < 0 || fr > cd || fr > h.indexOf('<script src=')) f(s.slug, 'Fragment-Skript fehlt oder steht nicht vor Consent/Google-Skripten');
   if (loader && (h.indexOf('adsbygoogle.js') < cd || h.indexOf('adsbygoogle.js') > kopfEnde)) f(s.slug, 'AdSense-Loader nicht nach den Consent-Grundwerten im head');
   if (['ratgeber', 'werkzeug'].includes(s.typ) && !werbung) f(s.slug, 'Werbeplätze fehlen');
   // Kopf-Anzeigenplatz erst nach H1 + Einleitung, auf Seiten mit Werkzeug nur breit
@@ -75,6 +78,11 @@ for (const s of SEITEN) {
     const p = ziel.endsWith('/') ? path.join(DOCS, ziel, 'index.html') : path.join(DOCS, ziel);
     if (!fs.existsSync(p)) f(s.slug, `toter Link ${ziel}`);
   }
+  // kein interner Link auf eine Weiterleitungsseite
+  for (const [alt] of WEITERLEITUNGEN) {
+    const pfad = '/' + alt.replace(/index\.html$/, '');
+    if (new RegExp(`href="${pfad.replace(/[.\/]/g, '\\$&')}["#?]`).test(h)) f(s.slug, `interner Link auf Weiterleitung ${pfad}`);
+  }
   for (const m of h.matchAll(/<script src="(\/[^"?]+)/g)) if (!fs.existsSync(path.join(DOCS, m[1]))) f(s.slug, `Skript fehlt ${m[1]}`);
   // keine fremden CDNs/Schriften
   if (/fonts\.googleapis|cdnjs|jsdelivr|unpkg/.test(h)) f(s.slug, 'fremdes CDN');
@@ -94,8 +102,12 @@ if (fs.readFileSync(path.join(DOCS, 'CNAME'), 'utf8') !== 'kuechenideenkompass.d
   }
   for (const [alt] of WEITERLEITUNGEN) if (sm.includes(`/${alt.replace(/index\.html$/, '')}<`)) f('sitemap.xml', `Weiterleitung ${alt} in der Sitemap`);
 }
-for (const [alt, neu] of WEITERLEITUNGEN) {
+for (const [alt, neu, anker] of WEITERLEITUNGEN) {
   const h = fs.readFileSync(path.join(DOCS, alt), 'utf8');
+  if (anker) {
+    if (!h.includes(`url=${DOMAIN}/${neu}/${anker}"`)) f(alt, `Weiterleitung ohne Abschnitt ${anker}`);
+    if (!fs.readFileSync(path.join(DOCS, neu, 'index.html'), 'utf8').includes(`id="${anker.slice(1)}"`)) f(alt, `Zielabschnitt ${anker} fehlt auf /${neu}/`);
+  }
   if (!/noindex/.test(h) || !h.includes(`url=${DOMAIN}/${neu ? neu + '/' : ''}`) || !h.includes(`rel="canonical" href="${DOMAIN}/${neu ? neu + '/' : ''}"`)) f(alt, 'Weiterleitung fehlerhaft');
 }
 for (const d of ['CNAME', '.nojekyll', 'ads.txt', 'robots.txt', 'sitemap.xml', '404.html', 'assets/fonts/OFL-YoungSerif.txt', 'assets/fonts/OFL-Figtree.txt']) if (!fs.existsSync(path.join(DOCS, d))) f(d, 'fehlt');
@@ -109,6 +121,6 @@ for (const pflicht of ['GitHub Pages', 'Drittanbieter, einschließlich Google, v
 for (const slug of ['impressum', 'datenschutz', 'kontakt']) if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, slug, 'index.html'), 'utf8'))) f(slug, 'data-statistik="aus" fehlt');
 if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, '404.html'), 'utf8'))) f('404.html', 'data-statistik="aus" fehlt');
 for (const s of SEITEN) if (!['impressum', 'datenschutz', 'kontakt'].includes(s.slug) && /data-statistik=/.test(fs.readFileSync(path.join(DOCS, s.slug, 'index.html'), 'utf8'))) f(s.slug, 'data-statistik auf Inhaltsseite');
-for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 18. November 2026', 'Kühlschrank-Fristen', 'wird nichts gespeichert', 'eine früher gespeicherte Auswahl bleibt bestehen']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
+for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 18. November 2026', 'Kühlschrank-Fristen', 'entfernt es sofort aus der Adresszeile', 'wird nichts gespeichert', 'eine früher gespeicherte Auswahl bleibt bestehen']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
 console.log(fehler.length ? `\n${fehler.length} FEHLER:\n` + fehler.join('\n') : '\nAlle Prüfungen bestanden.');
 process.exit(fehler.length ? 1 : 0);

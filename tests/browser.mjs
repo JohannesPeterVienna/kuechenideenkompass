@@ -170,8 +170,10 @@ for (const breite of [360, 390, 1366]) {
   await page.screenshot({ path: `${AUS}/${breite}-werkbank-ergebnis.png`, fullPage: true });
   // Teilen-Link
   await page.click('#wb-teilen');
-  const url = page.url();
+  // Der Link geht in die Zwischenablage (hier: data-link am Knopf); die Adresszeile bleibt ohne Fragment
+  const url = (await page.getAttribute('#wb-teilen', 'data-link')) || '';
   if (!/#r=/.test(url)) fehler.push('Teilen-Link fehlt');
+  if (/#/.test(page.url())) fehler.push('Teilen-Link verändert die Adresszeile');
   await page.goto('about:blank'); await geh(page, url);
   if ((await page.inputValue('#wb-titel')) !== 'Topfen-Gugelhupf') fehler.push('Teilen-Link stellt Rezept nicht her');
   // Backform

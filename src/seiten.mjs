@@ -189,7 +189,7 @@ export const SEITEN = [
     einleitung: 'Wer den Küchenideenkompass betreibt und wie das Unternehmen erreichbar ist.'
   },
   {
-    slug: 'impressum', typ: 'pflicht', kurz: 'Impressum',
+    slug: 'impressum', typ: 'pflicht', geaendert: '2026-11-18', kurz: 'Impressum', stand: '18. November 2026',
     titel: 'Impressum – Küchenideenkompass',
     beschreibung: 'Impressum und Offenlegung des Küchenideenkompass gemäß § 5 ECG und § 25 MedienG.',
     h1: 'Impressum',
@@ -218,6 +218,6 @@ export const WEITERLEITUNGEN = [
   ['portionenwerk.html', 'rezept-umrechnen'],
   ['rezeptliste-pruefen.html', 'rezept-umrechnen'],
   // Zusammengelegt am 18.11.2026
-  ['fuer-viele-gaeste-kochen/index.html', 'rezept-verdoppeln'],
-  ['essloeffel-teeloeffel-gramm/index.html', 'cups-in-gramm'],
+  ['fuer-viele-gaeste-kochen/index.html', 'rezept-verdoppeln', '#viele-gaeste'],
+  ['essloeffel-teeloeffel-gramm/index.html', 'cups-in-gramm', '#loeffel'],
 ];

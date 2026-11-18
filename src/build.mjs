@@ -15,11 +15,15 @@ const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261118a';
+const VERSION = '20261118b';
 // Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
 // (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
 // Impressum, Datenschutz, Kontakt und 404 tragen data-statistik="aus": dort lädt einwilligung.js nie Google Analytics.
 const CONSENT_DEFAULT = `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});window['ga-disable-G-T00HRG2YVF']=true;window.kikConsentStandard=true;</script>`;
+// Werkzeug-Zustand aus geteilten Links (#r=, #k=, #h=, #w=, #o=, #g=): als Erstes im head einlesen und aus der Adresse entfernen –
+// vor jedem Google-Skript, damit die Adresse, die Statistik oder Werbung sehen könnten, nie ein Rezept oder eine Eingabe enthält.
+// Klicks auf solche Links innerhalb derselben Seite ändern die Adresse gar nicht, sondern gehen als Ereignis „kik-fragment“ an das Werkzeug.
+const FRAGMENT = `<script>(function(){var m=/^#[a-z]=/,h=location.hash;if(m.test(h)){window.kikFragment=h;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(a&&a.origin===location.origin&&a.pathname===location.pathname&&m.test(a.hash)){e.preventDefault();window.dispatchEvent(new CustomEvent('kik-fragment',{detail:a.hash}))}})})();</script>`;
 const LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7811071715414905" crossorigin="anonymous"></script>';
 const OHNE_LOADER = ['impressum', 'datenschutz', 'kontakt'];
 
@@ -144,6 +148,7 @@ ${robots}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/figtree-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/werkbank.css?v=${VERSION}">
+${FRAGMENT}
 ${CONSENT_DEFAULT}
 ${!seite.noindex && !OHNE_LOADER.includes(seite.slug) ? LOADER + '\n' : ''}${jsonLd(seite, faq, howto)}
 <script src="/assets/js/einwilligung.js?v=${VERSION}" defer></script>
@@ -173,7 +178,7 @@ ${fuss()}
   return { slug: seite.slug, woerter, typ: seite.typ };
 }
 
-function weiterleitung(alt, neu) {
+function weiterleitung(alt, neu, anker = '') {
   const ziel = url(neu);
   return `<!doctype html>
 <html lang="de">
@@ -182,22 +187,22 @@ function weiterleitung(alt, neu) {
 <title>Weitergeleitet – Küchenideenkompass</title>
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="${ziel}">
-<meta http-equiv="refresh" content="0; url=${ziel}">
+<meta http-equiv="refresh" content="0; url=${ziel}${anker}">
 <meta name="google-adsense-account" content="ca-pub-7811071715414905">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>body{font-family:system-ui,sans-serif;background:#F5F0E8;color:#241C17;margin:0;padding:3rem 16px}a{color:#93361A}</style>
 </head>
-<body><p>Diese Seite ist umgezogen: <a href="${ziel}">${esc(ziel)}</a></p></body>
+<body><p>Diese Seite ist umgezogen: <a href="${ziel}${anker}">${esc(ziel)}</a></p></body>
 </html>
 `;
 }
 
 // --- Bauen ---
 const ergebnis = SEITEN.map(seiteBauen);
-for (const [alt, neu] of WEITERLEITUNGEN) {
+for (const [alt, neu, anker] of WEITERLEITUNGEN) {
   const datei = path.join(DOCS, alt);
   fs.mkdirSync(path.dirname(datei), { recursive: true });
-  fs.writeFileSync(datei, weiterleitung(alt, neu));
+  fs.writeFileSync(datei, weiterleitung(alt, neu, anker));
 }
 // lastmod je Seite: nur Seiten mit „geaendert“ bekommen ein neues Datum
 const heute = '2026-11-04';

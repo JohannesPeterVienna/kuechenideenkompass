@@ -585,10 +585,11 @@
     if (einheit === 'g') {
       // Rückweg: Gramm → Volumen
       var mlR = menge / z.gProMl;
+      var cupsT = deZahl(mlR / D.US_ML.cup, 2), cupsW = cupsT + (cupsT === '1' ? ' Cup' : ' Cups');
       return { zutat: z, g: menge, ml: mlR, cups: mlR / D.US_ML.cup, el: mlR / D.US_ML.el, tl: mlR / D.US_ML.tl, rueck: true, schritte: [
         'Messwert der Quelle: ' + z.volText + ' = ' + z.g + ' g, also ' + deZahl(z.gProCup, 0) + ' g je Cup',
-        deZahl(menge, menge < 10 ? 1 : 0) + ' g ÷ ' + deZahl(z.gProCup, 0) + ' g je Cup = ' + deZahl(mlR / D.US_ML.cup, 2) + ' Cups',
-        deZahl(mlR / D.US_ML.cup, 2) + ' Cups × 16 = ' + deZahl(mlR / D.US_ML.cup * 16, 1) + ' EL (× 48 = ' + deZahl(mlR / D.US_ML.cup * 48, 1) + ' TL)'
+        deZahl(menge, menge < 10 ? 1 : 0) + ' g ÷ ' + deZahl(z.gProCup, 0) + ' g je Cup = ' + cupsW,
+        cupsW + ' × 16 = ' + deZahl(mlR / D.US_ML.cup * 16, 1) + ' EL (× 48 = ' + deZahl(mlR / D.US_ML.cup * 48, 1) + ' TL)'
       ] };
     }
     if (!WAAGE_ML[einheit]) return null;

@@ -40,17 +40,47 @@ test('Kernwerte der Behörden wie in den Quellen', () => {
 
 test('kernPruefen: darunter, erreicht mit Haltezeit, Ruhezeit, Fahrenheit, Sichtprobe', () => {
   let r = R.kernPruefen('bfr-tierisch', '64,5', 'c');
-  assert.equal(r.status, 'darunter'); assert.equal(r.diff, -5.5); assert.match(r.naechster, /5,5 °C/);
+  assert.equal(r.status, 'darunter'); assert.ok(Math.abs(r.diff + 5.5) < 1e-9); assert.match(r.naechster, /5,5 °C/);
   r = R.kernPruefen('bfr-tierisch', 70, 'c');
-  assert.equal(r.status, 'erreicht'); assert.match(r.naechster, /2 Minuten/);
+  assert.equal(r.status, 'erreicht'); assert.equal(r.titel, 'Temperatur erreicht – 2 Minuten halten'); assert.match(r.naechster, /2 Minuten/);
   r = R.kernPruefen('usda-stueck', 145, 'f');
-  assert.equal(r.status, 'erreicht'); assert.match(r.naechster, /3 Minuten ruhen/); assert.match(r.schritte[0], /145,0 °F − 32\) ÷ 1,8 = 62,8 °C/);
+  assert.equal(r.status, 'erreicht'); assert.equal(r.diff, 0); assert.match(r.titel, /3 Minuten ruhen/); assert.match(r.schritte[0], /\(145 °F − 32\) ÷ 1,8 = 62,8 °C/);
   r = R.kernPruefen('usda-gefluegel', 73, 'c');
   assert.equal(r.status, 'darunter');
   assert.equal(R.kernPruefen('bfr-fisch', 80, 'c').status, 'ohne-zahl');
-  assert.equal(R.kernPruefen('ka-ruehrkuchen', 96, 'c').status, 'erreicht');
+  assert.equal(R.kernPruefen('ka-ruehrkuchen', 96, 'c').titel, 'Im Richtbereich');
   assert.equal(R.kernPruefen('ka-ruehrkuchen', 90, 'c').status, 'darunter');
   assert.equal(R.kernPruefen('ka-kaesekuchen', 80, 'c').status, 'darueber');
+});
+
+test('kernPruefen: knapp unter dem Mindestwert ist nie „erreicht“ (Vergleich ungerundet, USDA gegen °F-Original)', () => {
+  for (const [id, v, e] of [['bfr-tierisch', 69.95, 'c'], ['bfr-aufwaermen', '69,95', 'c'], ['bfr-heisshalten', 59.95, 'c'], ['usda-stueck', 62.75, 'c'], ['usda-fisch', 62.75, 'c'], ['usda-faschiert', 71.05, 'c'], ['usda-ei', 71.05, 'c'], ['usda-gefluegel', 73.86, 'c'], ['usda-reste', 73.86, 'c'], ['usda-stueck', 144.96, 'f'], ['usda-faschiert', 159.99, 'f'], ['usda-gefluegel', 164.99, 'f']]) {
+    const r = R.kernPruefen(id, v, e);
+    assert.equal(r.status, 'darunter', `${id} ${v} ${e}`);
+    assert.ok(r.diff < 0);
+    // die Anzeige widerspricht dem Ergebnis nicht: kein „0,0“, Messwert und Ziel nicht gleichlautend
+    const vgl = r.schritte.at(-1).match(/Vergleich: ([\d,]+) °C − ([\d,]+) °C = −([\d,]+) °C/);
+    assert.ok(vgl, r.schritte.at(-1));
+    assert.notEqual(vgl[1], vgl[2], r.schritte.at(-1));
+    assert.ok(parseFloat(vgl[3].replace(',', '.')) > 0, r.schritte.at(-1));
+    assert.ok(!/fehlen 0,0+ °C/.test(r.naechster), r.naechster);
+  }
+  for (const [id, v, e] of [['bfr-tierisch', 70, 'c'], ['bfr-heisshalten', 60, 'c'], ['usda-stueck', 62.8, 'c'], ['usda-stueck', 145, 'f'], ['usda-faschiert', 71.2, 'c'], ['usda-faschiert', 160, 'f'], ['usda-gefluegel', 73.9, 'c'], ['usda-gefluegel', 165, 'f']]) assert.equal(R.kernPruefen(id, v, e).status, 'erreicht', `${id} ${v} ${e}`);
+  // 71,1 °C sind 159,98 °F – die USDA druckt aber selbst „160 °F (71,1 °C)“, deshalb gilt die gedruckte Celsius-Zahl als erreicht
+  assert.equal(R.kernPruefen('usda-faschiert', 71.1, 'c').status, 'erreicht');
+  assert.equal(R.kernPruefen('usda-faschiert', 71.09, 'c').status, 'darunter');
+});
+
+test('kernPruefen: Garprobe – Bereich, Obergrenze, Zeile ohne Obergrenze', () => {
+  assert.equal(R.kernPruefen('ka-ruehrkuchen', 210, 'f').status, 'erreicht');
+  assert.equal(R.kernPruefen('ka-ruehrkuchen', 210.5, 'f').status, 'darueber');
+  assert.equal(R.kernPruefen('ka-ruehrkuchen', 99.5, 'c').status, 'darueber');
+  let r = R.kernPruefen('ka-brot', 120, 'c');
+  assert.equal(r.titel, 'Richtwert überschritten'); assert.ok(!/Richtbereich/.test(r.titel + r.naechster)); assert.match(r.naechster, /Obergrenze nennt die Quelle nicht/);
+  r = R.kernPruefen('ka-brot', 190, 'f');
+  assert.equal(r.titel, 'Richtwert erreicht');
+  assert.match(R.kernPruefen('ka-brot', 85, 'c').titel, /Richtwert noch nicht erreicht/);
+  assert.match(R.kernPruefen('ka-brot', 85, 'c').schritte[0], /^Richtwert laut King Arthur/);
 });
 
 test('kernPruefen: Unsinnseingaben werden abgewiesen, nie durchgereicht', () => {
@@ -73,11 +103,53 @@ test('fristBerechnen: Tage, Wochen, Stunden, Monats- und Jahreswechsel, Schaltja
   assert.deepEqual([r.frueh, r.spaet], ['2028-02-29', '2028-03-01']);
   r = R.fristBerechnen('ei-hart-de', '2026-11-01');
   assert.deepEqual([r.frueh, r.spaet], ['2026-11-15', '2026-11-29']);
-  r = R.fristBerechnen('hack-lose-de', '2026-11-18');
-  assert.equal(r.status, 'stunden'); assert.equal(r.spaet, '2026-11-18');
   assert.equal(R.fristBerechnen('reste-bfr', '2026-11-18', '2026-11-22').lage, 'abgelaufen');
   assert.equal(R.fristBerechnen('reste-bfr', '2026-11-18', '2026-11-20').lage, 'fenster');
+  assert.equal(R.fristBerechnen('reste-bfr', '2026-11-18', '2026-11-21').lage, 'letzter');
   assert.equal(R.fristBerechnen('reste-bfr', '2026-11-18', '2026-11-17').lage, 'zukunft');
+});
+
+test('fristBerechnen: Stundenzeilen melden ab dem Folgetag „Frist überschritten“', () => {
+  let r = R.fristBerechnen('hack-lose-de', '2026-11-18', '2026-11-18');
+  assert.deepEqual([r.status, r.lage, r.spaet, r.titel], ['stunden', 'letzter', '2026-11-18', 'Noch heute verbrauchen']);
+  r = R.fristBerechnen('hack-lose-de', '2026-11-10', '2026-11-18');
+  assert.deepEqual([r.status, r.lage, r.rest, r.titel], ['stunden', 'abgelaufen', -8, 'Frist überschritten']);
+  assert.match(r.naechster, /vor 8 Tagen\. Nicht mehr essen/);
+  r = R.fristBerechnen('hack-lose-de', '2026-11-17', '2026-11-18');
+  assert.equal(r.lage, 'abgelaufen'); assert.match(r.naechster, /vor 1 Tag\./);
+  assert.equal(R.fristBerechnen('hack-lose-de', '2026-11-19', '2026-11-18').lage, 'zukunft');
+});
+
+test('fristBerechnen: Text im Fristfenster passt zur Spanne; „70 °C“ nur bei der BfR-Reste-Zeile', () => {
+  // hartgekochte Eier, Tag 14 von 14–28: kürzere Frist erreicht, 14 Tage bis zur längeren – kein „heute verbrauchen“
+  let r = R.fristBerechnen('ei-hart-de', '2026-11-04', '2026-11-18');
+  assert.equal(r.lage, 'fenster'); assert.equal(r.titel, 'Kürzere Frist erreicht');
+  assert.match(r.naechster, /kürzere Angabe \(14 Tage\) ist erreicht, die längere \(28 Tage\) endet in 14 Tagen am Mittwoch, 2\.12\.2026/);
+  assert.ok(!/Heute verbrauchen|70 °C|erhitz/i.test(r.naechster), r.naechster);
+  for (const id of ['ei-roh-us', 'kaese-stueck-de', 'esl-de', 'stueck-us']) {
+    const z = R.LAGER.find((x) => x.id === id), tage = z.e === 'w' ? z.von * 7 : z.von;
+    const start = new Date(Date.UTC(2026, 10, 18) - tage * 86400000).toISOString().slice(0, 10);
+    r = R.fristBerechnen(id, start, '2026-11-18');
+    assert.equal(r.lage, 'fenster', id); assert.ok(!/70 °C|erhitz|Heute verbrauchen/i.test(r.naechster), id);
+  }
+  r = R.fristBerechnen('reste-bfr', '2026-11-16', '2026-11-18');
+  assert.equal(r.lage, 'fenster'); assert.match(r.naechster, /endet in 1 Tag am Donnerstag, 19\.11\.2026/); assert.match(r.naechster, /laut BfR: mindestens 70 °C für 2 Minuten/);
+  r = R.fristBerechnen('reste-bfr', '2026-11-15', '2026-11-18');
+  assert.equal(r.titel, 'Letzter Tag der Frist'); assert.match(r.naechster, /Heute endet die längere Frist/);
+  r = R.fristBerechnen('speck-us', '2026-11-11', '2026-11-18');
+  assert.equal(r.lage, 'letzter'); assert.match(r.naechster, /Heute endet die Frist der Quelle/); assert.ok(!/70 °C/.test(r.naechster));
+  assert.equal(R.LAGER.filter((z) => z.erhitzen).map((z) => z.id).join(), 'reste-bfr');
+});
+
+test('Startpunkt der Zählung: Annahmen sind gekennzeichnet', () => {
+  const belegt = R.LAGER.filter((z) => !z.abAnnahme).map((z) => z.id).sort();
+  assert.deepEqual(belegt, ['auflauf-ei-us', 'aufschnitt-us', 'esl-de', 'frischmilch-de', 'hack-lose-de', 'hmilch-de', 'kaese-scheiben-de', 'quiche-us']);
+  assert.match(R.abText(R.LAGER.find((z) => z.id === 'gefluegel-us')), /unsere Annahme/);
+  assert.equal(R.abText(R.LAGER.find((z) => z.id === 'frischmilch-de')), 'Öffnen');
+  assert.match(R.fristBerechnen('stueck-us', '2026-11-18').schritte[0], /gezählt ab Einkauf \(unsere Annahme/);
+  // Fisch: drei Quellzeilen bleiben drei Zeilen
+  assert.deepEqual(R.LAGER.filter((z) => z.gruppe === 'fisch' && /Fisch/.test(z.name)).map((z) => z.tk), ['2 bis 3 Monate', '6 bis 8 Monate', '4 bis 8 Monate']);
+  assert.equal(R.KERN.find((z) => z.id === 'usda-ei').name, 'Eier – USDA');
 });
 
 test('fristBerechnen: ungültige Daten', () => {

@@ -8,21 +8,25 @@
 
   /* Gemeinsam: Rechenweg, Link im Fragment (#w=…, #o=…, #g=…) – nur geprüfte Werte, nie freier Text */
   function weg(schritte) { return '<div class="rechenweg"><h3>Rechenweg</h3><ol>' + schritte.map(function (x) { return '<li>' + h(x) + '</li>'; }).join('') + '</ol></div>'; }
-  function fragment(kennung) {
-    var m = location.hash.match(new RegExp('^#' + kennung + '=([a-z0-9]{1,24})(?:~([0-9.]{1,8}))?(?:~([a-z]{1,8}))?$'));
+  // Die Adresse wird nie verändert. Ein Fragment aus einem geöffneten Link liegt in window.kikFragment (Kopf-Skript der Seite).
+  var startHash = window.kikFragment || location.hash; window.kikFragment = '';
+  function fragment(kennung, hash) {
+    var m = String(hash || '').match(new RegExp('^#' + kennung + '=([a-z0-9]{1,24})(?:~([0-9.]{1,8}))?(?:~([a-z]{1,8}))?$'));
     return m ? m.slice(1) : null;
   }
-  // Adresse erst nach einer Eingabe ändern, nicht schon beim Laden
-  var bedient = false;
-  ['input', 'change', 'click'].forEach(function (e) { document.addEventListener(e, function () { bedient = true; }, true); });
-  function fragmentSetzen(t) { if (!bedient) return; try { history.replaceState(null, '', location.pathname + location.search + '#' + t); } catch (e) { /* ohne History weiter */ } }
-  function linkKnopf(knopf, status) {
+  // „Link kopieren“: Link erst jetzt erzeugen, in die Zwischenablage legen; fragmentFn liefert den aktuellen Zustand
+  function linkKnopf(knopf, status, fragmentFn) {
     if (!knopf) return;
     knopf.addEventListener('click', function () {
-      var url = location.href;
+      var url = location.origin + location.pathname + '#' + fragmentFn();
+      knopf.setAttribute('data-link', url);
       function ok() { status.textContent = 'Link kopiert – er enthält nur die Auswahl und die Zahl.'; }
-      function nein() { status.textContent = 'Der Link steht in der Adresszeile.'; }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, nein); else nein();
+      function zeigen() {
+        status.textContent = 'Kopieren nicht möglich – bitte den Link aus dem Feld kopieren: ';
+        var f = document.createElement('input'); f.type = 'text'; f.readOnly = true; f.value = url; f.className = 'link-feld'; f.setAttribute('aria-label', 'Link zu diesem Ergebnis');
+        status.appendChild(f); f.focus(); f.select();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, zeigen); else zeigen();
     });
   }
   function hat(sel, wert) { return Array.prototype.some.call(sel.options, function (o) { return o.value === wert; }); }
@@ -48,21 +52,20 @@
       html += weg(r.schritte);
       html += '<p class="unterzeile">Quelle des Werts: <a href="' + D.QUELLEN.ka.url + '" rel="noopener" target="_blank">' + h(D.QUELLEN.ka.name) + '</a> – Eintrag „' + h(z.en) + '“: ' + h(z.volText) + ' = ' + z.g + ' g. Volumen nach NIST (1 Cup ≈ 236,6 ml). Gilt für gestrichene Messbecher und Messlöffel.' + (z.fluessig ? ' Flüssigkeiten misst die Werkbank im Rezept in Milliliter.' : '') + '</p>';
       $('wa-ergebnis').innerHTML = html;
-      fragmentSetzen('w=' + sel.value + '~' + menge + '~' + einheit);
     }
     var q = new URLSearchParams(location.search);
     if (q.get('zutat') && hat(sel, q.get('zutat'))) sel.value = q.get('zutat');
-    function ausFragment() {
-      var f = fragment('w');
+    function ausFragment(hash) {
+      var f = fragment('w', hash);
       if (!f || !hat(sel, f[0])) return false;
       sel.value = f[0]; if (num(f[1]) > 0) $('wa-menge').value = num(f[1]); if (f[2] && hat($('wa-einheit'), f[2])) $('wa-einheit').value = f[2];
       return true;
     }
-    ausFragment();
-    window.addEventListener('hashchange', function () { if (ausFragment()) { rechnen(); $('waage').scrollIntoView({ block: 'start' }); } });
+    ausFragment(startHash);
+    window.addEventListener('kik-fragment', function (e) { if (ausFragment(e.detail)) { rechnen(); $('waage').scrollIntoView({ block: 'start' }); } });
     $('waage').addEventListener('input', rechnen);
     $('waage').addEventListener('change', rechnen);
-    linkKnopf($('wa-link'), $('wa-status'));
+    linkKnopf($('wa-link'), $('wa-status'), function () { return 'w=' + sel.value + '~' + (num($('wa-menge').value) || 1) + '~' + $('wa-einheit').value; });
     rechnen();
   })();
 
@@ -94,17 +97,16 @@
       var r = w === null ? null : K.ofenRechnen(w, art);
       if (!r) { $('of-ergebnis').innerHTML = w === null ? '' : '<p>Dieser Wert liegt außerhalb üblicher Ofentemperaturen (30–320 °C bzw. 100–600 °F). Einheit prüfen?</p>'; return; }
       $('of-ergebnis').innerHTML = '<div class="kennzahlen"><div class="kennzahl"><span>Ober-/Unterhitze</span><b>' + K.deZahl(r.ouRund, 0) + ' °C</b></div><div class="kennzahl"><span>Umluft (≈ −20 °C)</span><b>' + K.deZahl(r.umluftRund, 0) + ' °C</b></div><div class="kennzahl"><span>Fahrenheit</span><b>' + K.deZahl(r.fRund, 0) + ' °F</b></div></div>' + weg(r.schritte);
-      fragmentSetzen('o=' + art + '~' + w);
     }
-    function ausFragment() {
-      var f = fragment('o');
+    function ausFragment(hash) {
+      var f = fragment('o', hash);
       if (!f || !hat($('of-art'), f[0]) || num(f[1]) === null) return false;
       $('of-art').value = f[0]; $('of-wert').value = num(f[1]); return true;
     }
-    ausFragment();
-    window.addEventListener('hashchange', function () { if (ausFragment()) { rechnen(); $('ofen').scrollIntoView({ block: 'start' }); } });
+    ausFragment(startHash);
+    window.addEventListener('kik-fragment', function (e) { if (ausFragment(e.detail)) { rechnen(); $('ofen').scrollIntoView({ block: 'start' }); } });
     $('ofen').addEventListener('input', rechnen); $('ofen').addEventListener('change', rechnen);
-    linkKnopf($('of-link'), $('of-status'));
+    linkKnopf($('of-link'), $('of-status'), function () { return 'o=' + $('of-art').value + '~' + (num($('of-wert').value) || 180); });
     rechnen();
   })();
 
@@ -118,17 +120,16 @@
       // Bezug: 7 g Trockengerm ≈ 500 g Mehl; 42 g Frischgerm ≈ 1000 g Mehl (Dr. Oetker AT)
       $('ge-ergebnis').innerHTML = '<div class="kennzahlen"><div class="kennzahl"><span>Mehl</span><b>' + K.deZahl(r.mehl, 0) + ' g</b></div><div class="kennzahl"><span>Frischgerm</span><b>' + K.deZahl(r.frisch, 1) + ' g</b></div><div class="kennzahl"><span>Trockengerm</span><b>' + K.deZahl(r.trocken, 1) + ' g</b></div><div class="kennzahl"><span>Würfel / Pkg.</span><b>' + K.deZahl(r.wuerfel, 2) + ' / ' + K.deZahl(r.pkg, 2) + '</b></div></div>' + weg(r.schritte) +
         '<p class="unterzeile">Bezugsgrößen: 1 Würfel (42 g) für etwa 1 kg Mehl, 1 Päckchen Trockengerm (7 g) für etwa 500 g Mehl – <a href="' + D.QUELLEN.oetkerGerm.url + '" rel="noopener" target="_blank">' + h(D.QUELLEN.oetkerGerm.name) + '</a>.</p>';
-      fragmentSetzen('g=' + art + '~' + m);
     }
-    function ausFragment() {
-      var f = fragment('g');
+    function ausFragment(hash) {
+      var f = fragment('g', hash);
       if (!f || !hat($('ge-art'), f[0]) || !(num(f[1]) > 0)) return false;
       $('ge-art').value = f[0]; $('ge-menge').value = num(f[1]); return true;
     }
-    ausFragment();
-    window.addEventListener('hashchange', function () { if (ausFragment()) { rechnen(); $('germ').scrollIntoView({ block: 'start' }); } });
+    ausFragment(startHash);
+    window.addEventListener('kik-fragment', function (e) { if (ausFragment(e.detail)) { rechnen(); $('germ').scrollIntoView({ block: 'start' }); } });
     $('germ').addEventListener('input', rechnen); $('germ').addEventListener('change', rechnen);
-    linkKnopf($('ge-link'), $('ge-status'));
+    linkKnopf($('ge-link'), $('ge-status'), function () { return 'g=' + $('ge-art').value + '~' + (num($('ge-menge').value) || 500); });
     rechnen();
   })();
 

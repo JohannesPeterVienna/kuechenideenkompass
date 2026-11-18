@@ -37,7 +37,10 @@ try {
       await page.goto(BASIS + pfad, { waitUntil: 'load' });
       return page;
     };
+    // Die Adresszeile darf nie ein Werkzeug-Fragment tragen: weder nach dem Öffnen eines geteilten Links noch nach Eingaben
+    const ohneFragment = (page, wo) => pruef(!/#[a-z]=/.test(page.url()) && !/#[a-z]=/.test(decodeURIComponent(page.url())), `${breite}px ${wo}: Fragment in der Adresse (${page.url().slice(BASIS.length)})`);
     const sauber = async (page, wo) => {
+      ohneFragment(page, wo);
       pruef(!(await page.evaluate(() => window.__xss)), `${breite}px ${wo}: eingeschleuster Code lief`);
       pruef(!(await page.evaluate(() => document.querySelector('main img[src="x"], main script:not([src]):not([type])'))), `${breite}px ${wo}: eingeschleustes Element im DOM`);
       const ueber = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -78,6 +81,8 @@ try {
     await page.close();
     page = await neu(ziel);
     await page.waitForTimeout(200);
+    ohneFragment(page, 'Werkbank nach Link aus dem Schnellrechner');
+    pruef(await page.evaluate(() => !window.dataLayer || !JSON.stringify(window.dataLayer).includes('#r=')), `${breite}px Werkbank: Fragment im dataLayer`);
     pruef(/25 dag glattes Mehl/.test(await page.inputValue('#wb-zutaten')), `${breite}px Werkbank: Rezept aus dem Schnellrechner nicht übernommen`);
     pruef(/375/.test(await page.locator('#wb-ergebnis').innerText()), `${breite}px Werkbank: Ergebnis aus Link fehlt`);
     await page.close();
@@ -89,10 +94,18 @@ try {
     await page.click('[data-beispiel="usda-gefluegel,71,c"]');
     let t = await page.locator('#kt-ergebnis').innerText();
     pruef(/Noch nicht erreicht/i.test(t) && /2,9 °C/.test(t) && /Rechenweg/i.test(t) && /Nächster Schritt/.test(t) && /abgerufen am 18\.11\.2026/.test(t), `${breite}px Kern: Beispiel Geflügel falsch: ${t.slice(0, 200)}`);
-    pruef(/#k=usda-gefluegel~71~c$/.test(page.url()), `${breite}px Kern: Adresse ${page.url()}`);
+    ohneFragment(page, 'Kern nach Beispiel');
     await page.click('[data-beispiel="usda-stueck,145,f"]');
     t = await page.locator('#kt-ergebnis').innerText();
-    pruef(/Zielwert erreicht/i.test(t) && /3 Minuten ruhen/.test(t) && /BfR empfiehlt/.test(t), `${breite}px Kern: Steak 145 °F falsch`);
+    pruef(/Temperatur erreicht – 3 Minuten ruhen lassen/i.test(t) && /BfR empfiehlt/.test(t), `${breite}px Kern: Steak 145 °F falsch`);
+    await page.click('[data-beispiel="bfr-tierisch,70,c"]');
+    pruef(/Temperatur erreicht – 2 Minuten halten/i.test(await page.locator('#kt-ergebnis').innerText()), `${breite}px Kern: BfR-Überschrift`);
+    await page.fill('#kt-wert', '69,95');
+    t = await page.locator('#kt-ergebnis').innerText();
+    pruef(/Noch nicht erreicht/i.test(t) && /69,95 °C − 70,00 °C = −0,05 °C/.test(t), `${breite}px Kern: 69,95 °C gilt als erreicht: ${t.slice(0, 160)}`);
+    await page.selectOption('#kt-zeile', 'ka-brot'); await page.fill('#kt-wert', '120');
+    t = await page.locator('#kt-ergebnis').innerText();
+    pruef(/Richtwert überschritten/i.test(t) && /Richtwert für die Qualität/i.test(t) && !/Im Richtbereich/i.test(t), `${breite}px Kern: Brot 120 °C: ${t.slice(0, 160)}`);
     for (const b of BOESE) { await page.fill('#kt-wert', b.slice(0, 7)); await page.evaluate((v) => { const e = document.getElementById('kt-wert'); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); }, b); await page.fill('#kt-suche', b); await page.waitForTimeout(15); }
     await sauber(page, 'Kern nach Unsinn');
     pruef(/Kein Eintrag passt/.test(await page.locator('#kt-info').innerText()), `${breite}px Kern: Leertreffer ohne Hinweis`);
@@ -111,14 +124,18 @@ try {
     pruef(/75/.test(await page.inputValue('#kt-wert')), `${breite}px Kern: Tab führt nicht ins Temperaturfeld`);
     await page.locator('#kt-tabelle [data-nimm="bfr-heisshalten"]').click();
     pruef((await page.inputValue('#kt-zeile')) === 'bfr-heisshalten', `${breite}px Kern: „prüfen“ in der Tabelle`);
+    await page.fill('#kt-wert', '61,5');
     await page.click('#kt-link'); await page.waitForTimeout(100);
-    pruef(/kopiert|Adresszeile/.test(await page.locator('#kt-status').innerText()), `${breite}px Kern: Link kopieren ohne Rückmeldung`);
+    pruef(/kopiert|Feld/.test(await page.locator('#kt-status').innerText()), `${breite}px Kern: Link kopieren ohne Rückmeldung`);
+    pruef(/\/kerntemperatur\/#k=bfr-heisshalten~61\.5~c$/.test((await page.getAttribute('#kt-link', 'data-link')) || ''), `${breite}px Kern: erzeugter Link ${await page.getAttribute('#kt-link', 'data-link')}`);
+    ohneFragment(page, 'Kern nach „Link kopieren“');
     if (AUS) await page.screenshot({ path: `${AUS}/w-${breite}-kern.png`, fullPage: true });
     await page.close();
     // geteilte und manipulierte Links
     page = await neu('/kerntemperatur/#k=usda-faschiert~160~f');
     t = await page.locator('#kt-ergebnis').innerText();
-    pruef(/71,1 °C/.test(t) && /Zielwert erreicht/i.test(t), `${breite}px Kern: geteilter Link`);
+    pruef(/71,1 °C/.test(t) && /Mindestwert erreicht/i.test(t), `${breite}px Kern: geteilter Link`);
+    ohneFragment(page, 'Kern nach geteiltem Link');
     await page.close();
     for (const h of ['#k=<img src=x onerror=window.__xss=1>', '#k=usda-stueck~<script>window.__xss=1</script>', '#k=javascript:alert(1)', '#k=usda-stueck~70~c%22%3E%3Csvg/onload=window.__xss=1%3E', '#h=reste-bfr~2026-11-18', '#k=__proto__~1~c']) {
       page = await neu('/kerntemperatur/' + h);
@@ -134,9 +151,14 @@ try {
     await page.selectOption('#hb-zeile', 'reste-bfr'); await page.fill('#hb-datum', '2026-11-15');
     t = await page.locator('#hb-ergebnis').innerText();
     pruef(/Dienstag, 17\.11\.2026/.test(t) && /Mittwoch, 18\.11\.2026/.test(t) && /\+ 2 Tage/.test(t) && /höchstens 7 °C/.test(t), `${breite}px Fristen: Gulasch-Beispiel falsch: ${t.slice(0, 200)}`);
-    pruef(/#h=reste-bfr~2026-11-15$/.test(page.url()), `${breite}px Fristen: Adresse ${page.url()}`);
+    ohneFragment(page, 'Fristen nach Eingabe');
+    await page.click('#hb-link'); await page.waitForTimeout(80);
+    pruef(/\/haltbarkeit-kuehlschrank\/#h=reste-bfr~2026-11-15$/.test((await page.getAttribute('#hb-link', 'data-link')) || ''), `${breite}px Fristen: erzeugter Link`);
     await page.selectOption('#hb-zeile', 'hack-lose-de');
-    pruef(/selben Tag/.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: Stundenfrist`);
+    t = await page.locator('#hb-ergebnis').innerText();
+    pruef(/Frist überschritten/i.test(t) && /Nicht mehr essen/.test(t), `${breite}px Fristen: Stundenzeile mit altem Datum meldet keine Überschreitung`);
+    await page.evaluate(() => { const d = new Date(), e = document.getElementById('hb-datum'); e.value = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); e.dispatchEvent(new Event('input', { bubbles: true })); });
+    pruef(/Noch heute verbrauchen/i.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: Stundenfrist heute`);
     await page.fill('#hb-datum', ''); await page.waitForTimeout(20);
     pruef(/gültiges Datum/.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: leeres Datum`);
     for (const b of BOESE) { await page.evaluate((v) => { const e = document.getElementById('hb-datum'); e.setAttribute('type', 'text'); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); }, b); await page.fill('#hb-suche', b); await page.waitForTimeout(15); }
@@ -148,7 +170,11 @@ try {
     pruef(csv2.trim().split('\r\n').length === 3 && /2 bis 4 Wochen/.test(csv2) && /1 Woche/.test(csv2), `${breite}px Fristen: CSV-Inhalt`);
     await page.fill('#hb-suche', '');
     await page.click('[data-beispiel="suppe-us,4"]');
-    pruef(/Jetzt verbrauchen|Frist überschritten/i.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: Beispiel Suppe`);
+    pruef(/Letzter Tag der Frist/i.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: Beispiel Suppe`);
+    await page.click('[data-beispiel="ei-hart-de,10"]');
+    await page.evaluate(() => { const d = new Date(); d.setDate(d.getDate() - 14); const e = document.getElementById('hb-datum'); e.value = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); e.dispatchEvent(new Event('input', { bubbles: true })); });
+    t = await page.locator('#hb-ergebnis').innerText();
+    pruef(/Kürzere Frist erreicht/i.test(t) && /endet in 14 Tagen/.test(t) && !/Heute verbrauchen|70 °C/.test(t), `${breite}px Fristen: Eier Tag 14 widersprüchlich: ${t.slice(0, 300)}`);
     if (AUS) await page.screenshot({ path: `${AUS}/w-${breite}-fristen.png`, fullPage: true });
     await page.close();
     for (const h of ['#h=reste-bfr~2026-11-15', '#h=<img src=x onerror=window.__xss=1>', '#h=reste-bfr~2026-99-99', '#h=reste-bfr~%3Cscript%3Ewindow.__xss=1%3C/script%3E']) {
@@ -157,6 +183,7 @@ try {
       await sauber(page, 'Fristen mit Link ' + h);
       pruef((await page.locator('#hb-ergebnis .befund').count()) === 1, `${breite}px Fristen: kein Ergebnis bei ${h}`);
       if (h === '#h=reste-bfr~2026-11-15') pruef(/17\.11\.2026/.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: geteilter Link`);
+      ohneFragment(page, 'Fristen nach Link ' + h.slice(0, 20));
       await page.close();
     }
     // Link im Fließtext derselben Seite (hashchange)
@@ -164,6 +191,8 @@ try {
     await page.locator('article a[href="/haltbarkeit-kuehlschrank/#h=reste-bfr~2026-11-15"]').click();
     await page.waitForTimeout(150);
     pruef(/17\.11\.2026/.test(await page.locator('#hb-ergebnis').innerText()), `${breite}px Fristen: Beispiel-Link im Text wirkt nicht`);
+    ohneFragment(page, 'Fristen nach Beispiel-Link im Text');
+    pruef((await page.evaluate(() => history.length)) <= 2, `${breite}px Fristen: Beispiel-Link legt Verlaufseintrag an`);
     await page.close();
 
     // 5) Zutaten-Waage, Ofen, Germ: Rechenweg, Links, Unsinn
@@ -173,6 +202,11 @@ try {
     await page.selectOption('#wa-zutat', 'weizenmehl'); await page.selectOption('#wa-einheit', 'g'); await page.fill('#wa-menge', '240');
     t = await page.locator('#wa-ergebnis').innerText();
     pruef(/240 g ÷ 120 g je Cup = 2 Cups/.test(t), `${breite}px Waage: Rückweg Gramm → Cups: ${t.slice(0, 200)}`);
+    await page.fill('#wa-menge', '120');
+    pruef(/= 1 Cup\b(?!s)/.test(await page.locator('#wa-ergebnis').innerText()), `${breite}px Waage: „1 Cups“`);
+    await page.click('#wa-link'); await page.waitForTimeout(80);
+    pruef(/\/cups-in-gramm\/#w=weizenmehl~120~g$/.test((await page.getAttribute('#wa-link', 'data-link')) || ''), `${breite}px Waage: erzeugter Link ${await page.getAttribute('#wa-link', 'data-link')}`);
+    ohneFragment(page, 'Waage nach Eingabe und „Link kopieren“');
     for (const b of ['-1', '0', '', '1e5000', '999999999']) { await page.evaluate((v) => { const e = document.getElementById('wa-menge'); e.setAttribute('type', 'text'); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); }, b); await page.waitForTimeout(10); pruef(/größer als 0/.test(await page.locator('#wa-ergebnis').innerText()), `${breite}px Waage: Eingabe „${b}“ nicht abgefangen`); }
     await sauber(page, 'Waage');
     await page.close();
@@ -182,18 +216,38 @@ try {
     pruef(/175 °C/.test(t) && /\(350 °F − 32\) ÷ 1,8 = 176,7 °C/.test(t), `${breite}px Ofen: Link 350 °F`);
     await page.locator('a[href="/ofentemperatur-umrechnen/#o=umluft~160"]').first().click(); await page.waitForTimeout(120);
     pruef(/160 °C Umluft \+ 20 °C = 180 °C/.test(await page.locator('#of-ergebnis').innerText()), `${breite}px Ofen: Beispiel-Link`);
+    ohneFragment(page, 'Ofen nach Beispiel-Link');
+    await page.click('#of-link'); await page.waitForTimeout(80);
+    pruef(/#o=umluft~160$/.test((await page.getAttribute('#of-link', 'data-link')) || ''), `${breite}px Ofen: erzeugter Link`);
     await page.fill('#of-wert', '9999'); pruef(/außerhalb/.test(await page.locator('#of-ergebnis').innerText()), `${breite}px Ofen: 9999 nicht abgefangen`);
     await sauber(page, 'Ofen'); await page.close();
     page = await neu('/germ-umrechnen/#g=frisch~21');
     t = await page.locator('#ge-ergebnis').innerText();
     pruef(/21 g Frischgerm ÷ 42 g × 1000 g = 500 g Mehl/.test(t), `${breite}px Germ: Link ½ Würfel`);
+    ohneFragment(page, 'Germ nach geteiltem Link');
+    await page.click('#ge-link'); await page.waitForTimeout(80);
+    pruef(/#g=frisch~21$/.test((await page.getAttribute('#ge-link', 'data-link')) || ''), `${breite}px Germ: erzeugter Link`);
     await page.fill('#ge-menge', '-4'); pruef(/größer als 0/.test(await page.locator('#ge-ergebnis').innerText()), `${breite}px Germ: −4 nicht abgefangen`);
     await sauber(page, 'Germ'); await page.close();
+
+    // 5b) Ohne Zwischenablage erscheint der Link in einem Feld; die Adresse bleibt unverändert
+    page = await neu('/kerntemperatur/');
+    await page.evaluate(() => { Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true }); });
+    await page.click('[data-beispiel="usda-gefluegel,71,c"]'); await page.click('#kt-link');
+    pruef(/#k=usda-gefluegel~71~c$/.test(await page.locator('#kt-status .link-feld').inputValue().catch(() => '')), `${breite}px Kern: Link-Feld ohne Zwischenablage fehlt`);
+    await sauber(page, 'Kern ohne Zwischenablage'); await page.close();
+    page = await neu('/rezept-umrechnen/');
+    await page.evaluate(() => { Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true }); });
+    await page.click('#wb-teilen');
+    pruef(/#r=[A-Za-z0-9_-]+$/.test(await page.locator('#wb-status .link-feld').inputValue().catch(() => '')), `${breite}px Werkbank: Link-Feld ohne Zwischenablage fehlt`);
+    await page.waitForTimeout(4300);
+    pruef((await page.locator('#wb-status .link-feld').count()) === 1, `${breite}px Werkbank: Link-Feld verschwindet wieder`);
+    await sauber(page, 'Werkbank Teilen ohne Zwischenablage'); await page.close();
 
     // 6) Zusammengelegte Seiten leiten weiter und stehen nicht in der Sitemap
     for (const [alt, neuP] of [['/fuer-viele-gaeste-kochen/', '/rezept-verdoppeln/'], ['/essloeffel-teeloeffel-gramm/', '/cups-in-gramm/']]) {
       const h = fs.readFileSync(path.join(DOCS, alt, 'index.html'), 'utf8');
-      pruef(/noindex/.test(h) && h.includes(`rel="canonical" href="https://kuechenideenkompass.de${neuP}"`) && h.includes(`url=https://kuechenideenkompass.de${neuP}`), `Weiterleitung ${alt}`);
+      pruef(/noindex/.test(h) && h.includes(`rel="canonical" href="https://kuechenideenkompass.de${neuP}"`) && h.includes(`url=https://kuechenideenkompass.de${neuP}#`), `Weiterleitung ${alt}`);
       pruef(!SITEMAP.includes(alt.slice(1)), `${alt} noch in der Sitemap`);
     }
     // 7) Druckansicht der Tabelle: Werkzeug sichtbar, Navigation weg
