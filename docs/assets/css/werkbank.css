@@ -57,7 +57,7 @@ p, ul, ol { margin: 0 0 1em; }
 .nav a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--eidotter); }
 .menue { display: none; }
 .nav-breit { display: block; }
-@media (max-width: 899px) {
+@media (max-width: 1179px) {
   .nav-breit { display: none; }
   .menue { display: block; }
   .menue > summary { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; list-style: none; padding: .5rem .8rem; white-space: nowrap; color: #fff; border: 1px solid rgba(255,255,255,.4); border-radius: var(--radius); font-weight: 600; }
@@ -362,3 +362,39 @@ ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
   .kik-zettel__zu { top: 2px; }
 }
 @media print { .kik-zettel, .kik-zettel-ansage { display: none !important; } body { padding-bottom: 0 !important; } }
+
+/* ---------- Eigenwert 18.11.2026: Rechenweg, Befund, Referenztabellen, Grafiken ---------- */
+.unterzeile { color: var(--tinte-2); font-size: .9rem; }
+.rechenweg { background: #FAF6F0; border: 1px solid var(--rosmarin-hell); border-radius: var(--radius); padding: .7rem .9rem; margin: .8rem 0; }
+.rechenweg h3 { margin: 0 0 .3rem; font-family: var(--schrift); font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; color: var(--tinte-2); }
+.rechenweg ol { margin: 0; padding-left: 1.3rem; font-size: .93rem; font-variant-numeric: tabular-nums; }
+.rechenweg li { margin: .15rem 0; overflow-wrap: anywhere; }
+.befund { border: 2px solid var(--rosmarin); border-left-width: 8px; border-radius: var(--radius); background: #fff; padding: .8rem 1rem; }
+.befund b { display: block; font-family: var(--schrift-titel, inherit); font-size: 1.25rem; line-height: 1.25; color: var(--rosmarin-tief); overflow-wrap: anywhere; }
+.befund p { margin: .35rem 0 0; font-size: .95rem; }
+.befund-art { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; color: var(--tinte-2); margin-bottom: .2rem; }
+.befund-erreicht { border-color: #2F6B3A; }
+.befund-darunter { border-color: var(--paprika); background: #FFF8F4; }
+.befund-darueber { border-color: var(--eidotter); background: var(--eidotter-hell); }
+.naechster { margin: .8rem 0 .4rem; }
+table.referenz td, table.referenz th { vertical-align: top; }
+table.referenz small { color: var(--tinte-2); }
+table.referenz tr[hidden] { display: none; }
+.leer-hinweis { padding: .8rem 1rem; margin: 0; color: var(--tinte-2); }
+.nur-vorlesen { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.grafik { margin: 1.4em 0; }
+.grafik svg { display: block; width: 100%; max-width: 420px; height: auto; background: #fff; border: 1px solid var(--linie); border-radius: var(--radius); }
+.grafik figcaption { font-size: .85rem; color: var(--tinte-2); margin-top: .4rem; }
+a.klein-knopf { display: inline-flex; align-items: center; text-decoration: none; }
+.held-werkzeug { padding-bottom: 0; }
+#sr-zutaten { min-height: 170px; }
+#sr-ergebnis:focus { outline: 3px solid var(--eidotter); outline-offset: 3px; }
+.werkzeug h3#kt-tab-h, .werkzeug h3#hb-tab-h { margin-top: 1.6rem; }
+@media print {
+  .rechenweg { border: 0; padding: 0; background: none; }
+  table.referenz { font-size: 9pt; }
+  table.referenz tr[hidden] { display: none !important; }
+  .tabelle-huelle { overflow: visible; border: 0; }
+}
+.tabelle-huelle { position: relative; } /* hält .nur-vorlesen innerhalb des scrollbaren Rahmens */
+.spalten > * { min-width: 0; }

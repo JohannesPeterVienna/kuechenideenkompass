@@ -16,6 +16,8 @@ Jede alte Datei liegt in `docs/` als noindex-Seite mit `meta refresh` und `canon
 | /portionen-umrechnen.html | /rezept-umrechnen/ |
 | /portionenwerk.html | /rezept-umrechnen/ |
 | /rezeptliste-pruefen.html | /rezept-umrechnen/ |
+| /fuer-viele-gaeste-kochen/ (zusammengelegt 18.11.2026) | /rezept-verdoppeln/ (Abschnitt „Mehr als doppelt: für viele Gäste“) |
+| /essloeffel-teeloeffel-gramm/ (zusammengelegt 18.11.2026) | /cups-in-gramm/ (Abschnitt „Esslöffel und Teelöffel in Gramm“) |
 
 ## Subdomains (nicht Teil dieses Repos – DNS/Hosting unverändert)
 

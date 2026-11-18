@@ -4,7 +4,8 @@
   "description": "Rezept-Werkbank AT · DE · CH – statische Website für GitHub Pages (docs/)",
   "scripts": {
     "build": "node src/build.mjs",
-    "test": "node --test tests/kern.test.mjs tests/statistik-zettel.test.mjs && node tests/seitenpruefung.mjs",
-    "test:browser": "node tests/browser.mjs"
+    "test": "node --test tests/kern.test.mjs tests/referenz.test.mjs tests/statistik-zettel.test.mjs && node tests/seitenpruefung.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "test:werkzeuge": "node tests/werkzeuge-browser.mjs"
   }
 }

@@ -5,6 +5,8 @@
     <div class="nicht-drucken reihe">
       <div class="feld"><label for="of-wert">Temperatur im Rezept</label><input type="number" id="of-wert" inputmode="decimal" step="5" value="180"></div>
       <div class="feld"><label for="of-art">Angabe im Rezept</label><select id="of-art"><option value="ou">°C Ober-/Unterhitze</option><option value="umluft">°C Umluft</option><option value="f">°F (Fahrenheit)</option></select></div>
+      <div class="knopf-reihe" style="grid-column:1/-1;margin-top:0"><a class="klein-knopf" href="/ofentemperatur-umrechnen/#o=f~350">Beispiel: 350 °F</a><a class="klein-knopf" href="/ofentemperatur-umrechnen/#o=umluft~160">Beispiel: 160 °C Umluft</a><button type="button" class="klein-knopf" id="of-link">Link kopieren</button></div>
+      <p class="status" id="of-status" role="status" style="grid-column:1/-1"></p>
     </div>
     <div id="of-ergebnis" aria-live="polite"></div>
   </div>

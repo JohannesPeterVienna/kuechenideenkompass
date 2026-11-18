@@ -1,0 +1,110 @@
+<!--@werkzeug-->
+<section class="werkzeug" id="haltbarkeit" aria-labelledby="hb-h">
+  <div class="werkzeug-kopf"><h2 id="hb-h">Fristen-Rechner für den Kühlschrank</h2><span class="kennung">Datum · Frist · Rechenweg · Quelle</span></div>
+  <div class="spalten spalten-2" id="hb-rechner">
+    <div class="nicht-drucken">
+      <div class="feld"><label for="hb-zeile">Was steht im Kühlschrank?</label><select id="hb-zeile"></select></div>
+      <div class="feld"><label for="hb-datum" id="hb-datum-label">Tag der Zubereitung</label><input type="date" id="hb-datum" min="2000-01-01" max="2100-12-31"></div>
+      <p class="hilfe">Zum Ausprobieren – der Starttag wird vom heutigen Datum zurückgerechnet:</p>
+      <div class="knopf-reihe" style="margin-top:.3rem">
+        <button type="button" class="klein-knopf" data-beispiel="reste-bfr,1">Reste von gestern</button>
+        <button type="button" class="klein-knopf" data-beispiel="suppe-us,4">Suppe, vor 4 Tagen gekocht</button>
+        <button type="button" class="klein-knopf" data-beispiel="frischmilch-de,0">Milch, heute geöffnet</button>
+        <button type="button" class="klein-knopf" data-beispiel="ei-hart-de,10">Ostereier, vor 10 Tagen gekocht</button>
+      </div>
+      <div class="knopf-reihe">
+        <button type="button" class="knopf zweit" id="hb-link">Link zu diesem Ergebnis kopieren</button>
+      </div>
+      <p class="status" id="hb-status" role="status"></p>
+    </div>
+    <div id="hb-ergebnis" aria-live="polite"></div>
+  </div>
+  <h3 class="nicht-drucken" id="hb-tab-h">Alle {{lager-anzahl}} Fristen durchsuchen</h3>
+  <div class="reihe nicht-drucken" style="grid-template-columns:minmax(0,2fr) minmax(0,3fr)">
+    <div class="feld"><label for="hb-suche">Suchen</label><input type="search" id="hb-suche" placeholder="z. B. Reste, Faschiertes, Milch, BZfE" autocomplete="off"></div>
+    <fieldset style="margin:0"><legend>Gruppe</legend><div class="wahl">{{lager-gruppen}}</div></fieldset>
+  </div>
+  <p class="treffer-info nicht-drucken" id="hb-info" role="status"></p>
+  {{lager-tabelle}}
+  <div class="knopf-reihe nicht-drucken">
+    <button type="button" class="knopf zweit" id="hb-csv">Sichtbare Zeilen als CSV</button>
+    <button type="button" class="knopf zweit" id="hb-druck">Tabelle drucken</button>
+  </div>
+</section>
+<!--@artikel-->
+<h2>Erst auf die Packung schauen: zwei Datumsarten</h2>
+<p>Der Rechner oben gilt für Selbstgekochtes, Geöffnetes und lose Gekauftes. Trägt eine Packung ein Datum, entscheidet zuerst dessen Art. Die EU-Lebensmittelinformationsverordnung unterscheidet zwei: das Mindesthaltbarkeitsdatum und das Verbrauchsdatum. Bei mikrobiologisch sehr leicht verderblichen Lebensmitteln ersetzt das Verbrauchsdatum das Mindesthaltbarkeitsdatum, und nach seinem Ablauf gilt das Lebensmittel rechtlich als nicht sicher (Artikel 24 der Verordnung (EU) Nr. 1169/2011).</p>
+<div class="tabelle-huelle"><table><caption>Welches Datum steht auf der Packung – und was folgt daraus?</caption>
+<thead><tr><th scope="col">Aufdruck</th><th scope="col">Bedeutung</th><th scope="col">Nach Ablauf</th><th scope="col">Typische Lebensmittel laut BZfE</th></tr></thead>
+<tbody>
+<tr><th scope="row">„mindestens haltbar bis“ (MHD)</th><td>Bis dahin garantiert der Hersteller Geschmack, Geruch, Farbe und Nährstoffe – ungeöffnet und richtig gelagert.</td><td>Ansehen, riechen, probieren. Besteht das Lebensmittel die Prüfung, ist es laut BZfE oft noch genießbar.</td><td>Joghurt, Käse, Mehl, Nudeln, Konserven, Getränke</td></tr>
+<tr><th scope="row">„zu verbrauchen bis“ (Verbrauchsdatum)</th><td>Sehr leicht verderblich; die Packung nennt auch die Lagertemperatur, zum Beispiel höchstens 2 °C.</td><td>Wegwerfen. Keime, die krank machen, sind nicht zu sehen, zu riechen oder zu schmecken.</td><td>Hackfleisch, Geflügel, roher Fisch, vorgeschnittener Salat, geschnittenes Obst</td></tr>
+<tr><th scope="row">kein Datum: selbst gekocht, geöffnet, lose gekauft</th><td>Es gibt nur Richtwerte von Behörden.</td><td>Frist mit dem Rechner oben bestimmen; im Zweifel wegwerfen.</td><td>Reste, geöffnete Milch, Aufschnitt von der Theke</td></tr>
+</tbody></table></div>
+
+<h2>Reste: zwei bis drei Tage – oder drei bis vier?</h2>
+<p>Für Reste gegarter Speisen nennt das deutsche Bundesinstitut für Risikobewertung (BfR) zwei bis drei Tage im Kühlschrank. FoodSafety.gov, das Portal der US-Bundesregierung für Lebensmittelsicherheit, nennt für gegartes Fleisch, Suppen und Eintöpfe drei bis vier Tage. Beide Zahlen stehen in der Tabelle, jeweils mit der Bedingung, unter der die Quelle rechnet: Das BfR geht von einem Kühlschrank mit höchstens 7 °C aus und empfiehlt unter 5 °C; die US-Tabelle setzt 4 °C (40 °F) oder weniger voraus. Wir mitteln die Angaben nicht. Für die deutschsprachige Küche steht die BfR-Frist an erster Stelle der Auswahl; wer die US-Frist nutzt, sollte auch deren Temperatur einhalten und sie mit einem Kühlschrankthermometer prüfen.</p>
+<div class="beispiel"><span class="beispiel-titel">Durchgerechnetes Beispiel – Gulasch, am Sonntag, 15.11.2026 gekocht</span>
+<p>BfR-Frist: Sonntag, 15.11. + 2 Tage = Dienstag, 17.11.; + 3 Tage = Mittwoch, 18.11. Der Kochtag zählt als Tag 0. Bis Dienstag ist das Gulasch innerhalb der kürzeren Frist, am Mittwoch läuft die längere ab. Am Donnerstag, 19.11. meldet der Rechner „Frist überschritten“. Das Datum ist ein Rechenbeispiel. <a href="/haltbarkeit-kuehlschrank/#h=reste-bfr~2026-11-15">Im Rechner öffnen</a>.</p></div>
+<p>Zum Aufwärmen gilt die Regel des BfR: mindestens 70 °C für zwei Minuten an allen Stellen. Ob das erreicht ist, zeigt der <a href="/kerntemperatur/#k=bfr-aufwaermen">Kerntemperatur-Prüfer</a>.</p>
+
+<h2>Wo im Kühlschrank? Die Zonen</h2>
+<figure class="grafik">
+<svg viewBox="0 0 360 400" role="img" aria-labelledby="hb-svg-t hb-svg-d" xmlns="http://www.w3.org/2000/svg">
+<title id="hb-svg-t">Zonen im Kühlschrank nach BZfE</title>
+<desc id="hb-svg-d">Schematischer Kühlschrank. Obere Ablagen: Käse, Speisereste, zubereitete Speisen. Mittlere Ablage, etwa 7 °C: Milch und Milchprodukte, Eier. Unterste Ablage über dem Gemüsefach, kälteste Stelle: Fleisch und Fisch. Gemüsefach, zwei bis drei Grad wärmer als der Durchschnitt: Obst, Gemüse, Salat. Tür, wärmste Stelle: Butter, Getränke, Soßen.</desc>
+<rect x="10" y="10" width="232" height="380" rx="8" fill="#fff" stroke="#3B2A20" stroke-width="2.5"/>
+<rect x="254" y="10" width="96" height="380" rx="8" fill="#F6E7CC" stroke="#3B2A20" stroke-width="2.5"/>
+<g stroke="#3B2A20" stroke-width="2"><path d="M10 100h232M10 190h232M10 290h232"/><path d="M254 136h96M254 262h96" stroke-width="1.5"/></g>
+<rect x="12" y="192" width="228" height="96" fill="#EADFD2"/>
+<rect x="22" y="302" width="208" height="76" rx="5" fill="#fff" stroke="#3B2A20" stroke-width="1.5" stroke-dasharray="5 4"/>
+<g font-family="Figtree, sans-serif" fill="#241C17">
+<text x="22" y="36" font-size="12" font-weight="700" fill="#5A4A3F">OBEN</text><text x="22" y="58" font-size="15" font-weight="700">Käse, Speisereste</text><text x="22" y="78" font-size="12">zubereitete Speisen</text>
+<text x="22" y="126" font-size="12" font-weight="700" fill="#5A4A3F">MITTE · etwa 7 °C</text><text x="22" y="148" font-size="15" font-weight="700">Milch, Joghurt, Eier</text><text x="22" y="168" font-size="12">Wurst, Produkte aus dem Kühlregal</text>
+<text x="22" y="216" font-size="12" font-weight="700" fill="#93361A">UNTEN · kälteste Stelle</text><text x="22" y="240" font-size="15" font-weight="700">Fleisch, Fisch</text><text x="22" y="260" font-size="12">abgedeckt auf der Glasplatte;</text><text x="22" y="276" font-size="12">Faschiertes ganz hinten</text>
+<text x="34" y="326" font-size="12" font-weight="700" fill="#5A4A3F">GEMÜSEFACH · 2–3 Grad wärmer</text><text x="34" y="350" font-size="15" font-weight="700">Obst, Gemüse, Salat</text><text x="34" y="368" font-size="12">nur kühlschranktaugliche Arten</text>
+<text x="264" y="36" font-size="12" font-weight="700" fill="#5A4A3F">TÜR</text><text x="264" y="54" font-size="12" font-weight="700" fill="#5A4A3F">am wärmsten</text>
+<text x="264" y="92" font-size="14" font-weight="700">Butter</text><text x="264" y="112" font-size="14" font-weight="700">Margarine</text>
+<text x="264" y="170" font-size="14" font-weight="700">Soßen</text><text x="264" y="190" font-size="14" font-weight="700">Tuben</text>
+<text x="264" y="300" font-size="14" font-weight="700">offene</text><text x="264" y="320" font-size="14" font-weight="700">Getränke</text>
+</g>
+</svg>
+<figcaption>Eigene schematische Grafik nach den Angaben des BZfE. Laut BZfE haben die meisten, aber nicht alle Kühlschränke solche Zonen – die Anleitung des Herstellers geht vor.</figcaption>
+</figure>
+<p>Laut BZfE entstehen die Zonen, wenn für das mittlere Fach etwa sieben Grad eingestellt sind: Die kälteste Stelle ist dann die unterste Ablage, die Tür ist am wärmsten, und das Gemüsefach unter der Glasplatte ist zwei bis drei Grad wärmer als der Durchschnitt des Innenraums. Fleisch und Fisch gehören deshalb nach unten – laut BfR auch, damit kein Fleischsaft auf andere Lebensmittel tropft. Milch steht nur dann in der Tür, wenn sie sehr bald getrunken wird.</p>
+<p>Bei den Eiern sind die Angaben des BZfE nicht ganz einheitlich: Eine Pressemeldung nennt die Tür als geeigneten Platz, die Lagerseite empfiehlt die Mitte, weil es dort kälter ist als im Eierfach der Tür und die Eier sich am längsten halten. Die Grafik folgt der Lagerseite. Das BfR ergänzt: rohe Eier bei höchstens 7 °C aufbewahren.</p>
+
+<h2>Hartgekochte Eier: zwei Quellen, zwei Zahlen</h2>
+<p>An einer Stelle gehen die Behördenangaben deutlich auseinander. Das BZfE schreibt, hartgekochte Eier hielten sich im Kühlschrank etwa zwei bis vier Wochen; FoodSafety.gov nennt eine Woche. Beide Zeilen stehen in der Tabelle, beide lassen sich im Rechner wählen. Für Eier, die am 1. November gekocht wurden, ergibt das BZfE-Fenster den 15. bis 29. November (1.11. + 14 beziehungsweise + 28 Tage), die US-Angabe den 8. November (1.11. + 7 Tage). Wir können nicht entscheiden, welche Angabe richtig ist; die kürzere ist die vorsichtigere. Der Schnellknopf „Ostereier“ oben verwendet die BZfE-Zeile.</p>
+
+<h2>Faschiertes: Stunden statt Tage</h2>
+<p>Lose beim Fleischer gekauftes Faschiertes – in Deutschland Hackfleisch – soll laut BZfE noch am selben Tag verbraucht werden, innerhalb von sechs bis acht Stunden, und bis dahin an der kältesten Stelle liegen: hinten auf der Glasplatte über dem Gemüsefach. Abgepacktes aus der Kühltheke trägt ein Verbrauchsdatum, das gilt. Die US-Tabelle nennt für Faschiertes ein bis zwei Tage bei höchstens 4 °C. Auch hier zeigt der Rechner beide Zeilen getrennt; bei der deutschen rechnet er keine Tage, sondern meldet „noch am selben Tag“.</p>
+
+<h2>Einfrieren: Sicherheit und Qualität sind zweierlei</h2>
+<p>Die Spalte „Tiefkühler“ stammt aus der US-Tabelle. Sie beschreibt nach deren eigener Aussage nur die Qualität: Dauerhaft bei −18 °C (0 °F) oder kälter gelagerte Lebensmittel können laut FoodSafety.gov unbegrenzt aufbewahrt werden; die Monatsangaben sagen nur, wie lange die Qualität hält. Das BZfE spricht von „einigen Monaten“ bei minus 18 Grad und rät, Selbsteingefrorenes mit Inhalt, Menge und Einfrierdatum zu beschriften. Deutsche Zeilen ohne Tiefkühl-Angabe tragen in der Tabelle einen Strich – die Quelle nennt dort keine Zahl, und wir ergänzen keine.</p>
+
+<h2>Vom Herd in den Kühlschrank</h2>
+<p>Warme Speisen sollen laut BfR innerhalb weniger Stunden auf unter 7 °C abkühlen; größere Mengen kühlen schneller, wenn man sie auf mehrere flache Schalen verteilt. Wer für viele Gäste kocht und die <a href="/rezept-verdoppeln/">doppelte oder fünffache Menge</a> im Topf hat, plant dafür Schalen und Platz im Kühlschrank ein. Enthält eine Speise rohe und gekochte Zutaten – etwa ein Nudelsalat –, sollen die gekochten laut BfR erst ausreichend abkühlen, bevor die übrigen dazukommen.</p>
+
+<h2>Was die Tabelle nicht kann</h2>
+<ul>
+<li><b>Sie ersetzt kein Verbrauchsdatum.</b> Steht eines auf der Packung, gilt es – auch wenn die Tabelle eine längere Frist nennt.</li>
+<li><b>Sie kennt Ihren Kühlschrank nicht.</b> Jede Frist gilt nur unter der Temperatur, die in der Spalte „Bedingung“ steht, und nur bei durchgehender Kühlung.</li>
+<li><b>Sie ist nicht vollständig.</b> Aufgenommen sind nur Lebensmittel, für die eine der vier Quellen eine Zahl nennt. Obst, Gemüse, Brot und Vorräte fehlen, weil die Quellen dort Lagerorte beschreiben, aber kaum Fristen.</li>
+<li><b>Sie gilt für gesunde Erwachsene.</b> Das BfR rät Menschen mit geschwächtem Immunsystem, Lebensmittel zügig nach dem Einkauf und weit vor Ablauf der Mindesthaltbarkeit zu verbrauchen.</li>
+</ul>
+
+<section class="faq" aria-labelledby="faq-h"><h2 id="faq-h">Häufige Fragen</h2>
+<details><summary>Wie lange halten sich gekochte Reste im Kühlschrank?</summary><p>Das BfR nennt zwei bis drei Tage bei höchstens 7 °C. Die US-Seite FoodSafety.gov nennt für gegartes Fleisch, Suppen und Eintöpfe drei bis vier Tage bei höchstens 4 °C.</p></details>
+<details><summary>Zählt der Tag des Kochens mit?</summary><p>Der Rechner zählt den Kochtag als Tag 0: Am Sonntag Gekochtes mit einer Frist von zwei bis drei Tagen ist bis Dienstag beziehungsweise Mittwoch zu verbrauchen.</p></details>
+<details><summary>Darf ich Lebensmittel nach dem Mindesthaltbarkeitsdatum noch essen?</summary><p>Oft ja. Laut BZfE ist das Mindesthaltbarkeitsdatum kein Wegwerfdatum; man prüft mit Augen, Nase und Zunge. Für das Verbrauchsdatum gilt das nicht – danach gehört das Lebensmittel in den Müll.</p></details>
+<details><summary>Wie kalt soll der Kühlschrank sein?</summary><p>Das BfR nennt höchstens 7 °C und empfiehlt unter 5 °C; die Temperatur soll man an verschiedenen Stellen regelmäßig prüfen.</p></details>
+</section>
+
+<section class="quellen"><h2>Quellen</h2><ul>
+{{lager-quellen}}
+<li><a href="https://www.bzfe.de/kueche-und-alltag/kochen/haltbarkeit-von-lebensmitteln" rel="noopener" target="_blank">BZfE: Haltbarkeit von Lebensmitteln</a> – Mindesthaltbarkeitsdatum, Verbrauchsdatum, Sinnesprüfung; vollständig gelesen, abgerufen am 18.11.2026</li>
+<li><a href="https://www.bzfe.de/presse/pressemeldungen-archiv-2024-und-frueher/was-gehoert-wohin-im-kuehlschrank" rel="noopener" target="_blank">BZfE, Pressemeldung: Was gehört wohin im Kühlschrank?</a> – Zonen, Eier in der Tür; vollständig gelesen, abgerufen am 18.11.2026</li>
+<li><a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:02011R1169-20180101" rel="noopener" target="_blank">Verordnung (EU) Nr. 1169/2011, konsolidierte Fassung vom 1.1.2018, Artikel 24</a> – Verbrauchsdatum ersetzt das Mindesthaltbarkeitsdatum; Artikel 24 gelesen, abgerufen am 18.11.2026</li>
+<li>Datumsrechnung: Starttag + Frist in Tagen, eine Woche = 7 Tage – im Rechner mit Rechenweg ausgewiesen und automatisch getestet (Monats-, Jahreswechsel, Schaltjahr).</li>
+</ul><p class="stand">Stand: November 2026 · Diese Seite ersetzt keine Beratung durch Behörden oder Ärztinnen und Ärzte.</p></section>

@@ -83,7 +83,17 @@ for (const s of SEITEN) {
 }
 if (/adsbygoogle/.test(fs.readFileSync(path.join(DOCS, '404.html'), 'utf8'))) f('404.html', 'AdSense-Loader auf der 404-Seite');
 if (fs.readFileSync(path.join(DOCS, 'CNAME'), 'utf8') !== 'kuechenideenkompass.de') f('CNAME', 'muss genau kuechenideenkompass.de ohne Zeilenumbruch sein');
-for (const m of fs.readFileSync(path.join(DOCS, 'sitemap.xml'), 'utf8').matchAll(/<lastmod>([^<]*)<\/lastmod>/g)) if (m[1] !== '2026-11-04') { f('sitemap.xml', 'lastmod ' + m[1]); break; }
+// lastmod: je Seite das Änderungsdatum aus seiten.mjs (Feld „geaendert“), sonst der Stand vom 4.11.2026
+{
+  const sm = fs.readFileSync(path.join(DOCS, 'sitemap.xml'), 'utf8');
+  for (const s of SEITEN) {
+    const m = sm.match(new RegExp(`<loc>${DOMAIN}/${s.slug ? s.slug + '/' : ''}</loc><lastmod>([^<]*)</lastmod>`));
+    const soll = s.geaendert || '2026-11-04';
+    if (!m || m[1] !== soll) f('sitemap.xml', `lastmod ${s.slug || '/'}: ${m ? m[1] : 'fehlt'} statt ${soll}`);
+    if (s.geaendert && !/^2026-\d\d-\d\d$/.test(s.geaendert)) f(s.slug, 'geaendert kein ISO-Datum');
+  }
+  for (const [alt] of WEITERLEITUNGEN) if (sm.includes(`/${alt.replace(/index\.html$/, '')}<`)) f('sitemap.xml', `Weiterleitung ${alt} in der Sitemap`);
+}
 for (const [alt, neu] of WEITERLEITUNGEN) {
   const h = fs.readFileSync(path.join(DOCS, alt), 'utf8');
   if (!/noindex/.test(h) || !h.includes(`url=${DOMAIN}/${neu ? neu + '/' : ''}`) || !h.includes(`rel="canonical" href="${DOMAIN}/${neu ? neu + '/' : ''}"`)) f(alt, 'Weiterleitung fehlerhaft');
@@ -99,6 +109,6 @@ for (const pflicht of ['GitHub Pages', 'Drittanbieter, einschließlich Google, v
 for (const slug of ['impressum', 'datenschutz', 'kontakt']) if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, slug, 'index.html'), 'utf8'))) f(slug, 'data-statistik="aus" fehlt');
 if (!/<body[^>]* data-statistik="aus"/.test(fs.readFileSync(path.join(DOCS, '404.html'), 'utf8'))) f('404.html', 'data-statistik="aus" fehlt');
 for (const s of SEITEN) if (!['impressum', 'datenschutz', 'kontakt'].includes(s.slug) && /data-statistik=/.test(fs.readFileSync(path.join(DOCS, s.slug, 'index.html'), 'utf8'))) f(s.slug, 'data-statistik auf Inhaltsseite');
-for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 5. November 2026', 'wird nichts gespeichert', 'eine früher gespeicherte Auswahl bleibt bestehen']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
+for (const pflicht of ['<h2 id="statistik-fenster">', 'href="#statistik-fenster"', '„kik-statistik“', '12 Monaten', '§ 165 Abs. 3 TKG 2021', 'Art. 6 Abs. 1 lit. a DSGVO', 'Global Privacy Control', 'Stand: 18. November 2026', 'Kühlschrank-Fristen', 'wird nichts gespeichert', 'eine früher gespeicherte Auswahl bleibt bestehen']) if (!ds.includes(pflicht)) f('datenschutz', `Statistik-Zettel: fehlt ${pflicht}`);
 console.log(fehler.length ? `\n${fehler.length} FEHLER:\n` + fehler.join('\n') : '\nAlle Prüfungen bestanden.');
 process.exit(fehler.length ? 1 : 0);

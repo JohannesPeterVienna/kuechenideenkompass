@@ -575,6 +575,61 @@
     } catch (e) { return null; }
   }
 
+  /* ---------- Kleine Rechner mit ausgewiesenem Rechenweg (Zutaten-Waage, Ofen, Germ) ---------- */
+  var WAAGE_ML = { cup: D.US_ML.cup, halb: D.US_ML.cup / 2, drittel: D.US_ML.cup / 3, viertel: D.US_ML.cup / 4, el: D.US_ML.el, tl: D.US_ML.tl };
+  var WAAGE_NAME = { cup: 'Cup', halb: '½ Cup', drittel: '1/3 Cup', viertel: '¼ Cup', el: 'EL', tl: 'TL' };
+  function waageRechnen(id, menge, einheit) {
+    var z = null;
+    D.WAAGE.forEach(function (x) { if (x.id === id) z = x; });
+    if (!z || typeof menge !== 'number' || !isFinite(menge) || menge <= 0 || menge > 100000) return null;
+    if (einheit === 'g') {
+      // Rückweg: Gramm → Volumen
+      var mlR = menge / z.gProMl;
+      return { zutat: z, g: menge, ml: mlR, cups: mlR / D.US_ML.cup, el: mlR / D.US_ML.el, tl: mlR / D.US_ML.tl, rueck: true, schritte: [
+        'Messwert der Quelle: ' + z.volText + ' = ' + z.g + ' g, also ' + deZahl(z.gProCup, 0) + ' g je Cup',
+        deZahl(menge, menge < 10 ? 1 : 0) + ' g ÷ ' + deZahl(z.gProCup, 0) + ' g je Cup = ' + deZahl(mlR / D.US_ML.cup, 2) + ' Cups',
+        deZahl(mlR / D.US_ML.cup, 2) + ' Cups × 16 = ' + deZahl(mlR / D.US_ML.cup * 16, 1) + ' EL (× 48 = ' + deZahl(mlR / D.US_ML.cup * 48, 1) + ' TL)'
+      ] };
+    }
+    if (!WAAGE_ML[einheit]) return null;
+    var ml = menge * WAAGE_ML[einheit], g = ml * z.gProMl;
+    var jeEinheit = z.gProMl * WAAGE_ML[einheit];
+    var schritte = ['Messwert der Quelle: ' + z.volText + ' = ' + z.g + ' g'];
+    if (einheit === 'el' || einheit === 'tl') schritte.push('1 Cup = 16 EL = 48 TL: ' + deZahl(z.gProCup, 0) + ' g ÷ ' + (einheit === 'el' ? '16' : '48') + ' = ' + deZahl(jeEinheit, 2) + ' g je ' + WAAGE_NAME[einheit]);
+    else if (z.cups !== 1 || einheit !== 'cup') schritte.push('1 ' + WAAGE_NAME[einheit] + ' = ' + deZahl(jeEinheit, 1) + ' g');
+    schritte.push(deZahl(menge, 2).replace(/,00$/, '').replace(/(,\d)0$/, '$1') + ' × ' + deZahl(jeEinheit, einheit === 'el' || einheit === 'tl' ? 2 : 1) + ' g = ' + deZahl(g, g < 10 ? 1 : 0) + ' g');
+    return { zutat: z, g: g, ml: ml, schritte: schritte };
+  }
+  function ofenRechnen(w, art) {
+    if (typeof w !== 'number' || !isFinite(w)) return null;
+    var schritte = [], ou;
+    if (art === 'f') {
+      if (w < 100 || w > 600) return null;
+      ou = fNachC(w); schritte.push('(' + deZahl(w, 0) + ' °F − 32) ÷ 1,8 = ' + deZahl(ou, 1) + ' °C Ober-/Unterhitze');
+    } else {
+      if (w < 30 || w > 320) return null;
+      if (art === 'umluft') { ou = w + 20; schritte.push(deZahl(w, 0) + ' °C Umluft + 20 °C = ' + deZahl(ou, 0) + ' °C Ober-/Unterhitze'); }
+      else { art = 'ou'; ou = w; }
+    }
+    var um = ou - 20, f = cNachF(ou);
+    if (art !== 'umluft') schritte.push(deZahl(ou, 1).replace(/,0$/, '') + ' °C − 20 °C = ' + deZahl(um, 1).replace(/,0$/, '') + ' °C Umluft (Richtwert laut NEFF)');
+    if (art !== 'f') schritte.push(deZahl(ou, 0) + ' °C × 1,8 + 32 = ' + deZahl(f, 1).replace(/,0$/, '') + ' °F');
+    schritte.push('Die Anzeige ist auf 5 Grad gerundet; die exakten Werte stehen in den Zeilen darüber');
+    return { ou: ou, umluft: um, f: f, ouRund: aufFuenf(ou), umluftRund: aufFuenf(um), fRund: aufFuenf(f), schritte: schritte };
+  }
+  function germRechnen(m, art) {
+    if (typeof m !== 'number' || !isFinite(m) || m <= 0 || m > 100000) return null;
+    var mehl, schritte = [];
+    if (art === 'frisch') { mehl = m / 42 * 1000; schritte.push(deZahl(m, 1).replace(/,0$/, '') + ' g Frischgerm ÷ 42 g × 1000 g = ' + deZahl(mehl, 0) + ' g Mehl'); }
+    else if (art === 'trocken') { mehl = m / 7 * 500; schritte.push(deZahl(m, 1).replace(/,0$/, '') + ' g Trockengerm ÷ 7 g × 500 g = ' + deZahl(mehl, 0) + ' g Mehl'); }
+    else { art = 'mehl'; mehl = m; }
+    var frisch = mehl / 1000 * 42, trocken = mehl / 500 * 7;
+    if (art !== 'frisch') schritte.push(deZahl(mehl, 0) + ' g Mehl ÷ 1000 g × 42 g = ' + deZahl(frisch, 1) + ' g Frischgerm (' + deZahl(frisch / 42, 2) + ' Würfel)');
+    if (art !== 'trocken') schritte.push(deZahl(mehl, 0) + ' g Mehl ÷ 500 g × 7 g = ' + deZahl(trocken, 1) + ' g Trockengerm (' + deZahl(trocken / 7, 2) + ' Päckchen)');
+    return { mehl: mehl, frisch: frisch, trocken: trocken, wuerfel: frisch / 42, pkg: trocken / 7, schritte: schritte };
+  }
+
+
   return {
     zahlLesen: zahlLesen, zeileLesen: zeileLesen, rezeptLesen: rezeptLesen, klasseVon: klasseVon,
     mengeRunden: mengeRunden, deZahl: deZahl, alsBruch: alsBruch, einheitText: einheitText,
@@ -582,6 +637,7 @@
     regionalUebersetzen: regionalUebersetzen, fNachC: fNachC, cNachF: cNachF, fahrenheitImText: fahrenheitImText,
     formFlaeche: formFlaeche, formFaktor: formFaktor, durchmesserFuer: durchmesserFuer,
     skalieren: skalieren, bereichVon: bereichVon, listeBauen: listeBauen, basisFormat: basisFormat,
-    kodieren: kodieren, dekodieren: dekodieren, EINHEITEN: EINHEIT_NACH_K
+    kodieren: kodieren, dekodieren: dekodieren, EINHEITEN: EINHEIT_NACH_K,
+    waageRechnen: waageRechnen, ofenRechnen: ofenRechnen, germRechnen: germRechnen
   };
 });

@@ -5,13 +5,13 @@ const KERN = ['kueche-daten.js', 'werkbank-kern.js'];
 
 export const SEITEN = [
   {
-    slug: '', typ: 'uebersicht', kurz: 'Startseite',
+    slug: '', typ: 'uebersicht', kurz: 'Startseite', geaendert: '2026-11-18', skripte: [...KERN, 'start-ui.js'],
     titel: 'Rezept-Werkbank AT · DE · CH: Rezepte umrechnen & übersetzen',
-    beschreibung: 'Rezept einfügen und in einem Durchgang auf Portionen, Backform und Einheiten umrechnen – mit dag, Obers, Topfen und Germ. Druckfertig, mit Einkaufsliste.',
+    beschreibung: 'Zutaten einfügen und sofort auf neue Portionen umrechnen – mit dag, Obers, Topfen, Germ und Rechenweg. Dazu Backformen, Cups in Gramm, Kerntemperatur, Kühlschrank-Fristen.',
     h1: 'Rezept-Werkbank für Österreich, Deutschland und die Schweiz'
   },
   {
-    slug: 'rezept-umrechnen', typ: 'werkzeug', kurz: 'Rezept umrechnen', skripte: [...KERN, 'werkbank-ui.js'],
+    slug: 'rezept-umrechnen', typ: 'werkzeug', geaendert: '2026-11-18', kurz: 'Rezept umrechnen', skripte: [...KERN, 'werkbank-ui.js'],
     titel: 'Rezept umrechnen: Portionen, Backform & Einheiten in einem Schritt',
     beschreibung: 'Beliebiges Rezept einfügen, auf neue Portionen oder eine andere Backform umrechnen, Cups in Gramm wandeln und zwischen AT-, DE- und CH-Küchensprache übersetzen.',
     h1: 'Rezept umrechnen – Portionen, Backform und Einheiten',
@@ -33,11 +33,11 @@ export const SEITEN = [
     einleitung: 'Sehr viele Kuchenrezepte im deutschsprachigen Raum sind für eine Springform mit 26 cm Durchmesser geschrieben. Hier stehen die Faktoren für die gängigen anderen Größen – und was beim Umrechnen wirklich zählt.'
   },
   {
-    slug: 'cups-in-gramm', typ: 'werkzeug', kurz: 'Cups in Gramm (Zutaten-Waage)', skripte: [...KERN, 'helfer-ui.js'],
-    titel: 'Cups in Gramm umrechnen: Mehl, Zucker, Butter, Milch',
-    beschreibung: 'Zutaten-Waage: 1 Cup Mehl, Zucker, Butter oder Milch in Gramm und Milliliter, dazu EL und TL. Jeder Wert mit Quelle (King Arthur Ingredient Weight Chart).',
+    slug: 'cups-in-gramm', typ: 'werkzeug', kurz: 'Cups, EL & TL in Gramm (Zutaten-Waage)', stand: 'November 2026', geaendert: '2026-11-18', skripte: [...KERN, 'helfer-ui.js'],
+    titel: 'Cups, Esslöffel & Teelöffel in Gramm – mit Rechenweg je Zutat',
+    beschreibung: 'Zutaten-Waage: Cups, EL und TL in Gramm und Gramm zurück in Cups – für Mehl, Zucker, Butter, Milch und viele weitere Zutaten. Jeder Wert mit Rechenweg und Quelle.',
     h1: 'Cups in Gramm – die Zutaten-Waage',
-    einleitung: 'Ein Cup ist ein Hohlmaß, Gramm sind ein Gewicht. Wie viel ein Cup wiegt, hängt deshalb von der Zutat ab. Die Zutaten-Waage rechnet mit veröffentlichten Messwerten und nennt zu jedem Wert die Quelle.'
+    einleitung: 'Cup, Esslöffel und Teelöffel sind Hohlmaße, Gramm sind ein Gewicht. Wie viel ein Cup oder ein Löffel wiegt, hängt deshalb von der Zutat ab. Die Zutaten-Waage rechnet in beide Richtungen, zeigt jeden Rechenschritt und nennt zu jedem Wert die Quelle.'
   },
   {
     slug: 'dag-in-gramm', typ: 'ratgeber', kurz: 'dag in Gramm',
@@ -61,7 +61,7 @@ export const SEITEN = [
     einleitung: 'Topfenstrudel, Quarkkuchen, Käsekuchen: Gemeint ist dieselbe Zutat. Trotzdem gelingt ein Rezept aus dem Nachbarland manchmal nicht. Das liegt selten am Namen, sondern an Fettstufe und Wassergehalt.'
   },
   {
-    slug: 'germ-umrechnen', typ: 'ratgeber', kurz: 'Germ umrechnen', skripte: [...KERN, 'helfer-ui.js'],
+    slug: 'germ-umrechnen', typ: 'ratgeber', geaendert: '2026-11-18', kurz: 'Germ umrechnen', skripte: [...KERN, 'helfer-ui.js'],
     titel: 'Germ umrechnen: Würfel, Trockengerm & Hefe – mit Rechner',
     beschreibung: '1 Würfel Frischgerm (42 g) entspricht 2 Päckchen Trockengerm à 7 g. Rechner für Frischgerm, Trockengerm und Mehlmenge, Herstellerangaben aus AT und CH.',
     h1: 'Germ umrechnen – Würfel, Trockengerm, Hefe',
@@ -83,13 +83,6 @@ export const SEITEN = [
     howto: 'Ein Rezept halbieren'
   },
   {
-    slug: 'fuer-viele-gaeste-kochen', typ: 'ratgeber', kurz: 'Für viele Gäste kochen',
-    titel: 'Für viele Gäste kochen: Mengen, Töpfe und Ablauf planen',
-    beschreibung: 'Von 4 auf 20 Portionen: Was linear mitwächst, was nicht, welche Topf- und Pfannengröße passt und wie man Arbeit und Herdplätze sinnvoll einteilt.',
-    h1: 'Für viele Gäste kochen',
-    einleitung: 'Ein Rezept für vier auf zwanzig Personen hochzurechnen, dauert mit der Werkbank Sekunden. Schwieriger ist alles drumherum: Topfgröße, Bratflächen, Herdplätze und Zeitplan. Dieser Ratgeber sortiert das.'
-  },
-  {
     slug: 'us-rezepte-umrechnen', typ: 'ratgeber', kurz: 'US-Rezepte nachbacken',
     titel: 'US-Rezepte nachbacken: Cups, Sticks, Unzen & Fahrenheit umrechnen',
     beschreibung: 'Amerikanische Rezepte sicher nachbacken: Cups und Sticks in Gramm, Unzen, Teelöffel, Fahrenheit in Celsius – und welche Zutaten es bei uns anders gibt.',
@@ -97,7 +90,7 @@ export const SEITEN = [
     einleitung: 'Amerikanische Back-Rezepte messen mit Tassen, schneiden Butter in Sticks und heizen in Fahrenheit. Mit drei Umrechnungen und ein wenig Zutatenkunde backt man sie in Wien, Köln oder Bern genauso nach.'
   },
   {
-    slug: 'ofentemperatur-umrechnen', typ: 'ratgeber', kurz: 'Ofentemperatur umrechnen', skripte: [...KERN, 'helfer-ui.js'],
+    slug: 'ofentemperatur-umrechnen', typ: 'ratgeber', geaendert: '2026-11-18', kurz: 'Ofentemperatur umrechnen', skripte: [...KERN, 'helfer-ui.js'],
     titel: 'Ofentemperatur umrechnen: Umluft, Ober-/Unterhitze & Fahrenheit',
     beschreibung: 'Umluft statt Ober-/Unterhitze: rund 20 °C weniger. Fahrenheit in Celsius: minus 32, geteilt durch 1,8. Rechner, Tabelle und Hinweise zu Heißluft-Systemen.',
     h1: 'Ofentemperatur umrechnen – Umluft, Ober-/Unterhitze, Fahrenheit',
@@ -111,18 +104,25 @@ export const SEITEN = [
     einleitung: 'Für ein Wochenende, ein Fest oder die ganze Woche: Rezepte einfügen, Portionsfaktor setzen, Vorrat eintragen. Die Liste fasst gleiche Zutaten zusammen und sortiert sie so, wie man durch den Markt geht.'
   },
   {
+    slug: 'kerntemperatur', typ: 'werkzeug', kurz: 'Kerntemperatur prüfen', stand: 'November 2026', geaendert: '2026-11-18', skripte: ['referenz-kern.js', 'referenz-ui.js'],
+    titel: 'Kerntemperatur prüfen: BfR- und USDA-Werte mit Rechenweg',
+    beschreibung: 'Gemessene Kerntemperatur eingeben, Zielwert und Abstand ablesen: 70 °C für 2 Minuten (BfR), USDA-Werte für Geflügel, Faschiertes, Steak und Fisch – jede Zeile mit Quelle.',
+    h1: 'Kerntemperatur prüfen – Mindestwerte mit Quelle',
+    einleitung: 'Thermometer ablesen, Wert eintippen: Der Prüfer vergleicht mit dem Mindestwert der Behörde, zeigt die Rechnung und sagt, was als Nächstes zu tun ist. Darunter stehen alle Werte als durchsuchbare Tabelle – deutsche und amerikanische Angaben getrennt, nichts gemittelt.'
+  },
+  {
+    slug: 'haltbarkeit-kuehlschrank', typ: 'werkzeug', kurz: 'Fristen im Kühlschrank', stand: 'November 2026', geaendert: '2026-11-18', skripte: ['referenz-kern.js', 'referenz-ui.js'],
+    titel: 'Wie lange haltbar im Kühlschrank? Fristen-Rechner mit Datum',
+    beschreibung: 'Reste, Faschiertes, Milch, Eier: Datum eingeben und ablesen, bis wann laut BfR, BZfE oder FoodSafety.gov zu verbrauchen ist – mit Rechenweg, Bedingung und Quelle je Zeile.',
+    h1: 'Haltbarkeit im Kühlschrank – Fristen mit Datum',
+    einleitung: 'Wann wurde gekocht oder geöffnet? Der Rechner zählt vom Datum weg und nennt den Tag, bis zu dem eine Behörde das Lebensmittel für verwendbar hält. Die Tabelle darunter zeigt jede Frist mit der Kühlschranktemperatur, die die Quelle voraussetzt.'
+  },
+  {
     slug: 'kuechenwoerterbuch', typ: 'werkzeug', kurz: 'Küchenwörterbuch AT–DE–CH', skripte: [...KERN, 'helfer-ui.js'],
     titel: 'Küchenwörterbuch AT · DE · CH: Obers, Topfen, Germ & Co.',
     beschreibung: 'Durchsuchbares Küchenwörterbuch mit belegten Einträgen: von Erdäpfeln über Paradeiser bis Rüebli. Jeder Begriff mit Bedeutung, Region, Praxistipp und Quelle.',
     h1: 'Küchenwörterbuch AT · DE · CH',
     einleitung: 'Paradeiser, Rüebli, Faschiertes, Nüsslisalat: Jedes Land hat seine Küchenwörter. Hier sind die wichtigsten mit Bedeutung, Region und Quelle versammelt – dieselbe Liste übersetzt in der Werkbank automatisch.'
-  },
-  {
-    slug: 'essloeffel-teeloeffel-gramm', typ: 'ratgeber', kurz: 'Esslöffel & Teelöffel in Gramm',
-    titel: 'Esslöffel und Teelöffel in Gramm – Tabelle je Zutat',
-    beschreibung: 'Wie viel Gramm hat ein Esslöffel Zucker, Mehl, Butter oder Salz? Tabelle je Zutat mit Quelle, Unterschied gestrichen und gehäuft, Kaffeelöffel in Österreich.',
-    h1: 'Esslöffel und Teelöffel in Gramm',
-    einleitung: '„2 EL Zucker“ ist schnell gelesen, aber wie viel ist das auf der Waage? Die Antwort hängt von der Zutat ab – und davon, ob der Löffel gestrichen oder gehäuft ist. Die Tabelle rechnet mit Messlöffeln.'
   },
   {
     slug: 'mehltypen-at-de-ch', typ: 'ratgeber', kurz: 'Mehltypen AT · DE · CH', stand: 'November 2026',
@@ -146,15 +146,15 @@ export const SEITEN = [
     einleitung: 'Im Rezept steht „eine Stunde gehen lassen“. In einer warmen Sommerküche reicht das, im kühlen Altbau im Jänner nicht. Dieser Ratgeber zeigt, wie stark die Temperatur die Gehzeit verändert – und worauf es wirklich ankommt.'
   },
   {
-    slug: 'backzeit-formgroesse', typ: 'ratgeber', kurz: 'Backzeit bei anderer Form', stand: 'November 2026',
+    slug: 'backzeit-formgroesse', typ: 'ratgeber', geaendert: '2026-11-18', kurz: 'Backzeit bei anderer Form', stand: 'November 2026',
     titel: 'Backzeit bei anderer Formgröße: Teighöhe, Tabelle, Temperatur',
     beschreibung: 'Gleicher Teig, andere Form: wie viel höher oder flacher er wird, wann Sie Temperatur und Zeit ändern sollten und welche Kerntemperatur zeigt, dass Kuchen und Brot gar sind.',
     h1: 'Backzeit und Temperatur bei anderer Formgröße',
     einleitung: 'Die 26er-Springform ist gerade im Geschirrspüler, die 22er steht bereit. Was passiert mit Backzeit und Temperatur, wenn derselbe Teig in eine andere Form kommt? Die Antwort liegt in der Teighöhe.'
   },
   {
-    slug: 'rezept-verdoppeln', typ: 'ratgeber', kurz: 'Rezept verdoppeln', stand: 'November 2026',
-    titel: 'Rezept verdoppeln: Form, Topf, Würze und Zeit – die Fallstricke',
+    slug: 'rezept-verdoppeln', typ: 'ratgeber', geaendert: '2026-11-18', kurz: 'Rezept verdoppeln & viele Gäste', stand: 'November 2026',
+    titel: 'Rezept verdoppeln oder für viele Gäste hochrechnen: Form, Topf, Zeit',
     beschreibung: 'Doppelte Menge ohne Pannen: welche Form oder welches Blech passt, warum im großen Topf weniger verdampft, wie man würzt und warum sich die Backzeit nicht verdoppelt.',
     h1: 'Rezept verdoppeln – Form, Topf, Würze, Zeit',
     einleitung: 'Für Gäste, das Pfarrfest oder zum Einfrieren: Verdoppeln ist rechnerisch einfach. Schwierig wird es bei Form, Topf, Gewürzen und Zeit. So vermeiden Sie die typischen Fehler.',
@@ -175,7 +175,7 @@ export const SEITEN = [
     einleitung: 'Ein Rechenwerkzeug ist nur so gut wie seine Annahmen. Deshalb steht hier vollständig, wie die Werkbank liest, rechnet, rundet und übersetzt – und wo sie bewusst nicht rechnet.'
   },
   {
-    slug: 'ueber-uns', typ: 'pflicht', kurz: 'Über uns', stand: '4. November 2026',
+    slug: 'ueber-uns', typ: 'pflicht', geaendert: '2026-11-18', kurz: 'Über uns', stand: '18. November 2026',
     titel: 'Über uns – Küchenideenkompass',
     beschreibung: 'Wer hinter dem Küchenideenkompass steht, warum es die Rezept-Werkbank gibt und nach welchen Grundsätzen Werte, Quellen und Werbung behandelt werden.',
     h1: 'Über den Küchenideenkompass',
@@ -196,7 +196,7 @@ export const SEITEN = [
     einleitung: 'Angaben gemäß § 5 E-Commerce-Gesetz (ECG), § 14 Unternehmensgesetzbuch und Offenlegung gemäß § 25 Mediengesetz.'
   },
   {
-    slug: 'datenschutz', typ: 'pflicht', kurz: 'Datenschutz', stand: '5. November 2026',
+    slug: 'datenschutz', typ: 'pflicht', geaendert: '2026-11-18', kurz: 'Datenschutz', stand: '18. November 2026',
     titel: 'Datenschutzerklärung – Küchenideenkompass',
     beschreibung: 'Datenschutzerklärung: Hosting über GitHub Pages, Google AdSense, Google Analytics 4 nur nach Einwilligung, Rezepte und Listen nur lokal im Browser.',
     h1: 'Datenschutzerklärung',
@@ -217,4 +217,7 @@ export const WEITERLEITUNGEN = [
   ['portionen-umrechnen.html', 'rezept-umrechnen'],
   ['portionenwerk.html', 'rezept-umrechnen'],
   ['rezeptliste-pruefen.html', 'rezept-umrechnen'],
+  // Zusammengelegt am 18.11.2026
+  ['fuer-viele-gaeste-kochen/index.html', 'rezept-verdoppeln'],
+  ['essloeffel-teeloeffel-gramm/index.html', 'cups-in-gramm'],
 ];

@@ -303,3 +303,43 @@ test('Zielregion DE/CH: dag wird bei „wie im Rezept“ zu Gramm', () => {
   assert.equal(lauf('original')[0].einheit, 'dag');
   assert.equal(lauf('de', 'at')[0].einheit, 'dag', 'ausdrücklich österreichische Einheiten bleiben dag');
 });
+
+// ---- Kleine Rechner mit Rechenweg (18.11.2026) ----
+test('waageRechnen: Cup, Löffel, Rückweg Gramm → Cups, Unsinn', async () => {
+  const { createRequire } = await import('node:module');
+  const K2 = createRequire(import.meta.url)('../docs/assets/js/werkbank-kern.js');
+  let r = K2.waageRechnen('weizenmehl', 1.5, 'cup');
+  assert.equal(Math.round(r.g), 180);
+  assert.equal(r.schritte.at(-1), '1,5 × 120 g = 180 g');
+  r = K2.waageRechnen('zucker', 2, 'el');
+  assert.ok(Math.abs(r.g - 24.75) < 0.05);
+  assert.match(r.schritte[1], /198 g ÷ 16 = 12,38 g je EL/);
+  r = K2.waageRechnen('butter', 1, 'cup');
+  assert.equal(Math.round(r.g), 226);
+  r = K2.waageRechnen('weizenmehl', 240, 'g');
+  assert.ok(r.rueck); assert.ok(Math.abs(r.cups - 2) < 1e-9); assert.ok(Math.abs(r.el - 32) < 0.1);
+  for (const [id, m, e] of [['gibtsnicht', 1, 'cup'], ['zucker', 0, 'cup'], ['zucker', -1, 'cup'], ['zucker', NaN, 'cup'], ['zucker', 1, 'eimer'], ['zucker', '1', 'cup'], ['zucker', 1e9, 'cup'], ['__proto__', 1, 'cup']]) assert.equal(K2.waageRechnen(id, m, e), null);
+});
+test('ofenRechnen: Fahrenheit, Umluft, Grenzen', async () => {
+  const { createRequire } = await import('node:module');
+  const K2 = createRequire(import.meta.url)('../docs/assets/js/werkbank-kern.js');
+  let r = K2.ofenRechnen(350, 'f');
+  assert.deepEqual([r.ouRund, r.umluftRund, r.fRund], [175, 155, 350]);
+  assert.match(r.schritte[0], /\(350 °F − 32\) ÷ 1,8 = 176,7 °C/);
+  r = K2.ofenRechnen(160, 'umluft');
+  assert.deepEqual([r.ou, r.umluft, Math.round(r.f)], [180, 160, 356]);
+  r = K2.ofenRechnen(180, 'ou');
+  assert.deepEqual([r.ouRund, r.umluftRund, r.fRund], [180, 160, 355]);
+  for (const [w, a] of [[5, 'ou'], [1000, 'ou'], [50, 'f'], [9999, 'f'], [NaN, 'ou'], ['180', 'ou']]) assert.equal(K2.ofenRechnen(w, a), null);
+});
+test('germRechnen: Mehl, Frischgerm, Trockengerm', async () => {
+  const { createRequire } = await import('node:module');
+  const K2 = createRequire(import.meta.url)('../docs/assets/js/werkbank-kern.js');
+  let r = K2.germRechnen(500, 'mehl');
+  assert.deepEqual([r.frisch, r.trocken, r.wuerfel, r.pkg], [21, 7, 0.5, 1]);
+  r = K2.germRechnen(42, 'frisch');
+  assert.deepEqual([r.mehl, r.trocken], [1000, 14]);
+  r = K2.germRechnen(7, 'trocken');
+  assert.deepEqual([r.mehl, r.frisch], [500, 21]);
+  assert.equal(K2.germRechnen(0, 'mehl'), null); assert.equal(K2.germRechnen(-3, 'frisch'), null); assert.equal(K2.germRechnen(Infinity, 'mehl'), null);
+});

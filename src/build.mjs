@@ -8,12 +8,14 @@ import { TABELLEN } from './tabellen.mjs';
 import { woerterbuchHtml, WOERTER } from './woerterbuch.mjs';
 TABELLEN['woerterbuch'] = woerterbuchHtml;
 TABELLEN['woerter-anzahl'] = () => String(WOERTER.length);
+TABELLEN['ratgeber-anzahl'] = () => String(SEITEN.filter((s) => s.typ === 'ratgeber').length);
+TABELLEN['waage-anzahl'] = () => String(createRequire(import.meta.url)('../docs/assets/js/kueche-daten.js').WAAGE.length);
 
 const require = createRequire(import.meta.url);
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const WURZEL = path.resolve(HIER, '..');
 const DOCS = path.join(WURZEL, 'docs');
-const VERSION = '20261105d';
+const VERSION = '20261118a';
 // Consent-Mode-Grundwerte inline vor jedem Google-Skript; danach der AdSense-Loader statisch im head
 // (alle indexierbaren Seiten außer Impressum, Datenschutz, Kontakt). einwilligung.js und anzeigen.js laden nichts doppelt.
 // Impressum, Datenschutz, Kontakt und 404 tragen data-statistik="aus": dort lädt einwilligung.js nie Google Analytics.
@@ -35,6 +37,8 @@ const NAV = [
   ['cups-in-gramm', 'Zutaten-Waage'],
   ['kuechenwoerterbuch', 'Wörterbuch'],
   ['einkaufsliste', 'Einkaufsliste'],
+  ['kerntemperatur', 'Kerntemperatur'],
+  ['haltbarkeit-kuehlschrank', 'Haltbarkeit'],
   ['', 'Ratgeber', '#ratgeber']
 ];
 
@@ -195,10 +199,11 @@ for (const [alt, neu] of WEITERLEITUNGEN) {
   fs.mkdirSync(path.dirname(datei), { recursive: true });
   fs.writeFileSync(datei, weiterleitung(alt, neu));
 }
+// lastmod je Seite: nur Seiten mit „geaendert“ bekommen ein neues Datum
 const heute = '2026-11-04';
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${SEITEN.filter((s) => !s.noindex).map((s) => `  <url><loc>${url(s.slug)}</loc><lastmod>${heute}</lastmod></url>`).join('\n')}
+${SEITEN.filter((s) => !s.noindex).map((s) => `  <url><loc>${url(s.slug)}</loc><lastmod>${s.geaendert || heute}</lastmod></url>`).join('\n')}
 </urlset>
 `;
 fs.writeFileSync(path.join(DOCS, 'sitemap.xml'), sitemap);

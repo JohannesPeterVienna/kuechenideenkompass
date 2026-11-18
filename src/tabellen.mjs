@@ -4,9 +4,14 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const D = require('../docs/assets/js/kueche-daten.js');
 const K = require('../docs/assets/js/werkbank-kern.js');
+const R = require('../docs/assets/js/referenz-kern.js');
+const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const qLink = (id) => { const q = R.QUELLEN[id]; return `<a href="${q.url}" rel="noopener" target="_blank">${esc(q.kurz)}</a> <small>(${q.land === 'DE' ? 'Deutschland' : 'USA'})</small>`; };
 const z = (x, s = 0) => K.deZahl(x, s);
 const huelle = (cap, kopf, zeilen) => `<div class="tabelle-huelle"><table><caption>${cap}</caption><thead><tr>${kopf.map((k, i) => `<th scope="col"${i ? ' class="zahl"' : ''}>${k}</th>`).join('')}</tr></thead><tbody>${zeilen.map((r) => `<tr>${r.map((c, i) => (i ? `<td class="zahl">${c}</td>` : `<th scope="row">${c}</th>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
 const ka = `<a href="${D.QUELLEN.ka.url}" rel="noopener" target="_blank">King Arthur Ingredient Weight Chart</a>`;
+
+const quellenListe = (ids) => ids.map((id) => R.QUELLEN[id]).map((q) => `<li><a href="${q.url}" rel="noopener" target="_blank">${esc(q.name)}</a> – vollständig gelesen, abgerufen am ${R.ABRUF}${q.weg ? `; ${esc(q.weg)}, weil die Originalseite automatische Abrufe abweist (<a href="${q.archiv}" rel="noopener" target="_blank">Archivkopie</a>)` : ''}</li>`).join('\n');
 
 const flaecheRund = (d) => Math.PI * (d / 2) ** 2;
 
@@ -96,5 +101,17 @@ export const TABELLEN = {
     const f = [[4, 8], [4, 12], [4, 20], [6, 20], [4, 30]];
     return huelle('Faktor, Geschirr und Bratfläche', ['Von → nach', 'Faktor', 'Topf-/Pfannen-Ø: 24 cm wird …', 'Bratdurchgänge in der Originalpfanne'],
       f.map(([a, b]) => { const k = b / a; return [`${a} → ${b} Portionen`, z(k, 2), `${z(24 * Math.sqrt(k))} cm`, `${Math.ceil(k)}`]; }));
-  }
+  },
+
+  // Referenztabellen: stehen vollständig im HTML (auch ohne JavaScript lesbar); referenz-ui.js filtert nur.
+  'kerntemperatur-tabelle': () => `<div class="tabelle-huelle"><table id="kt-tabelle" class="referenz"><caption>Kerntemperaturen: Mindestwerte der Behörden und Garproben für Gebäck – ${R.KERN.length} Einträge, abgerufen am ${R.ABRUF}</caption><thead><tr><th scope="col">Lebensmittel</th><th scope="col">Zielwert im Kern</th><th scope="col">Art</th><th scope="col">Quelle</th><th scope="col" class="nicht-drucken"><span class="nur-vorlesen">Im Prüfer öffnen</span></th></tr></thead><tbody>${R.KERN.map((z) => `<tr data-id="${z.id}"><th scope="row">${esc(z.name)}</th><td>${esc(z.wert)}${z.hinweis ? `<br><small>${esc(z.hinweis)}</small>` : ''}</td><td>${z.art === 'sicherheit' ? 'Mindestwert' : 'Garprobe'}</td><td>${qLink(z.quelle)}</td><td class="nicht-drucken"><button type="button" class="klein-knopf" data-nimm="${z.id}" aria-label="${esc(z.name)} im Prüfer öffnen">prüfen</button></td></tr>`).join('')}</tbody></table><p id="kt-leer" class="leer-hinweis" hidden>Kein Eintrag passt zu dieser Suche.</p></div>`,
+
+  'lager-tabelle': () => `<div class="tabelle-huelle"><table id="hb-tabelle" class="referenz"><caption>Fristen im Kühlschrank nach Behördenangaben – ${R.LAGER.length} Einträge, abgerufen am ${R.ABRUF}</caption><thead><tr><th scope="col">Lebensmittel</th><th scope="col">Im Kühlschrank</th><th scope="col">Bedingung der Quelle</th><th scope="col">Tiefkühler (nur Qualität)</th><th scope="col">Quelle</th><th scope="col" class="nicht-drucken"><span class="nur-vorlesen">Im Rechner öffnen</span></th></tr></thead><tbody>${R.LAGER.map((z) => `<tr data-id="${z.id}"><th scope="row">${esc(z.name)}</th><td><b>${esc(R.fristText(z))}</b><br><small>ab ${esc(z.ab)}</small></td><td>${esc(z.bedingung)}</td><td>${z.tk ? esc(z.tk) : '<span class="nur-vorlesen">keine Angabe in der Quelle</span>–'}</td><td>${qLink(z.quelle)}</td><td class="nicht-drucken"><button type="button" class="klein-knopf" data-nimm="${z.id}" aria-label="${esc(z.name)} im Rechner öffnen">rechnen</button></td></tr>`).join('')}</tbody></table><p id="hb-leer" class="leer-hinweis" hidden>Kein Eintrag passt zu dieser Suche.</p></div>`,
+
+  'kern-gruppen': () => [['alle', 'alle'], ...R.KERN_GRUPPEN.map((g) => [g.id, g.name])].map(([id, n], i) => `<label><input type="radio" name="kt-gruppe" value="${id}"${i ? '' : ' checked'}> ${esc(n)}</label>`).join(''),
+  'lager-gruppen': () => [['alle', 'alle'], ...R.LAGER_GRUPPEN.map((g) => [g.id, g.name])].map(([id, n], i) => `<label><input type="radio" name="hb-gruppe" value="${id}"${i ? '' : ' checked'}> ${esc(n)}</label>`).join(''),
+  'kern-anzahl': () => String(R.KERN.length),
+  'lager-anzahl': () => String(R.LAGER.length),
+  'kern-quellen': () => quellenListe(['bfr', 'fsis', 'kaKuchen', 'kaKaese', 'kaBrot']),
+  'lager-quellen': () => quellenListe(['bfr', 'bzfe', 'zgfdt', 'fsgov'])
 };

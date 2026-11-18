@@ -6,8 +6,10 @@
       <div class="feld"><label for="wa-zutat">Zutat</label><select id="wa-zutat"></select></div>
       <div class="reihe">
         <div class="feld"><label for="wa-menge">Menge</label><input type="number" id="wa-menge" inputmode="decimal" min="0" step="0.25" value="1"></div>
-        <div class="feld"><label for="wa-einheit">Einheit</label><select id="wa-einheit"><option value="cup">Cup</option><option value="halb">½ Cup</option><option value="drittel">1/3 Cup</option><option value="viertel">¼ Cup</option><option value="el">EL (Tablespoon)</option><option value="tl">TL (Teaspoon)</option></select></div>
+        <div class="feld"><label for="wa-einheit">Einheit</label><select id="wa-einheit"><option value="cup">Cup</option><option value="halb">½ Cup</option><option value="drittel">1/3 Cup</option><option value="viertel">¼ Cup</option><option value="el">EL (Tablespoon)</option><option value="tl">TL (Teaspoon)</option><option value="g">Gramm → Cups, EL, TL</option></select></div>
       </div>
+      <div class="knopf-reihe" style="margin-top:0"><a class="klein-knopf" href="/cups-in-gramm/#w=weizenmehl~1.5~cup">Beispiel: 1 ½ Cups Mehl</a><a class="klein-knopf" href="/cups-in-gramm/#w=zucker~2~el">Beispiel: 2 EL Zucker</a><a class="klein-knopf" href="/cups-in-gramm/#w=butter~250~g">Beispiel: 250 g Butter in Cups</a><button type="button" class="klein-knopf" id="wa-link">Link kopieren</button></div>
+      <p class="status" id="wa-status" role="status"></p>
       <p class="hilfe">Ganze Rezepte mit Cups rechnet die <a href="/rezept-umrechnen/">Werkbank</a> im Modus „metrisch“ auf einmal um.</p>
     </div>
     <div id="wa-ergebnis" aria-live="polite"></div>
@@ -21,7 +23,7 @@
 <h2>Die Werte und ihre Quelle</h2>
 <p>King Arthur Baking gibt für jede Zutat ein Volumen und das zugehörige Gewicht an – meistens für einen Cup, bei Butter für einen halben Cup (8 Esslöffel), bei Honig für einen Esslöffel, bei Backpulver für einen Teelöffel. Die Waage übernimmt jeden Originalwert und rechnet daraus die anderen Maße: Nach US-Definition hat ein Cup 16 Esslöffel und ein Esslöffel 3 Teelöffel. Milliliter rechnet die Waage nach dem US-Normungsinstitut NIST: 1 Cup ≈ 236,6 ml, 1 Esslöffel ≈ 14,79 ml, 1 Teelöffel ≈ 4,93 ml.</p>
 {{cup-tabelle}}
-<p>Die vollständige Liste mit allen 31 Zutaten steht unten. Werte, für die es keine belegte Quelle gibt, fehlen absichtlich. Lieber eine Lücke als eine erfundene Zahl – für eine Zutat ohne Wert rechnet die Werkbank in Milliliter weiter.</p>
+<p>Die vollständige Liste mit allen {{waage-anzahl}} Zutaten steht unten. Werte, für die es keine belegte Quelle gibt, fehlen absichtlich. Lieber eine Lücke als eine erfundene Zahl – für eine Zutat ohne Wert rechnet die Werkbank in Milliliter weiter.</p>
 
 <h2>Die wichtigsten Zutaten im Detail</h2>
 <h3>Mehl</h3>
@@ -33,8 +35,17 @@
 <h3>Milch, Obers und Öl</h3>
 <p>Flüssigkeiten misst man bei uns meist ohnehin in Millilitern. Für die Vollständigkeit nennt King Arthur auch Gewichte: 227 g pro Cup für Milch und für Obers beziehungsweise Sahne, 198 g für Pflanzenöl. In der Werkbank werden Flüssigkeiten deshalb in Milliliter umgerechnet, nicht in Gramm – das entspricht dem, was auf dem Messbecher steht.</p>
 
-<h2>Esslöffel und Teelöffel</h2>
-<p>Für kleine Mengen gibt die Waage auch Esslöffel und Teelöffel aus. Gemeint sind Messlöffel, gestrichen. Haushaltslöffel fassen je nach Form spürbar mehr oder weniger, und gehäufte Löffel können ein Mehrfaches eines gestrichenen enthalten. Eine ausführliche Tabelle mit allen Zutaten steht im Ratgeber <a href="/essloeffel-teeloeffel-gramm/">Esslöffel und Teelöffel in Gramm</a>.</p>
+<h2 id="loeffel">Esslöffel und Teelöffel in Gramm</h2>
+<p>Für kleine Mengen rechnet die Waage auch mit Esslöffeln und Teelöffeln. Gemeint sind gestrichene Messlöffel nach US-Definition (1 EL ≈ 14,79 ml, 1 TL ≈ 4,93 ml nach NIST), praktisch also 15 und 5 ml. Ein Esslöffel sind drei Teelöffel.</p>
+{{loeffel-tabelle}}
+<p>Direkt als Löffelwert veröffentlicht sind bei King Arthur zum Beispiel Honig (1 EL = 21 g), feines Speisesalz (1 EL = 18 g), Backpulver (1 TL = 4 g) und Natron (½ TL = 3 g). Alle anderen Zeilen sind aus dem Gewicht je Cup errechnet: geteilt durch 16 für den Esslöffel, durch 48 für den Teelöffel. Bei Mehl sind das 120 g ÷ 16 = 7,5 g je Esslöffel. Grobes Salz wiegt deutlich weniger als feines: Für koscheres Salz der Marke Diamond Crystal nennt King Arthur nur 8 g je Esslöffel.</p>
+<div class="beispiel"><span class="beispiel-titel">Beispiel – 2 EL Zucker</span>
+<p>198 g je Cup ÷ 16 = 12,38 g je Esslöffel; 2 × 12,38 g ≈ 25 g. <a href="/cups-in-gramm/#w=zucker~2~el">Mit diesen Werten in der Waage öffnen</a> – dort lässt sich die Zutat oder die Menge ändern.</p></div>
+<ul>
+<li><b>Gehäufte Löffel</b> fassen bei pulvrigen Zutaten mehr als gestrichene. Wie viel, hängt vom Löffel und vom Häufchen ab; eine belegte Zahl dafür haben wir nicht, deshalb rechnet die Waage nur gestrichen.</li>
+<li><b>Haushaltslöffel</b> aus der Besteckschublade sind keine Messlöffel; ihr Fassungsvermögen hängt von der Form ab.</li>
+<li><b>Kaffeelöffel (KL)</b> in österreichischen Rezepten meint den Teelöffel. Dr. Oetker Österreich schreibt in seinen Back-Tipps von einem gestrichenen Kaffeelöffel Backpulver; die Werkbank behandelt KL und TL gleich.</li>
+</ul>
 
 <h2>Vollständige Tabelle</h2>
 {{waage-tabelle}}
@@ -54,4 +65,5 @@
 <li><a href="https://www.kingarthurbaking.com/learn/ingredient-weight-chart" rel="noopener" target="_blank">King Arthur Baking: Ingredient Weight Chart</a> – alle Gewichtswerte</li>
 <li><a href="https://www.nist.gov/pml/owm/approximate-conversions-us-customary-measures-metric" rel="noopener" target="_blank">NIST: Approximate Conversions from U.S. Customary Measures to Metric</a> – Milliliter je Cup, EL, TL</li>
 <li><a href="https://cabotcreamery.com/blogs/food/how-many-tablespoons-in-a-stick-of-butter" rel="noopener" target="_blank">Cabot Creamery: How many tablespoons in a stick of butter</a> – 1 Stick = 8 EL = ½ Cup = 113 g</li>
-</ul><p class="stand">Stand: Oktober 2026</p></section>
+<li><a href="https://www.oetker.at/inspiration/tipps-tricks/t/wie-viel-backpulver-braucht-man" rel="noopener" target="_blank">Dr. Oetker Österreich: Wie viel Backpulver braucht man?</a> – Kaffeelöffel als Maß</li>
+</ul><p class="stand">Stand: November 2026</p></section>
