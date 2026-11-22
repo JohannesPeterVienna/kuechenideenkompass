@@ -11,7 +11,7 @@ export const SEITEN = [
     h1: 'Rezept-Werkbank für Österreich, Deutschland und die Schweiz'
   },
   {
-    slug: 'rezept-umrechnen', typ: 'werkzeug', geaendert: '2026-11-18', kurz: 'Rezept umrechnen', skripte: [...KERN, 'werkbank-ui.js'],
+    slug: 'rezept-umrechnen', typ: 'werkzeug', geaendert: '2026-11-22', kurz: 'Rezept umrechnen', skripte: [...KERN, 'werkbank-ui.js'],
     titel: 'Rezept umrechnen: Portionen, Backform & Einheiten in einem Schritt',
     beschreibung: 'Beliebiges Rezept einfügen, auf neue Portionen oder eine andere Backform umrechnen, Cups in Gramm wandeln und zwischen AT-, DE- und CH-Küchensprache übersetzen.',
     h1: 'Rezept umrechnen – Portionen, Backform und Einheiten',

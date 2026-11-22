@@ -30,7 +30,7 @@
 <script src="/assets/js/anzeigen.js?v=20261118b" defer></script>
 <script src="/assets/js/kueche-daten.js?v=20261118b" defer></script>
 <script src="/assets/js/werkbank-kern.js?v=20261118b" defer></script>
-<script src="/assets/js/werkbank-ui.js?v=20261118b" defer></script>
+<script src="/assets/js/werkbank-ui.js?v=20261122" defer></script>
 </head>
 <body data-werbung="ja" data-seitentyp="werkzeug">
 <a class="uebersprung" href="#inhalt">Zum Inhalt springen</a>
@@ -88,7 +88,9 @@
         <label><input type="radio" name="region" value="de"> Deutschland</label>
         <label><input type="radio" name="region" value="ch"> Schweiz</label>
       </div></fieldset>
-      <div class="knopf-reihe"><button type="button" class="knopf zweit" id="wb-beispiel">Beispiel laden</button><button type="button" class="knopf zweit" id="wb-leeren">Leeren</button></div>
+      <label for="wb-fall">Rezept zum Ausprobieren</label>
+      <select id="wb-fall"><option value="kuchen">Topfen-Gugelhupf · 4 auf 6</option><option value="suppe">Rote Linsensuppe · 4 auf 7</option><option value="palatschinken">Palatschinken · 4 auf 2</option></select>
+      <div class="knopf-reihe"><button type="button" class="knopf zweit" id="wb-beispiel">Gewähltes Rezept einsetzen</button><button type="button" class="knopf zweit" id="wb-leeren">Leeren</button></div>
     </div>
     <div>
       <div class="blatt" id="wb-ergebnis" aria-live="polite"></div>

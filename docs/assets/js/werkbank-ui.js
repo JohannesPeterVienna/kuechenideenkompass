@@ -13,6 +13,15 @@
     von: 4, nach: 6
   };
 
+  var rezepte = {
+    kuchen: BEISPIEL,
+    suppe: { titel: 'Rote Linsensuppe', zutaten: '200 g rote Linsen\n400 g passierte Tomaten\n800 ml Gemüsebrühe\n2 Karotten\n1 EL Öl',
+      schritte: 'Karotten klein würfeln und im Öl anschwitzen. Linsen abspülen, mit Tomaten und einem Teil der Brühe zugeben. Sanft köcheln, bis die Linsen weich sind. Die restliche Brühe nach gewünschter Dicke ergänzen. Für sieben Portionen 350 g trockene Linsen abwiegen.',
+      von: 4, nach: 7 },
+    palatschinken: { titel: 'Palatschinken', zutaten: '200 g Mehl\n400 ml Milch\n2 Eier\n1 Prise Salz\nÖl für die Pfanne',
+      schritte: 'Mehl mit einem Teil der Milch glatt rühren. Eier, Salz und restliche Milch einrühren. Teig kurz ruhen lassen und dünn in einer leicht geölten Pfanne ausbacken. Für die halbe Menge bleiben ein ganzes Ei und 200 ml Milch. Die Pfanne behält ihre Größe.',
+      von: 4, nach: 2 }
+  };
   var FORMEN = { rund: 'rund (Springform)', eckig: 'eckig / quadratisch', kasten: 'Kastenform', gugelhupf: 'Gugelhupf', blech: 'Blech' };
 
   function h(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -158,7 +167,8 @@
   wurzel.addEventListener('input', function () { grundlageZeigen(); rechnen(); });
   wurzel.addEventListener('change', function () { grundlageZeigen(); rechnen(); });
   $('wb-beispiel').addEventListener('click', function () {
-    setzen({ t: BEISPIEL.titel, z: BEISPIEL.zutaten, s: BEISPIEL.schritte, v: BEISPIEL.von, n: BEISPIEL.nach, g: 'portionen' });
+    var rezept = rezepte[$('wb-fall').value];
+    setzen({ t: rezept.titel, z: rezept.zutaten, s: rezept.schritte, v: rezept.von, n: rezept.nach, g: 'portionen' });
     rechnen(); status('Beispiel geladen – ändern Sie Portionen, Einheiten oder Küchensprache.');
   });
   $('wb-leeren').addEventListener('click', function () { $('wb-titel').value = ''; $('wb-zutaten').value = ''; $('wb-schritte').value = ''; rechnen(); $('wb-zutaten').focus(); });

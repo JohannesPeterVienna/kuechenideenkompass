@@ -117,7 +117,7 @@ function seiteBauen(seite) {
   const seitenleiste = mitSeitenleiste ? `<aside class="seitenleiste" aria-label="Seitenleiste">${toc.length >= 3 ? `<nav class="inhalt-liste" aria-label="Auf dieser Seite"><h2>Auf dieser Seite</h2><ol>${toc.map(([id, t]) => `<li><a href="#${id}">${esc(t)}</a></li>`).join('')}</ol></nav>` : ''}${werbung ? '<div class="anzeige" data-anzeige="seite" hidden></div>' : ''}</aside>` : '';
 
   const krumen = seite.slug ? `<nav class="brotkrumen" aria-label="Brotkrumen"><ol><li><a href="/">Startseite</a></li><li aria-current="page">${esc(seite.kurz)}</li></ol></nav>` : '';
-  const skripte = (seite.skripte || []).map((s) => `<script src="/assets/js/${s}?v=${VERSION}" defer></script>`).join('\n');
+  const skripte = (seite.skripte || []).map((s) => `<script src="/assets/js/${s}?v=${s === 'werkbank-ui.js' ? '20261122' : VERSION}" defer></script>`).join('\n');
   const robots = seite.noindex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robots" content="index, follow, max-image-preview:large">';
   const kopfZeile = seite.slug ? `${krumen}<h1>${esc(seite.h1)}</h1><p class="einleitung">${seite.einleitung}</p><p class="stand">${seite.typ === 'pflicht' ? `Stand: ${seite.stand || '2. November 2026'}` : `Stand: ${seite.stand || 'Oktober 2026'} · ${seite.typ === 'werkzeug' ? 'Werkzeug läuft vollständig in Ihrem Browser' : 'Werte mit Quellenangabe'}`}</p>` : '';
   // Kopf-Anzeigenplatz erst nach H1 + Einleitung. Werkzeugseiten: kein Kopfplatz – das Werkzeug beginnt dort
