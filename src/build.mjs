@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { SEITEN, WEITERLEITUNGEN, DOMAIN } from './seiten.mjs';
 import { TABELLEN } from './tabellen.mjs';
 import { woerterbuchHtml, WOERTER } from './woerterbuch.mjs';
+
+const shopLink = fs.readFileSync(new URL('./shop-link.html', import.meta.url), 'utf8');
 TABELLEN['woerterbuch'] = woerterbuchHtml;
 TABELLEN['woerter-anzahl'] = () => String(WOERTER.length);
 TABELLEN['ratgeber-anzahl'] = () => String(SEITEN.filter((s) => s.typ === 'ratgeber').length);
@@ -68,7 +70,7 @@ function fuss() {
 <div><h2>Projekt</h2><ul><li><a href="/so-rechnet-die-werkbank/">So rechnet die Werkbank</a></li><li><a href="/ueber-uns/">Über uns</a></li><li><a href="/kontakt/">Kontakt</a></li><li><a href="/impressum/">Impressum</a></li><li><a href="/datenschutz/">Datenschutz</a></li><li><button type="button" class="link-knopf" data-datenschutz-einstellungen>Datenschutz-Einstellungen</button></li></ul></div>
 </div>
 <p class="klein">© 2026 AdStern, Wien · Alle Rechenwerte mit Quellenangabe, Stand: November 2026 · Rezepte und Listen bleiben in Ihrem Browser.</p>
-</div></footer>`;
+${shopLink}</div></footer>`;
 }
 
 function jsonLd(seite, faq, howto) {
